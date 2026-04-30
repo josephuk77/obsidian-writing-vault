@@ -1,1 +1,25 @@
-[]
+[
+  "dataview",
+  "obsidian-excalidraw-plugin",
+  "githobs",
+  "kr-book-info-plugin",
+  "obsidian-kanban",
+  "obsidian-local-rest-api",
+  "obsidian-minimal-settings",
+  "note-refactor-obsidian",
+  "open-in-terminal",
+  "obsidian-outliner",
+  "omnisearch",
+  "url-into-selection",
+  "periodic-notes",
+  "remotely-save",
+  "shiki-highlighter",
+  "obsidian-style-settings",
+  "smart-composer",
+  "templater-obsidian",
+  "obsidian-tasks-plugin",
+  "supercharged-links-obsidian",
+  "translate",
+  "various-complements",
+  "obsidian-git"
+]
