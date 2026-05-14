@@ -18,7 +18,9 @@ publish_url:
 
 ## 작성된 글
 
-- 아직 없음
+- [[2026-05-14_[Database] Redis vs DB, 저장소의 목적부터 다르다]]
+- [[2026-05-14_[Database] Redis 트랜잭션은 DB 트랜잭션과 무엇이 다른가]]
+- [[2026-05-14_[Database] Redis Lock과 DB Lock은 언제 다르게 써야 할까]]
 
 ## 글의 방향
 
