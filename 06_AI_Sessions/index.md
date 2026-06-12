@@ -24,6 +24,7 @@ tags:
 - `wiki/entities/`
 - `wiki/errors/`
 - `wiki/playbooks/`
+  - [[ai-session-triage]]
 - `wiki/projects/`
 - `wiki/sources/`
 - `wiki/synthesis/`

@@ -14,6 +14,7 @@ tags:
 - [[NAMING_RULES]]
 - [[TAG_RULES]]
 - [[WORKFLOW]]
+- [[AI_WIKI_ARCHITECTURE]]
 - [[MAINTENANCE_LOG]]
 
 ## 사용 규칙

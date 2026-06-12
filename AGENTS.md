@@ -13,6 +13,7 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
 - `02_Study/`: study notes for React, Next.js, Spring, Database, Security, AI, Git, and other technical concepts
 - `03_Blog/`: blog ideas, drafts, revisions, and published writing
 - `04_Projects/`: project documentation, architecture notes, feature specs, and portfolio material
+- `06_AI_Sessions/`: cross-project AI work wiki, raw sources, conversations, and outputs
 - `05_CodingTest/`: coding test solutions, problem summaries, personal code, lecture code, and comparison notes
 - `06_Resources/`: source notes, references, links, images, PDFs, and quoted material
 - `90_Templates/`: Obsidian templates
@@ -114,6 +115,10 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
 ## Raw Source and Notion rules
 
 - Raw Source is for original source preservation and must not be rewritten.
+- Cross-project raw sources go in `06_AI_Sessions/raw/`.
+- Cross-project AI conversations go in `06_AI_Sessions/conversations/`.
+- Cross-project AI wiki notes go in `06_AI_Sessions/wiki/`.
+- Cross-project AI outputs go in `06_AI_Sessions/output/`.
 - Notion planning originals go in `04_Projects/{project}/10_RAW_SOURCE/notion/`.
 - Conversations go in `04_Projects/{project}/10_RAW_SOURCE/conversations/`.
 - Meeting notes go in `04_Projects/{project}/10_RAW_SOURCE/meetings/`.
@@ -121,6 +126,15 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
 - Codex summaries, interpretations, and structured planning documents go in `04_Projects/{project}/20_WIKI/`.
 - When processing Notion content, keep the original raw file unchanged and create or update wiki documents separately.
 - If a claim cannot be verified from the Raw Source, mark it as an open question instead of presenting it as fact.
+
+## AI Sessions rules
+
+- Use `06_AI_Sessions/` for AI work that is not clearly owned by one project.
+- Use `06_AI_Sessions/raw/` as immutable source storage.
+- Use `06_AI_Sessions/wiki/` for synthesized concepts, decisions, entities, errors, playbooks, project summaries, source summaries, and synthesis notes.
+- Use `06_AI_Sessions/index.md` as the global AI work map.
+- Use `06_AI_Sessions/log.md` as the global AI work timeline.
+- When AI session work becomes project-specific, link or summarize it into the relevant project under `04_Projects/{project}/20_CORE/` or `20_WIKI/`.
 
 ## Project document separation rules
 

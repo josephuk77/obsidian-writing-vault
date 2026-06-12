@@ -37,6 +37,16 @@ tags:
 - 정식 결정 기록: `30_DECISIONS/`
 - 상세 문제 해결 기록: `40_ERRORS/`
 
+## 영상식 3-Layer와의 연결
+
+| Layer | 프로젝트 내부 위치 | 설명 |
+| --- | --- | --- |
+| Raw Source | `10_RAW_SOURCE/` | Notion 원문, 대화, 회의록, 참고자료 원본. 수정 금지 |
+| Wiki | `20_WIKI/`, `20_CORE/`, `30_DECISIONS/`, `40_ERRORS/` | 정리된 지식, 핵심 기준, 결정, 해결 기록 |
+| Schema | `00_SCHEMA/` | INDEX, LOG, PROJECT_RULES, REPO_LINKS |
+
+프로젝트를 넘나드는 AI 업무 기록은 [[AI_WIKI_ARCHITECTURE]] 기준으로 `06_AI_Sessions/`에 둡니다.
+
 ## Notion 기획 정리 흐름
 
 1. Notion의 기획 원문을 프로젝트 `10_RAW_SOURCE/notion/`에 저장한다.

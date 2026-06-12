@@ -18,8 +18,21 @@ tags:
 | `03_Blog/` | 블로그 아이디어, 초안, 발행 기록 |
 | `04_Projects/` | 현재 기획 중인 프로젝트 허브와 프로젝트별 위키 |
 | `05_Resources/` | 주제별 참고자료, 링크, 인용, 장기 보관 자료 |
+| `06_AI_Sessions/` | 프로젝트를 넘나드는 AI 업무 위키, 대화, 원문, 산출물 |
 | `90_Templates/` | 공통 노트 템플릿 |
 | `99_System/` | vault 운영 규칙, 네이밍, 태그, 워크플로, 유지보수 로그 |
+
+## AI 업무 위키 구조
+
+이 vault는 영상의 AI 업무 위키 구조를 그대로 복사하지 않고, 개인 지식 vault와 프로젝트 허브에 맞게 확장해서 사용합니다.
+
+| Layer | 전역 위치 | 프로젝트별 위치 | 역할 |
+| --- | --- | --- | --- |
+| Raw Source | `06_AI_Sessions/raw/` | `04_Projects/{project}/10_RAW_SOURCE/` | 수정하지 않는 원본 |
+| Wiki | `06_AI_Sessions/wiki/` | `04_Projects/{project}/20_WIKI/` | AI가 정리하고 연결하는 지식 |
+| Schema | `06_AI_Sessions/index.md`, `log.md`, `AGENTS.md` | `04_Projects/{project}/00_SCHEMA/` | 운영 규칙, 지도, 작업 히스토리 |
+
+프로젝트가 명확하지 않은 AI 대화와 자료는 `06_AI_Sessions/`에 두고, 프로젝트가 명확한 자료는 `04_Projects/{project}/`에 둡니다.
 
 ## 프로젝트 기획 흐름
 
@@ -51,6 +64,7 @@ tags:
 - [[PROJECT_INDEX]]: 전체 프로젝트 목록
 - [[PROJECT_DASHBOARD]]: 전체 프로젝트 현황
 - [[NOTION_SYNC_GUIDE]]: Notion 원문 가져오기 규칙
+- [[AI_WIKI_ARCHITECTURE]]: AI 업무 위키 구조 비교와 저장 기준
 - [[VAULT_RULES]]: vault 운영 원칙
 - [[NAMING_RULES]]: 파일명 규칙
 - [[TAG_RULES]]: 태그 규칙

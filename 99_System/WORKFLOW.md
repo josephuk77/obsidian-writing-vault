@@ -29,6 +29,15 @@ tags:
 - 프로젝트 실행 기준으로 먼저 봐야 하는 핵심 정보는 `20_CORE/`에 둔다.
 - 긴 설명, 배경, 정리형 문서는 `20_WIKI/`에 둔다.
 
+## 전역 AI 업무 정리
+
+1. 프로젝트가 명확하지 않은 AI 대화는 `06_AI_Sessions/conversations/`에 저장한다.
+2. 프로젝트를 넘나드는 원문은 `06_AI_Sessions/raw/`에 저장한다.
+3. 원문을 정리한 지식은 `06_AI_Sessions/wiki/`에 저장한다.
+4. 재사용 가능한 프롬프트, 리포트, 스펙은 `06_AI_Sessions/output/`에 저장한다.
+5. 의미 있는 작업 후 `06_AI_Sessions/log.md`와 `06_AI_Sessions/index.md`를 갱신한다.
+6. 프로젝트 전용으로 정리할 내용이 생기면 해당 프로젝트의 `20_CORE/` 또는 `20_WIKI/`에 연결한다.
+
 ## 프로젝트 갱신
 
 - 전체 목록은 [[PROJECT_INDEX]]에서 관리한다.

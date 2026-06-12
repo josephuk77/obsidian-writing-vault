@@ -20,8 +20,19 @@ tags:
 2. 학습 정리는 `02_Study/`에 둔다.
 3. 프로젝트 기획은 `04_Projects/`에 둔다.
 4. 공통 참고자료는 `05_Resources/`에 둔다.
-5. 반복 작성 양식은 `90_Templates/`에 둔다.
-6. 운영 규칙은 `99_System/`에 둔다.
+5. 프로젝트를 넘나드는 AI 업무 기록은 `06_AI_Sessions/`에 둔다.
+6. 반복 작성 양식은 `90_Templates/`에 둔다.
+7. 운영 규칙은 `99_System/`에 둔다.
+
+## AI 업무 위키 원칙
+
+- 전역 AI 업무 공간은 `06_AI_Sessions/`이다.
+- 전역 Raw Source는 `06_AI_Sessions/raw/`에 둔다.
+- 전역 Wiki는 `06_AI_Sessions/wiki/`에 둔다.
+- 전역 대화 기록은 `06_AI_Sessions/conversations/`에 둔다.
+- 전역 산출물은 `06_AI_Sessions/output/`에 둔다.
+- 프로젝트가 명확한 자료는 `04_Projects/{project}/`에 둔다.
+- 세션 복구는 `index.md`와 `log.md`를 기준으로 한다.
 
 ## 프로젝트 원칙
 
