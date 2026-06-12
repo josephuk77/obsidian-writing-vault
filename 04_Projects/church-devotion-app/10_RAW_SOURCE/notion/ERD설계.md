@@ -86,14 +86,21 @@ FCM 알림
 
 ## 권한 역할
 
-권한 역할은 campus_members.role 에서 관리한다.
+권한 역할은 users.role 에서 관리한다.
 
-|값|설명|
-|---|---|
-|OWNER|캠퍼스 소유자|
-|ADMIN|관리자|
-|MEMBER|일반 구성원|
+| 값      | 설명      |
+| ------ | ------- |
+| OWNER  | 캠퍼스 소유자 |
+| ADMIN  | 관리자     |
+| MEMBER | 일반 구성원  |
+캠퍼스 campus_role
 
+| 값             | 설명   |
+| ------------- | ---- |
+| MINISTER      | 전도사님 |
+| ELDER         | 엘더   |
+| CAMPUS_LEADER | 캠장   |
+| MEMBER        | 목자들  |
 ## 운영 담당 역할
 
 운영 담당 역할은 campus_duty_assignments 에서 관리한다.
@@ -208,7 +215,6 @@ OWNER ADMIN MEMBER duty_type □ COFFEE member_status
 
 ```
 ACTIVE
-PENDING
 INACTIVE
 ```
 
