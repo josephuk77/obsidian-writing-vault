@@ -10,6 +10,25 @@ tags:
 
 ### Task
 
+- 비어 있는 폴더도 Git에 올라갈 수 있도록 `.gitkeep`을 추가했다.
+
+### Changed
+
+- `03_Blog/Drafts/AI-ML/.gitkeep`을 추가했다.
+
+### Evidence
+
+- `.obsidian/`과 `scripts/`는 수정하지 않았다.
+- `.git`과 `.obsidian`을 제외하고 비어 있는 폴더를 확인한 뒤 작업했다.
+
+### Next
+
+- 새 빈 폴더를 만들면 `.gitkeep`을 함께 추가한다.
+
+---
+
+### Task
+
 - 영상의 Obsidian 기반 AI 업무 위키 구조와 현재 vault 구조를 비교해 더 나은 혼합 구조로 확장했다.
 
 ### Changed
