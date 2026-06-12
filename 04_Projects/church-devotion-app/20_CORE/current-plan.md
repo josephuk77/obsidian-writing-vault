@@ -12,7 +12,7 @@ tags:
 
 ## Current Product Direction
 
-FaithLog MVP는 “캠퍼스 운영 자동화 앱”이다. 묵상 콘텐츠 앱이 아니라, 경건생활 제출, 예배/모임 투표, 커피 주문, 벌금/커피 청구, 납부 상태, 알림을 줄이는 운영 도구로 만든다.
+FaithLog MVP는 “캠퍼스 운영 자동화 앱”이다. 묵상 콘텐츠 앱이 아니라, 경건생활 제출, 예배/모임 일정 투표, 커피 당번/커피비, 벌금/청구, 납부 상태, 알림을 줄이는 운영 도구로 만든다. 밥/식사/점심 기능은 MVP에서 제외하고 이후 확장으로 분리한다.
 
 ## Execution Order
 
@@ -24,7 +24,7 @@ FaithLog MVP는 “캠퍼스 운영 자동화 앱”이다. 묵상 콘텐츠 앱
 | 4 | 인증/쿠키/JWT/Refresh Token hash 구현 | Codex | open |
 | 5 | 캠퍼스/멤버/권한 API 구현 | Codex | open |
 | 6 | 경건생활 하루 체크/주간 제출/벌금 청구 구현 | Codex | open |
-| 7 | 투표/커피/청구 통합 구현 | Codex | open |
+| 7 | 투표/커피비/청구 통합 구현. 단, 밥/식사 기능은 제외 | Codex | open |
 | 8 | FCM 토큰/알림/대시보드 구현 | Codex | open |
 | 9 | React Native 앱 구현 | Codex | open |
 
@@ -44,7 +44,7 @@ FaithLog MVP는 “캠퍼스 운영 자동화 앱”이다. 묵상 콘텐츠 앱
 
 ## Not in Scope Now
 
-- 점심 기능
+- 밥/식사/점심 기능 전체. MVP에서는 만들지 않고, 추후 별도 확장으로 검토
 - 카카오톡 자동 연동
 - 결제 API
 - QR/GPS 출석 인증
