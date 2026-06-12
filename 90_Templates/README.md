@@ -20,3 +20,19 @@
 - Error Note.md
 - Coding Test.md
 - Blog Draft.md
+
+## 공통 Markdown 템플릿
+
+아래 파일은 vault 운영 규칙에 맞춰 새로 추가한 공통 템플릿입니다. 기존 템플릿은 보존하고, 프로젝트 허브와 Raw Source 흐름에서는 가능한 한 아래 템플릿을 사용합니다.
+
+- [[project-note]]
+- [[raw-source]]
+- [[meeting-note]]
+- [[decision-record]]
+- [[error-note]]
+- [[daily-note]]
+- [[blog-draft]]
+
+## 프로젝트 템플릿 위치
+
+프로젝트별 폴더 구조 템플릿은 `04_Projects/_Project_Template/`에 따로 둡니다. 새 프로젝트를 만들 때는 해당 폴더 구조를 복제한 뒤 `00_SCHEMA/INDEX.md`, `00_SCHEMA/LOG.md`, `00_SCHEMA/REPO_LINKS.md`를 먼저 갱신합니다.

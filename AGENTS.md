@@ -69,3 +69,74 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
   - abrupt ending
   - missing code explanation
   - missing troubleshooting explanation
+
+## Vault hub rules
+
+- Treat this vault as a personal knowledge base, project planning hub, and future bridge to development repository wikis.
+- Do not delete existing files or folders unless the user explicitly asks.
+- Do not modify `.obsidian/` unless the user explicitly asks.
+- Do not delete or change existing files in `scripts/` unless the user explicitly asks.
+- Preserve existing file contents when updating documents; append or add clearly named sections when possible.
+- Keep `.DS_Store` ignored by git.
+
+## Project hub rules
+
+- `04_Projects/` is the hub for projects that are currently being planned.
+- Project folders are not code repositories unless `00_SCHEMA/REPO_LINKS.md` says otherwise.
+- New project folders must use kebab-case and follow `04_Projects/_Project_Template/`.
+- Every project must have:
+  - `00_SCHEMA/INDEX.md`
+  - `00_SCHEMA/LOG.md`
+  - `00_SCHEMA/PROJECT_RULES.md`
+  - `00_SCHEMA/REPO_LINKS.md`
+  - `10_RAW_SOURCE/_MANIFEST.md`
+  - `20_WIKI/project-brief.md`
+  - `20_WIKI/requirements.md`
+  - `20_WIKI/roadmap.md`
+  - `20_WIKI/open-questions.md`
+- After changing a project, update that project's `00_SCHEMA/INDEX.md` if new core documents were added.
+- After changing a project, update that project's `00_SCHEMA/LOG.md` with Task, Changed, Evidence, Decisions, Errors, and Next.
+- Keep the global project list in `04_Projects/PROJECT_INDEX.md`.
+- Keep the global status view in `04_Projects/PROJECT_DASHBOARD.md`.
+
+## Raw Source and Notion rules
+
+- Raw Source is for original source preservation and must not be rewritten.
+- Notion planning originals go in `04_Projects/{project}/10_RAW_SOURCE/notion/`.
+- Conversations go in `04_Projects/{project}/10_RAW_SOURCE/conversations/`.
+- Meeting notes go in `04_Projects/{project}/10_RAW_SOURCE/meetings/`.
+- References go in `04_Projects/{project}/10_RAW_SOURCE/references/`.
+- Codex summaries, interpretations, and structured planning documents go in `04_Projects/{project}/20_WIKI/`.
+- When processing Notion content, keep the original raw file unchanged and create or update wiki documents separately.
+- If a claim cannot be verified from the Raw Source, mark it as an open question instead of presenting it as fact.
+
+## Repo link rules
+
+- Leave repo fields blank while no development repo exists.
+- When a repo is created, update `00_SCHEMA/REPO_LINKS.md` with:
+  - Notion planning link
+  - GitHub repo link
+  - local repo path
+  - repo wiki path
+  - deploy URL
+  - API docs URL
+  - other reference links
+- Keep planning context in this vault and implementation-specific documentation in the repo or repo wiki.
+
+## File, tag, and link rules
+
+- Top-level folders should keep the current `number_English` style.
+- Project folders must use kebab-case.
+- ADR files must use `ADR-0001-title.md`.
+- Error files must use `ERR-0001-title.md`.
+- Date files must use `YYYY-MM-DD-title.md`.
+- Write tags in YAML frontmatter.
+- Use the approved tags from `99_System/TAG_RULES.md`.
+- Prefer Obsidian internal links like `[[document-name]]` when linking between notes.
+- Add new core documents to the relevant `INDEX.md`.
+
+## Maintenance rules
+
+- When changing vault structure, update `99_System/MAINTENANCE_LOG.md`.
+- When adding or changing templates, update `90_Templates/README.md`.
+- When adding a project, update `04_Projects/PROJECT_INDEX.md` and `04_Projects/PROJECT_DASHBOARD.md`.
