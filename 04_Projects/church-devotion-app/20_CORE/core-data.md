@@ -21,6 +21,7 @@ tags:
 | 납부 계좌 | 벌금/커피 계좌 및 snapshot 생성 | [[ERD설계]] | confirmed |
 | 반복 투표 템플릿 | 수요예배/토요 목자모임 반복 생성 | [[API 명세서]] | confirmed |
 | 투표/선택지/응답 | 투표 참여, 결과, 미응답자 조회 | [[ERD설계]], [[API 명세서]] | confirmed |
+| 투표 댓글 | 투표별 질의/공지/대댓글과 삭제 상태 관리 | [[ERD설계]] | confirmed |
 | 청구 항목 | 벌금과 커피비 통합 납부 흐름 | [[ERD설계]], [[API 명세서]] | confirmed |
 | FCM 토큰 | 사용자별 푸시 알림 대상 | [[API 명세서]] | confirmed |
 | 알림 로그 | 중복 방지, 실패 원인 추적 | [[ERD설계]], [[API 명세서]] | confirmed |
@@ -43,6 +44,7 @@ tags:
 | `charge_status` | `UNPAID`, `PAID`, `WAIVED`, `CANCELED` |
 | `charge_source_type` | `DEVOTION_RECORD`, `POLL_RESPONSE` |
 | `device_type` | `ANDROID`, `IOS`, `WEB` |
+| `notification_type` | `DEVOTION_REMINDER`, `DEVOTION_MISSING`, `WED_POLL_OPEN`, `WED_POLL_MISSING`, `SATURDAY_POLL_OPEN`, `SATURDAY_POLL_MISSING`, `COFFEE_POLL_OPEN`, `COFFEE_POLL_MISSING`, `PAYMENT_UNPAID`, `CUSTOM` |
 | `send_status` | `PENDING`, `SENT`, `FAILED`, `SKIPPED` |
 
 ## 벌금 기본값
@@ -62,8 +64,18 @@ tags:
 | 주간 경건생활 기록 | `campus_id + user_id + week_start_date` |
 | 하루별 경건생활 체크 | `weekly_record_id + record_date` |
 | 투표 응답 | `poll_id + user_id` |
+| 투표 응답 선택지 | `response_id + option_id` |
 | 청구 항목 | `campus_id + user_id + payment_category + source_type + source_id` |
 | FCM 토큰 | `token` |
+
+## DBML 반영 메모
+
+- `poll_templates`는 반복 투표의 시간 규칙을 저장하고, `poll_template_options`는 반복 생성 시 사용할 기본 선택지를 저장한다.
+- `polls.payment_account_id`와 `payment_category`는 투표 응답에서 청구를 만들 때 어느 계좌/분류로 청구할지 결정한다.
+- `poll_options.compose_menu_code`는 커피 메뉴 코드용이며, 가격 변경에 대비해 `price_amount` snapshot을 함께 저장한다.
+- `poll_comments`는 투표별 댓글과 대댓글을 지원하며, 삭제는 `is_deleted/deleted_at`로 처리한다.
+- `charge_items`는 계좌 snapshot(`bank_name_snapshot`, `account_number_snapshot`, `account_holder_snapshot`)을 저장해 과거 청구가 계좌 변경에 흔들리지 않게 한다.
+- `notification_logs.target_week_start_date`와 `target_id`는 주차/대상별 알림 중복 방지와 실패 추적에 사용한다.
 
 ## 실제 필요한 정보
 

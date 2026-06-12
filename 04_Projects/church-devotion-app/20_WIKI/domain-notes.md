@@ -21,8 +21,11 @@ tags:
 | 벌금 규칙 | 캠퍼스별 벌금 산정 기준 | `penalty_rules` |
 | 청구 항목 | 사용자가 납부해야 할 금액 | `charge_items` |
 | 반복 투표 템플릿 | 매주 반복 생성되는 투표 설정 | `poll_templates` |
+| 반복 투표 선택지 | 반복 투표 생성 시 복사되는 기본 선택지 | `poll_template_options` |
 | 실제 투표 | 사용자가 응답하는 투표 인스턴스 | `polls` |
 | 커피 투표 | 선택지 금액으로 커피 청구가 생성되는 투표 | `poll_type = COFFEE` |
+| 투표 응답 선택지 | 단일/다중 선택 결과 | `poll_response_options` |
+| 투표 댓글 | 투표 상세의 질문, 공지, 대댓글 | `poll_comments` |
 | 알림 로그 | 푸시 알림 발송 이력 | `notification_logs` |
 
 ## 사용자 언어
@@ -34,6 +37,8 @@ tags:
 - “커피값 냈어?” -> `charge_items.payment_category = COFFEE`
 - “납부했어요” -> 본인 청구 항목을 `PAID`로 변경
 - “수요예배 투표 안 한 사람” -> 해당 poll에 `poll_responses`가 없는 활성 멤버
+- “투표에서 어떤 선택지를 골랐어?” -> `poll_response_options`
+- “투표 댓글 남겼어?” -> `poll_comments`
 - “커피 담당” -> `campus_duty_assignments`의 활성 `COFFEE` 담당자
 
 ## 중요한 도메인 결정
@@ -44,6 +49,9 @@ tags:
 - 청구 항목은 MVP에서 `PENALTY`, `COFFEE` 두 종류만 사용한다.
 - 경건생활 청구는 제출 시점에만 만든다.
 - 커피 청구는 커피 투표 응답 시점에 만든다.
+- 커피 청구 투표는 `polls.payment_account_id`로 커피 계좌를 연결한다.
+- 반복 투표 템플릿의 선택지는 실제 투표 생성 시 `poll_options`로 복사한다.
+- 투표 댓글은 응답 데이터와 분리해서 `poll_comments`에 저장한다.
 - 사용자 직접 `PAID` 처리가 MVP 기준이다.
 
 ## 헷갈리기 쉬운 표현

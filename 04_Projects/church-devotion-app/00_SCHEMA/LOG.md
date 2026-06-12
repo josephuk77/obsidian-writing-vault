@@ -137,3 +137,26 @@ tags:
 - 실제 개발 레포를 생성하고 [[REPO_LINKS]]를 갱신한다.
 - [[open-questions]]에서 주차 기준, 제출 후 수정 정책, 납부 처리 정책을 먼저 확정한다.
 
+## 2026-06-12 DBML 수정본 기획 반영
+
+### Context
+
+- 사용자가 최신 DBML을 제공했다.
+- 디자인은 그대로 두고, 기획/요구사항/아키텍처 문서만 최신 DB 구조에 맞췄다.
+
+### Updated
+
+- [[core-data]]: `notification_type`, `poll_template_options`, `poll_response_options`, `poll_comments`, `payment_account_id`, 계좌 snapshot 메모 반영
+- [[requirements]]: 반복 투표 선택지, 단일/다중 선택, 투표 상태, 커피 계좌 연결, 투표 댓글, 세분화된 알림 유형 반영
+- [[architecture-memo]]: 반복 투표 생성, 투표 댓글, 커피 청구 생성, 알림 로그 흐름 보강
+- [[project-brief]]: 투표 댓글/대댓글과 DB 수정 기준 반영
+- [[project-facts]]: DBML 수정본 기준 핵심 사실 추가
+- [[current-plan]]: 투표 템플릿, 커피 청구, 투표 댓글 순서로 실행 계획 세분화
+- [[key-decisions]]: 반복 투표 선택지 복사, 투표 댓글 분리, 커피 청구 계좌 연결 결정 추가
+- [[feature-notes]], [[domain-notes]]: 커피 투표/댓글 도메인 설명 보강
+
+### Decisions
+
+- 밥/식사/점심 기능은 계속 MVP 제외다.
+- 커피는 MVP에 남기되, `polls.payment_account_id`, `payment_category = COFFEE`, `charge_generation_type = OPTION_PRICE` 기준으로 청구와 연결한다.
+- 투표 응답과 투표 댓글은 분리한다.

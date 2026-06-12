@@ -65,9 +65,17 @@ weekly_devotion_records
 polls
   1:N poll_options
   1:N poll_responses
+  1:N poll_comments
 
 poll_responses
+  1:N poll_response_options
   1:1 charge_items where source_type = POLL_RESPONSE and payment_category = COFFEE
+
+poll_templates
+  1:N poll_template_options
+
+payment_accounts
+  1:N charge_items
 ```
 
 ## 데이터 흐름
@@ -102,12 +110,38 @@ poll_responses
 
 ```text
 관리자 또는 커피 담당자 커피 투표 생성
+-> polls.payment_category = COFFEE, charge_generation_type = OPTION_PRICE
+-> polls.payment_account_id로 커피 계좌 연결
 -> poll_options에 compose_menu_code, content, price_amount 저장
 -> 사용자 poll_response 저장
+-> poll_response_options에 선택 옵션 저장
 -> 선택지 price_amount > 0이면 charge_items에 COFFEE 1줄 생성 또는 갱신
 ```
 
 메뉴 가격은 Spring enum의 기본값을 투표 선택지 생성 시점에 복사한다. 과거 투표 금액이 메뉴 가격 변경에 따라 바뀌면 안 되기 때문이다.
+
+### 반복 투표 생성
+
+```text
+Scheduler
+-> poll_templates 조회
+-> start_day_of_week/start_time, end_day_of_week/end_time 기준으로 polls 생성
+-> poll_template_options를 poll_options로 복사
+-> poll_status = SCHEDULED 또는 OPEN
+```
+
+반복 투표 템플릿은 수요예배와 토요 목자모임처럼 매주 반복되는 운영 투표에 사용한다. 커스텀 투표는 템플릿 없이 직접 생성할 수 있다.
+
+### 투표 댓글
+
+```text
+투표 상세 댓글 작성
+-> poll_comments 생성
+-> parent_id가 있으면 대댓글로 처리
+-> 삭제 시 is_deleted = true, deleted_at 기록
+```
+
+댓글은 투표 응답과 별개다. 응답은 `poll_responses/poll_response_options`, 논의와 질문은 `poll_comments`로 분리한다.
 
 ### 납부 처리
 
@@ -128,7 +162,7 @@ poll_responses
 Scheduler 또는 관리자 수동 요청
 -> 대상자 조회
 -> FCM 발송
--> notification_logs 저장
+-> notification_logs에 notification_type, target_week_start_date, target_id 저장
 -> 실패 토큰 비활성화 또는 재등록 유도
 ```
 
@@ -139,9 +173,11 @@ Scheduler 또는 관리자 수동 요청
 3. 경건생활 하루 체크 및 주간 제출
 4. 벌금 규칙과 `PENALTY` 청구 생성
 5. 투표 기본 구조와 미응답자 조회
-6. 커피 담당/커피 투표/`COFFEE` 청구 생성
-7. FCM 토큰/알림 로그/수동 알림
-8. Scheduler와 관리자 대시보드
+6. 반복 투표 템플릿과 선택지 복사
+7. 커피 담당/커피 투표/`COFFEE` 청구 생성
+8. 투표 댓글
+9. FCM 토큰/알림 로그/수동 알림
+10. Scheduler와 관리자 대시보드
 
 ## 리스크와 주의점
 

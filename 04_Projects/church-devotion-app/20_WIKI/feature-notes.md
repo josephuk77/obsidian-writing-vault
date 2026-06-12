@@ -76,7 +76,11 @@ tags:
 
 ### 커피
 
-커피는 점심 기능이 아니다. MVP에는 커피 투표와 커피비 청구가 포함된다. 메뉴는 Spring enum으로 관리하되, 투표 생성 시 `poll_options.price_amount`에 가격을 복사한다.
+커피는 점심 기능이 아니다. MVP에는 커피 투표와 커피비 청구가 포함된다. 메뉴는 Spring enum으로 관리하되, 투표 생성 시 `poll_options.compose_menu_code`와 `poll_options.price_amount`에 메뉴 코드와 가격 snapshot을 복사한다. 커피 투표는 `polls.payment_category = COFFEE`, `polls.charge_generation_type = OPTION_PRICE`, `polls.payment_account_id`를 함께 사용한다.
+
+### 투표 댓글
+
+투표 응답은 `poll_responses/poll_response_options`에 저장하고, 투표에 대한 질문/공지/대댓글은 `poll_comments`에 저장한다. 댓글 삭제는 `is_deleted`, `deleted_at` 기반 soft delete로 처리한다.
 
 ### 납부
 

@@ -28,6 +28,10 @@ tags:
 | 캠퍼스가 실제 운영 단위다. | `app_groups` 제거 결론 | [[ERD설계]] |
 | 청구 항목은 MVP에서 `PENALTY`, `COFFEE` 두 종류만 사용한다. | `charge_items` 통합 설계 | [[ERD설계]], [[API 명세서]] |
 | 점심 기능은 MVP에서 제외한다. | 최신 ERD 결론에 제외 명시 | [[ERD설계]] |
+| 반복 투표의 기본 선택지는 `poll_template_options`에 저장한다. | 템플릿 기반 투표 생성 시 실제 `poll_options`로 복사 | DBML 수정본 |
+| 투표 응답 선택지는 `poll_response_options`에 저장한다. | 단일/다중 선택을 같은 구조로 처리 | DBML 수정본 |
+| 투표 댓글은 `poll_comments`로 관리한다. | 응답 데이터와 논의/질문 데이터를 분리 | DBML 수정본 |
+| 커피 청구 투표는 `polls.payment_account_id`로 납부 계좌를 연결한다. | 청구 생성 시 계좌 snapshot을 고정하기 위함 | DBML 수정본 |
 
 ## Users
 
@@ -58,6 +62,7 @@ tags:
 - 경건생활 하루 체크와 주간 제출
 - 벌금 규칙과 PENALTY 청구
 - 투표 템플릿, 실제 투표, 투표 응답, 미응답자 조회
+- 투표 댓글/대댓글
 - 커피 투표와 COFFEE 청구
 - 납부 계좌, 청구 조회, 사용자 직접 납부 완료 처리
 - FCM 토큰, 알림 발송, 알림 로그

@@ -24,14 +24,16 @@ FaithLog MVP는 “캠퍼스 운영 자동화 앱”이다. 묵상 콘텐츠 앱
 | 4 | 인증/쿠키/JWT/Refresh Token hash 구현 | Codex | open |
 | 5 | 캠퍼스/멤버/권한 API 구현 | Codex | open |
 | 6 | 경건생활 하루 체크/주간 제출/벌금 청구 구현 | Codex | open |
-| 7 | 투표/커피비/청구 통합 구현. 단, 밥/식사 기능은 제외 | Codex | open |
-| 8 | FCM 토큰/알림/대시보드 구현 | Codex | open |
-| 9 | React Native 앱 구현 | Codex | open |
+| 7 | 투표 기본 구조, 반복 템플릿, 선택지 복사 구현 | Codex | open |
+| 8 | 커피 투표/커피비/청구 통합 구현. 단, 밥/식사 기능은 제외 | Codex | open |
+| 9 | 투표 댓글/대댓글 구현 | Codex | open |
+| 10 | FCM 토큰/알림/대시보드 구현 | Codex | open |
+| 11 | React Native 앱 구현 | Codex | open |
 
 ## This Week
 
 - 레포 생성 여부 결정
-- 백엔드부터 시작할지, API 문서/DBML을 더 고정할지 결정
+- 백엔드부터 시작할지, 최신 DBML 기준으로 API 문서를 먼저 갱신할지 결정
 - [[open-questions]] 중 주차 기준, 제출 후 수정 정책, 납부 처리 정책을 먼저 확정
 
 ## Blockers
