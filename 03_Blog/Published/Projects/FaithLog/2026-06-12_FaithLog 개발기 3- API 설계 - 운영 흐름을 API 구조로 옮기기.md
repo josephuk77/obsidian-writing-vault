@@ -1,3 +1,13 @@
+---
+tags:
+  - type/project
+  - area/backend
+  - status/active
+project: FaithLog
+series: FaithLog 개발기
+published: true
+created: 2026-06-12
+---
 
 # FaithLog 개발기 API 설계: 운영 흐름을 API 구조로 옮기기
 

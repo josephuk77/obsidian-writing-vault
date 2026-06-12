@@ -6,7 +6,7 @@ tags:
 project: FaithLog
 series: FaithLog 개발기
 published: true
-created: 2026-06-12
+created: 2026-06-11
 ---
 
 # [FaithLog 개발기 2] ERD 설계: 운영 흐름을 데이터 구조로 옮기기
