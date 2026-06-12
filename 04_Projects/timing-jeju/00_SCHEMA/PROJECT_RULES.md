@@ -27,3 +27,10 @@ tags:
 - 새 위키 문서를 추가하면 [[INDEX]]에 링크합니다.
 - 확정되지 않은 내용은 [[open-questions]]에 남깁니다.
 - 개발 레포가 생기면 [[REPO_LINKS]]를 갱신합니다.
+
+## 에이전트 명령 규칙
+
+- `Save`: 저장 전 [[SAVE_FILTERS]]를 적용합니다.
+- `Reference`: 이 프로젝트의 [[INDEX]]와 [[LOG]]를 먼저 읽습니다.
+- `Ingest`: 원문은 `10_RAW_SOURCE/`에 보존하고 정리본은 `20_WIKI/`와 `20_CORE/`에 분리합니다.
+- `Lint`: [[LINT_RULES]] 기준으로 출처, 결정 근거, 인덱스/로그 누락을 검사합니다.

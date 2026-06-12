@@ -10,6 +10,29 @@ tags:
 
 ### Task
 
+- AI 에이전트 협업 기준에 맞춰 Save, Reference, Ingest, Lint 운영 체계를 추가했다.
+
+### Changed
+
+- [[COMMANDS]], [[SAVE_FILTERS]], [[REFERENCE_RESTORE]], [[LINT_RULES]]를 추가했다.
+- Claude Code용 `CLAUDE.md`와 `06_AI_Sessions/CLAUDE.md`를 추가했다.
+- [[save-reference-ingest-lint]] 플레이북을 추가했다.
+- [[README]], [[WORKFLOW]], [[AI_WIKI_ARCHITECTURE]], `AGENTS.md`, `06_AI_Sessions/index.md`, `06_AI_Sessions/log.md`를 갱신했다.
+
+### Evidence
+
+- 저장 5필터, Raw/Wiki/Core 분리, 세션 복원 순서, Lint 검사 기준을 문서화했다.
+- `.obsidian/`과 `scripts/`는 수정하지 않았다.
+
+### Next
+
+- 사용자가 "Obsidian에 저장해줘"라고 하면 `Save` 명령으로 해석하고 [[SAVE_FILTERS]]를 먼저 적용한다.
+- 사용자가 "Obsidian 참고해서 복원해줘"라고 하면 `Reference` 명령으로 해석하고 [[REFERENCE_RESTORE]]를 따른다.
+
+---
+
+### Task
+
 - 비어 있는 폴더도 Git에 올라갈 수 있도록 `.gitkeep`을 추가했다.
 
 ### Changed

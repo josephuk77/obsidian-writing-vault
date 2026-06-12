@@ -34,6 +34,19 @@ tags:
 
 프로젝트가 명확하지 않은 AI 대화와 자료는 `06_AI_Sessions/`에 두고, 프로젝트가 명확한 자료는 `04_Projects/{project}/`에 둡니다.
 
+## AI 업무 명령
+
+이 vault는 한글 설명과 영어 명령어를 섞어 사용합니다. 사람이 편집하는 규칙은 한국어로 쓰고, 에이전트 실행 키워드는 영어로 고정합니다.
+
+| Command | 의미 | 기준 문서 |
+| --- | --- | --- |
+| `Save` | 저장 필터를 통과한 내용만 Raw/Wiki/Core에 저장 | [[COMMANDS]], [[SAVE_FILTERS]] |
+| `Reference` | index/log를 읽고 이전 맥락 복원 | [[REFERENCE_RESTORE]] |
+| `Ingest` | 원문을 Raw에 보존하고 정리본을 Wiki/Core에 생성 | [[COMMANDS]] |
+| `Lint` | 맥락 오염, 출처 없는 결정, 오래된 규칙 검사 | [[LINT_RULES]] |
+
+저장 전에는 반드시 [[SAVE_FILTERS]]의 5필터를 적용합니다.
+
 ## 프로젝트 기획 흐름
 
 1. Notion에서 프로젝트 기획 원문을 가져온다.
@@ -65,6 +78,10 @@ tags:
 - [[PROJECT_DASHBOARD]]: 전체 프로젝트 현황
 - [[NOTION_SYNC_GUIDE]]: Notion 원문 가져오기 규칙
 - [[AI_WIKI_ARCHITECTURE]]: AI 업무 위키 구조 비교와 저장 기준
+- [[COMMANDS]]: Save, Reference, Ingest, Lint 명령 규칙
+- [[SAVE_FILTERS]]: Wiki/Core 저장 전 5가지 필터
+- [[REFERENCE_RESTORE]]: 세션 복원 순서
+- [[LINT_RULES]]: 맥락 오염 검사 규칙
 - [[VAULT_RULES]]: vault 운영 원칙
 - [[NAMING_RULES]]: 파일명 규칙
 - [[TAG_RULES]]: 태그 규칙

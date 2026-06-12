@@ -136,6 +136,16 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
 - Use `06_AI_Sessions/log.md` as the global AI work timeline.
 - When AI session work becomes project-specific, link or summarize it into the relevant project under `04_Projects/{project}/20_CORE/` or `20_WIKI/`.
 
+## Natural command rules
+
+- `Save`: before saving, apply `99_System/SAVE_FILTERS.md`.
+- `Reference`: restore context using `99_System/REFERENCE_RESTORE.md`.
+- `Ingest`: preserve originals in Raw Source and create processed notes in Wiki/Core.
+- `Lint`: inspect context pollution using `99_System/LINT_RULES.md`.
+- Do not promote one-off answers, unverified drafts, or unsupported speculation into Wiki/Core.
+- After a successful command, update the relevant index and log files.
+- Claude Code should read `CLAUDE.md`; Codex should read `AGENTS.md`. Both must follow the same `99_System/` command rules.
+
 ## Project document separation rules
 
 - User-authored project documents go in `04_Projects/{project}/15_MY_DOCUMENTS/`.

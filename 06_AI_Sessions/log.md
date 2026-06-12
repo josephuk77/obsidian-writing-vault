@@ -12,6 +12,36 @@ AI 업무 작업 타임라인입니다. 세션이 끊겨도 이 문서와 [[inde
 
 ### Task
 
+- AI 에이전트 협업용 운영 명령과 맥락 오염 방지 규칙 보강
+
+### Changed
+
+- [[COMMANDS]], [[SAVE_FILTERS]], [[REFERENCE_RESTORE]], [[LINT_RULES]]를 추가했다.
+- Claude Code용 `CLAUDE.md`와 `06_AI_Sessions/CLAUDE.md`를 추가했다.
+- [[save-reference-ingest-lint]] 플레이북을 추가했다.
+- `index.md`와 `AGENTS.md`에 Save, Reference, Ingest, Lint 규칙을 연결했다.
+
+### Evidence
+
+- Raw Source 불변, Wiki/Core 승격 필터, 세션 복원 순서, Lint 검사 기준을 문서화했다.
+
+### Decisions
+
+- 사람용 설명은 한국어로 유지한다.
+- 에이전트 명령 키워드는 `Save`, `Reference`, `Ingest`, `Lint`로 고정한다.
+
+### Errors
+
+- 없음
+
+### Next
+
+- 실제 작업에서 `Save` 요청이 들어오면 [[SAVE_FILTERS]]를 먼저 적용한다.
+
+---
+
+### Task
+
 - 영상의 AI 업무 위키 구조를 vault에 맞게 적용
 
 ### Changed

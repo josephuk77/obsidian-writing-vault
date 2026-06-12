@@ -25,6 +25,7 @@ tags:
 - `wiki/errors/`
 - `wiki/playbooks/`
   - [[ai-session-triage]]
+  - [[save-reference-ingest-lint]]
 - `wiki/projects/`
 - `wiki/sources/`
 - `wiki/synthesis/`
@@ -51,4 +52,8 @@ tags:
 - [[VAULT_RULES]]
 - [[WORKFLOW]]
 - [[AI_WIKI_ARCHITECTURE]]
+- [[COMMANDS]]
+- [[SAVE_FILTERS]]
+- [[REFERENCE_RESTORE]]
+- [[LINT_RULES]]
 - [[MAINTENANCE_LOG]]

@@ -22,6 +22,7 @@ tags:
 - 원본 아티클, 논문, 회의록, 메모, 스크린샷은 `raw/`에 저장합니다.
 - AI가 정리한 업무 지식은 `wiki/`에 저장합니다.
 - 최종 산출물은 `output/`에 저장합니다.
+- 저장 전 [[SAVE_FILTERS]]의 5필터를 적용합니다.
 
 ## Raw Source 규칙
 
@@ -47,3 +48,10 @@ tags:
 - 의미 있는 구조 변경, 대화 정리, 산출물 생성 후 `log.md`를 갱신합니다.
 - 새 핵심 문서를 만들면 `index.md`에 링크를 추가합니다.
 - 프로젝트 전용 내용이면 `04_Projects/{project}/00_SCHEMA/LOG.md`도 갱신합니다.
+
+## 자연어 명령 규칙
+
+- `Save`: [[SAVE_FILTERS]]를 통과한 내용만 저장합니다.
+- `Reference`: [[REFERENCE_RESTORE]]에 따라 `index.md`와 `log.md`부터 읽습니다.
+- `Ingest`: 원문은 `raw/`에 보존하고 정리본은 `wiki/`에 작성합니다.
+- `Lint`: [[LINT_RULES]]에 따라 맥락 오염을 점검합니다.

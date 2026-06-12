@@ -44,3 +44,16 @@ tags:
 - 실제 프로젝트 진행 기준은 `20_CORE/`에 둡니다.
 - 세션 복구는 `index.md`와 `log.md`를 기준으로 합니다.
 - 프로젝트별 세션 복구는 `04_Projects/{project}/00_SCHEMA/INDEX.md`와 `LOG.md`를 기준으로 합니다.
+
+## 운영 명령
+
+- [[COMMANDS]]
+- [[SAVE_FILTERS]]
+- [[REFERENCE_RESTORE]]
+- [[LINT_RULES]]
+
+## Claude/Codex 규칙 파일
+
+- Codex: `AGENTS.md`
+- Claude Code: `CLAUDE.md`
+- 전역 AI 업무: `06_AI_Sessions/AGENTS.md`, `06_AI_Sessions/CLAUDE.md`

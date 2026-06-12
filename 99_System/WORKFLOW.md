@@ -38,6 +38,13 @@ tags:
 5. 의미 있는 작업 후 `06_AI_Sessions/log.md`와 `06_AI_Sessions/index.md`를 갱신한다.
 6. 프로젝트 전용으로 정리할 내용이 생기면 해당 프로젝트의 `20_CORE/` 또는 `20_WIKI/`에 연결한다.
 
+## 자연어 명령 운영
+
+- `Save`: [[SAVE_FILTERS]]를 통과한 내용만 저장한다.
+- `Reference`: [[REFERENCE_RESTORE]] 순서로 맥락을 복원한다.
+- `Ingest`: 원문은 Raw에 보존하고 정리본은 Wiki/Core에 분리한다.
+- `Lint`: [[LINT_RULES]] 기준으로 맥락 오염을 검사한다.
+
 ## 프로젝트 갱신
 
 - 전체 목록은 [[PROJECT_INDEX]]에서 관리한다.
