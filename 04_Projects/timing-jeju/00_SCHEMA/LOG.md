@@ -12,6 +12,37 @@ tags:
 
 ### Task
 
+- 프로젝트 내부 문서 공간을 사용자 문서, AI 맥락, 핵심 정보로 분리
+
+### Changed
+
+- `15_MY_DOCUMENTS/`를 추가했다.
+- `16_AI_CONTEXT/`를 추가했다.
+- `20_CORE/`를 추가했다.
+- [[INDEX]]와 [[PROJECT_RULES]]를 새 구조에 맞게 갱신했다.
+
+### Evidence
+
+- 기존 `20_WIKI/`, `30_DECISIONS/`, `40_ERRORS/`는 유지했다.
+
+### Decisions
+
+- 사용자가 직접 쓴 프로젝트 문서는 `15_MY_DOCUMENTS/`에 둔다.
+- AI 작업 가정과 조사 큐는 `16_AI_CONTEXT/`에 둔다.
+- 실제 진행 기준 정보는 `20_CORE/`에 둔다.
+
+### Errors
+
+- 없음
+
+### Next
+
+- Notion 원문 수집 후 [[project-facts]], [[core-data]], [[current-plan]]을 갱신한다.
+
+## 2026-06-12
+
+### Task
+
 - 프로젝트 기획 허브 초기 구조 생성
 
 ### Changed

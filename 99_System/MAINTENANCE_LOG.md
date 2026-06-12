@@ -10,6 +10,30 @@ tags:
 
 ### Task
 
+- 프로젝트 폴더 안에 사용자 작성 문서, AI 작업 맥락, 실제 핵심 정보 공간을 분리했다.
+
+### Changed
+
+- `_Project_Template/`, `church-devotion-app/`, `timing-jeju/`에 `15_MY_DOCUMENTS/`, `16_AI_CONTEXT/`, `20_CORE/`를 추가했다.
+- `20_CORE/`에 `project-facts.md`, `core-data.md`, `key-decisions.md`, `solved-issues.md`, `current-plan.md`를 추가했다.
+- `16_AI_CONTEXT/`에 `ai-brief.md`, `assumptions.md`, `research-queue.md`, `handoff.md`를 추가했다.
+- 프로젝트 `INDEX.md`, [[WORKFLOW]], [[VAULT_RULES]], [[NOTION_SYNC_GUIDE]], `AGENTS.md`를 새 분류에 맞게 갱신했다.
+
+### Evidence
+
+- 기존 `20_WIKI/`, `30_DECISIONS/`, `40_ERRORS/`는 삭제하지 않고 역할을 상세 문서/정식 기록으로 유지했다.
+- `.obsidian/`과 `scripts/`는 수정하지 않았다.
+
+### Next
+
+- 사용자가 직접 쓴 프로젝트 문서는 `15_MY_DOCUMENTS/`에 넣는다.
+- AI 작업 가정과 핸드오프는 `16_AI_CONTEXT/`에 넣는다.
+- 실제 프로젝트 진행 기준은 `20_CORE/`에 요약한다.
+
+---
+
+### Task
+
 - vault를 개인 지식, 프로젝트 기획 허브, 향후 개발 레포 wiki 연결 구조로 정리했다.
 
 ### Changed

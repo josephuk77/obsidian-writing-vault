@@ -90,6 +90,18 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
   - `00_SCHEMA/PROJECT_RULES.md`
   - `00_SCHEMA/REPO_LINKS.md`
   - `10_RAW_SOURCE/_MANIFEST.md`
+  - `15_MY_DOCUMENTS/README.md`
+  - `16_AI_CONTEXT/README.md`
+  - `16_AI_CONTEXT/ai-brief.md`
+  - `16_AI_CONTEXT/assumptions.md`
+  - `16_AI_CONTEXT/research-queue.md`
+  - `16_AI_CONTEXT/handoff.md`
+  - `20_CORE/README.md`
+  - `20_CORE/project-facts.md`
+  - `20_CORE/core-data.md`
+  - `20_CORE/key-decisions.md`
+  - `20_CORE/solved-issues.md`
+  - `20_CORE/current-plan.md`
   - `20_WIKI/project-brief.md`
   - `20_WIKI/requirements.md`
   - `20_WIKI/roadmap.md`
@@ -109,6 +121,17 @@ This repository is an Obsidian vault for Korean developer notes, study logs, tro
 - Codex summaries, interpretations, and structured planning documents go in `04_Projects/{project}/20_WIKI/`.
 - When processing Notion content, keep the original raw file unchanged and create or update wiki documents separately.
 - If a claim cannot be verified from the Raw Source, mark it as an open question instead of presenting it as fact.
+
+## Project document separation rules
+
+- User-authored project documents go in `04_Projects/{project}/15_MY_DOCUMENTS/`.
+- AI working context, assumptions, research queue, and handoff notes go in `04_Projects/{project}/16_AI_CONTEXT/`.
+- The current source of truth for practical project execution goes in `04_Projects/{project}/20_CORE/`.
+- `20_CORE/project-facts.md` should contain confirmed facts only.
+- `20_CORE/core-data.md` should contain data and information actually needed to build or plan the project.
+- `20_CORE/key-decisions.md` should summarize important decisions; formal decision records still go in `30_DECISIONS/`.
+- `20_CORE/solved-issues.md` should summarize important resolutions; detailed error records still go in `40_ERRORS/`.
+- Do not put uncertain AI speculation in `20_CORE/`; put it in `16_AI_CONTEXT/assumptions.md` or `20_WIKI/open-questions.md`.
 
 ## Repo link rules
 

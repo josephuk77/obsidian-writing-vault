@@ -16,6 +16,28 @@ tags:
 - `10_RAW_SOURCE/meetings/`
 - `10_RAW_SOURCE/references/`
 
+## My Documents
+
+- `15_MY_DOCUMENTS/README.md`
+- `15_MY_DOCUMENTS/drafts/`
+- `15_MY_DOCUMENTS/notes/`
+- `15_MY_DOCUMENTS/reviews/`
+
+## AI Context
+
+- [[ai-brief]]
+- [[assumptions]]
+- [[research-queue]]
+- [[handoff]]
+
+## Core
+
+- [[project-facts]]
+- [[core-data]]
+- [[key-decisions]]
+- [[solved-issues]]
+- [[current-plan]]
+
 ## Project Wiki
 
 - [[project-brief]]

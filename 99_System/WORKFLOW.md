@@ -16,9 +16,18 @@ tags:
 
 1. Notion 원문을 프로젝트의 `10_RAW_SOURCE/notion/`에 저장한다.
 2. 원문 파일에는 [[raw-source]] 템플릿을 사용한다.
-3. Codex에게 원문을 바탕으로 `20_WIKI/` 문서를 갱신하게 한다.
-4. 새 결정이 생기면 `30_DECISIONS/`에 ADR로 남긴다.
-5. 막힌 점은 `20_WIKI/open-questions.md`와 `PROJECT_DASHBOARD.md`에 반영한다.
+3. Codex에게 원문을 바탕으로 `20_WIKI/` 상세 문서를 갱신하게 한다.
+4. 실제 진행에 필요한 확정 정보는 `20_CORE/`에 요약한다.
+5. 새 결정이 생기면 `20_CORE/key-decisions.md`에 먼저 요약하고, 정식 기록이 필요하면 `30_DECISIONS/`에 ADR로 남긴다.
+6. 해결한 중요한 문제는 `20_CORE/solved-issues.md`에 요약하고, 상세 기록이 필요하면 `40_ERRORS/`에 남긴다.
+7. 막힌 점은 `20_WIKI/open-questions.md`, `16_AI_CONTEXT/research-queue.md`, `PROJECT_DASHBOARD.md`에 반영한다.
+
+## 프로젝트 문서 분리
+
+- 사용자가 직접 작성한 문서와 초안은 `15_MY_DOCUMENTS/`에 둔다.
+- AI가 작업하며 필요한 가정, 추론, 조사 큐, 핸드오프는 `16_AI_CONTEXT/`에 둔다.
+- 프로젝트 실행 기준으로 먼저 봐야 하는 핵심 정보는 `20_CORE/`에 둔다.
+- 긴 설명, 배경, 정리형 문서는 `20_WIKI/`에 둔다.
 
 ## 프로젝트 갱신
 
@@ -29,5 +38,5 @@ tags:
 ## 개발 레포 생성 이후
 
 1. 프로젝트의 `00_SCHEMA/REPO_LINKS.md`에 repo 정보를 채운다.
-2. vault 위키에는 기획 맥락과 의사결정을 유지한다.
+2. vault의 `20_CORE/`에는 프로젝트 핵심 기준 정보를 유지한다.
 3. repo wiki에는 구현, 운영, 배포, API 문서를 연결한다.
