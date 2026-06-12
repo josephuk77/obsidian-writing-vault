@@ -17,6 +17,8 @@ tags:
 | 아직 실제 개발 레포는 없다. | 초기 vault 구조 정리 | [[REPO_LINKS]] |
 | 현재 상태는 planning이다. | 프로젝트 인덱스 초기화 | [[INDEX]] |
 | Notion 원문은 아직 수집되지 않았다. | Raw Source manifest 비어 있음 | [[_MANIFEST]] |
+| 서비스 전체 권한은 `USER`, `MANAGER`, `ADMIN`이다. | `users.role`에 `user_role` 적용 | [[ERD설계]] |
+| 캠퍼스 내부 역할은 `MINISTER`, `ELDER`, `CAMPUS_LEADER`, `MEMBER`이다. | `campus_members.campus_role`에 `campus_role` 적용 | [[ERD설계]] |
 
 ## Users
 

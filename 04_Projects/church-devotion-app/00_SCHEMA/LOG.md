@@ -12,6 +12,38 @@ tags:
 
 ### Task
 
+- users와 campus_members 역할 구조 변경을 Notion/Obsidian 문서에 반영
+
+### Changed
+
+- [[ERD설계]]에서 `user_role`, `campus_role`, `users.role`, `campus_members.campus_role` 기준으로 수정했다.
+- Notion `대학부 앱 개발 > ERD 설계 > FaithLog ERD 설계` 문서의 권한 설명, 테이블 설명, DBML을 같은 기준으로 수정했다.
+- [[key-decisions]]와 [[project-facts]]에 권한 분리 결정을 추가했다.
+
+### Evidence
+
+- 서비스 전체 권한: `USER`, `MANAGER`, `ADMIN`
+- 캠퍼스 내부 역할: `MINISTER`, `ELDER`, `CAMPUS_LEADER`, `MEMBER`
+- 멤버 상태: `ACTIVE`, `INACTIVE`
+
+### Decisions
+
+- 전역 권한은 `users.role`에서 관리한다.
+- 캠퍼스별 운영 역할은 `campus_members.campus_role`에서 관리한다.
+- 커피 담당은 `campus_members.campus_role`에 넣지 않고 `campus_duty_assignments`로 분리한다.
+
+### Errors
+
+- 없음
+
+### Next
+
+- API 구현 시 `role`과 `campusRole` 응답 필드가 이 분리 기준을 따르는지 확인한다.
+
+## 2026-06-12
+
+### Task
+
 - 프로젝트 내부 문서 공간을 사용자 문서, AI 맥락, 핵심 정보로 분리
 
 ### Changed

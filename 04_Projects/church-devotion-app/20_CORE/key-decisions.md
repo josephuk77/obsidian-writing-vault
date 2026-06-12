@@ -12,7 +12,8 @@ tags:
 
 | Date | Decision | Reason | Evidence | ADR |
 | --- | --- | --- | --- | --- |
-|  |  |  |  |  |
+| 2026-06-12 | 서비스 전체 권한은 `users.role`, 캠퍼스 내부 역할은 `campus_members.campus_role`로 분리한다. | 전역 권한과 캠퍼스별 운영 권한의 책임 범위가 다르기 때문 | [[ERD설계]] |  |
+| 2026-06-12 | `campus_members.status`는 `ACTIVE`, `INACTIVE`만 사용한다. | 가입 대기 상태를 MVP 권한/멤버십 흐름에서 제외하고 단순화하기 위함 | [[ERD설계]] |  |
 
 ## Pending Decisions
 

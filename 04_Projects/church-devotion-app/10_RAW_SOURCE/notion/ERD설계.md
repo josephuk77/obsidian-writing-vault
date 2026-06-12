@@ -90,10 +90,11 @@ FCM 알림
 
 | 값      | 설명      |
 | ------ | ------- |
-| OWNER  | 캠퍼스 소유자 |
-| ADMIN  | 관리자     |
-| MEMBER | 일반 구성원  |
-캠퍼스 campus_role
+| USER   | 일반 사용자  |
+| MANAGER | 캠퍼스 생성 가능 |
+| ADMIN  | 전체 관리자  |
+
+캠퍼스 내부 역할은 campus_members.campus_role 에서 관리한다.
 
 | 값             | 설명   |
 | ------------- | ---- |
@@ -113,7 +114,7 @@ MVP에서는 커피 담당자만 둔다.
 
 커피 담당자는 커피 투표 생성, 커피 계좌 관리, 커피 주문 확인을 할 수 있다.
 
-한 사용자가 일반 구성원이면서 커피 담당일 수 있으므로 campus_members.role 에 COFFEE 를 넣지 않고 별도 테이블로 분리한다.
+한 사용자가 일반 구성원이면서 커피 담당일 수 있으므로 campus_members.campus_role 에 COFFEE 를 넣지 않고 별도 테이블로 분리한다.
 
 ## 6. 청구 구조
 
@@ -209,9 +210,15 @@ campuses 1 : N notification_logs
 
 ## 9. Enum 설계
 
-실제 구현에서는 PostgreSQL DB enum보다 Spring enum + DB varchar 저장 방식을 추천한다. dbdiagram.io에서는 보기 쉽게 Enum으로 표현한다. member_role
+실제 구현에서는 PostgreSQL DB enum보다 Spring enum + DB varchar 저장 방식을 추천한다. dbdiagram.io에서는 보기 쉽게 Enum으로 표현한다.
 
-OWNER ADMIN MEMBER duty_type □ COFFEE member_status
+user_role: USER, MANAGER, ADMIN
+
+campus_role: MINISTER, ELDER, CAMPUS_LEADER, MEMBER
+
+duty_type: COFFEE
+
+member_status
 
 ```
 ACTIVE
@@ -368,7 +375,8 @@ ComposeMenu(String displayName, TemperatureType temperatureType, int defaultPric
 
 사용자 기본 정보를 저장한다.
 
-권한은 users 가 아니라 campus_members 에서 관리한다.
+서비스 전체 권한은 users.role 에서 관리한다.
+캠퍼스 내부 역할은 campus_members.campus_role 에서 별도로 관리한다.
 
 |컬럼명|타입|설명|
 |---|---|---|
@@ -376,6 +384,7 @@ ComposeMenu(String displayName, TemperatureType temperatureType, int defaultPric
 |name|varchar|사용자 이름|
 |email|varchar|로그인 이메일|
 |password_hash|varchar|암호화된 비밀번호|
+|role|enum/varchar|USER, MANAGER, ADMIN|
 |is_active|boolean|활성 여부|
 |last_login_at|timestamptz|마지막 로그인 시간|
 |created_at|timestamptz|생성일|
@@ -434,8 +443,8 @@ invite_code unique
 |id|bigint|PK|
 |campus_id|bigint|캠퍼스 ID|
 |user_id|bigint|사용자 ID|
-|role|enum/varchar|OWNER, ADMIN, MEMBER|
-|status|enum/varchar|ACTIVE, PENDING, INACTIVE|
+|campus_role|enum/varchar|MINISTER, ELDER, CAMPUS_LEADER, MEMBER|
+|status|enum/varchar|ACTIVE, INACTIVE|
 |joined_at|timestamptz|가입일|
 |created_at|timestamptz|생성일|
 |updated_at|timestamptz|수정일|
@@ -899,7 +908,7 @@ PENALTY / 2026년 6월 2주차 벌금 / 2,500원 / UNPAID
 
 ## 커피 투표 생성
 
-COFFEE 담당자 또는 ADMIN/OWNER가 커피 투표 생성 → Spring ComposeMenu enum에서 메뉴 선택 → poll_options에 content, compose_menu_code, price_amount 저장
+COFFEE 담당자 또는 ADMIN, MINISTER, ELDER, CAMPUS_LEADER가 커피 투표 생성 → Spring ComposeMenu enum에서 메뉴 선택 → poll_options에 content, compose_menu_code, price_amount 저장
 
 ## 커피 주문과 청구 생성
 
@@ -1057,9 +1066,16 @@ charge_items.status = UNPAID
 ## 15. dbdiagram.io용 DBML 초안
 
 ```
-Enum member_role {
-  OWNER
+Enum user_role {
+  USER
+  MANAGER
   ADMIN
+}
+
+Enum campus_role {
+  MINISTER
+  ELDER
+  CAMPUS_LEADER
   MEMBER
 }
 
@@ -1069,7 +1085,6 @@ Enum duty_type {
 
 Enum member_status {
   ACTIVE
-  PENDING
   INACTIVE
 }
 
@@ -1156,6 +1171,9 @@ Table users {
   name varchar(100) [not null]
   email varchar(255) [not null, unique]
   password_hash varchar(255) [not null]
+
+  role user_role [not null, default: 'USER']
+
   is_active boolean [not null, default: true]
   last_login_at timestamptz
   created_at timestamptz [not null]
@@ -1186,7 +1204,9 @@ Table campus_members {
   id bigint [pk, increment]
   campus_id bigint [not null]
   user_id bigint [not null]
-  role member_role [not null, default: 'MEMBER']
+
+  campus_role campus_role [not null, default: 'MEMBER']
+
   status member_status [not null, default: 'ACTIVE']
   joined_at timestamptz
   created_at timestamptz [not null]
