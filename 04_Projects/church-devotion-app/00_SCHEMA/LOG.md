@@ -99,3 +99,41 @@ tags:
 
 - Notion 기획 원문을 `10_RAW_SOURCE/notion/`에 추가한다.
 - [[project-brief]], [[requirements]], [[roadmap]], [[open-questions]]를 실제 기획 내용으로 갱신한다.
+
+## 2026-06-12
+
+### Task
+
+- Notion 원문 기반 FaithLog MVP 기획, 위키, 코어 기준 문서 갱신
+
+### Changed
+
+- [[project-brief]]에 FaithLog의 문제 정의, 대상 사용자, MVP 범위, 제외 범위, 성공 기준을 정리했다.
+- [[requirements]]에 인증, 캠퍼스, 경건생활, 청구, 투표, 커피, 알림, 대시보드 요구사항을 정리했다.
+- [[architecture-memo]]에 React Native, Spring Boot, Supabase PostgreSQL, FCM 구조와 핵심 데이터 흐름을 정리했다.
+- [[feature-notes]], [[domain-notes]], [[roadmap]], [[open-questions]]를 Notion 원문 기반으로 갱신했다.
+- [[project-facts]], [[core-data]], [[key-decisions]], [[current-plan]], [[solved-issues]]를 현재 구현 기준으로 갱신했다.
+- [[INDEX]]의 현재 상태를 Notion 원문 수집 완료로 바꿨다.
+
+### Evidence
+
+- Raw Source: [[기획서]], [[API 명세서]], [[ERD설계]]
+- 최신 MVP 기준: `campuses/campus_members`, `charge_items`, `weekly_devotion_records`, `devotion_daily_checks`, `polls`, `poll_responses`, `notification_logs`
+
+### Decisions
+
+- 캠퍼스가 실제 운영 단위이며 `app_groups`는 만들지 않는다.
+- 점심 기능은 MVP에서 제외한다.
+- 납부 흐름은 사용자 직접 `PAID` 처리 기준으로 정리한다.
+- 벌금과 커피비는 `charge_items`에서 `PENALTY`, `COFFEE`로 통합 관리한다.
+- 커피 담당은 `campus_duty_assignments`로 분리한다.
+
+### Errors
+
+- gstack autoplan 전체 프리플라이트는 telemetry/gbrain sync 가능성 때문에 실행하지 않았다. 로컬 파일 읽기와 문서 작성 중심으로 진행했다.
+
+### Next
+
+- 실제 개발 레포를 생성하고 [[REPO_LINKS]]를 갱신한다.
+- [[open-questions]]에서 주차 기준, 제출 후 수정 정책, 납부 처리 정책을 먼저 확정한다.
+
