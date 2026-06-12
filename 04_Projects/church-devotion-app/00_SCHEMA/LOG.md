@@ -160,3 +160,23 @@ tags:
 - 밥/식사/점심 기능은 계속 MVP 제외다.
 - 커피는 MVP에 남기되, `polls.payment_account_id`, `payment_category = COFFEE`, `charge_generation_type = OPTION_PRICE` 기준으로 청구와 연결한다.
 - 투표 응답과 투표 댓글은 분리한다.
+
+## 2026-06-12 디자인 최종 세트 반영
+
+### Context
+
+- 사용자가 Figma 디자인 작업이 끝났고, 맨 밑에 있는 세트를 최종 기준으로 사용할 것이라고 결정했다.
+- Figma 파일에서 `FaithLog Mobile Wireframes v2` 페이지의 최하단 세트를 확인했다.
+
+### Updated
+
+- [[design-decision]] 생성
+- [[INDEX]]에 디자인 기준 문서 추가
+- [[roadmap]]에 Figma 최하단 디자인 세트 확정 항목 추가
+- [[project-brief]] 최신 기준에 디자인 기준 연결 추가
+
+### Decisions
+
+- 구현 디자인 기준은 Figma `FaithLog Mobile Wireframes v2` 페이지의 맨 밑 세트다.
+- `Warm Campus Notebook v1`은 참고용 탐색물로만 둔다.
+- 디자인은 더 수정하지 않고, 위키 기준만 반영한다.

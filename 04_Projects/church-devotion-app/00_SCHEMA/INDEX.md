@@ -49,6 +49,7 @@ tags:
 - [[architecture-memo]]
 - [[domain-notes]]
 - [[feature-notes]]
+- [[design-decision]]
 
 ## Decisions
 
@@ -75,3 +76,4 @@ tags:
 - Repo 연결: 미연결
 - MVP 기준: 캠퍼스 중심 구조, 경건생활, 투표, 커피, 벌금/커피 청구, 알림
 - MVP 제외: 점심 기능, 결제 API, 카카오톡 자동 연동, QR/GPS, AI 묵상 분석, 관리자 납부 승인 전용 플로우
+- 디자인 기준: Figma `FaithLog Mobile Wireframes v2` 페이지의 맨 밑 세트
