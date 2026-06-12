@@ -10,7 +10,9 @@ tags:
 
 | Date | Source | Location | Summary | Processed |
 | --- | --- | --- | --- | --- |
-|  |  |  |  |  |
+| 2026-06-12 | Notion | `10_RAW_SOURCE/notion/기획서.md` | FaithLog 프로젝트 기획 원문 | yes |
+| 2026-06-12 | Notion | `10_RAW_SOURCE/notion/ERD설계.md` | FaithLog ERD 설계 원문 | yes |
+| 2026-06-12 | Notion | `10_RAW_SOURCE/notion/API 명세서.md` | FaithLog API 명세 원문 | yes |
 
 ## Raw Source 규칙
 
