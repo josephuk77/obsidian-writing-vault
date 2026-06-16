@@ -47,6 +47,13 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - #16 Kanban Status: Code Review -> Done
   - #23~#26 누락된 Priority/Estimate/Work Type/Epic/Release/Domain 필드 보강
   - #23, #24 Domain은 single-select 제약과 혼합 도메인 표기 때문에 pending decision으로 남김
+- Codex Hook 세팅 수치:
+  - GitHub Issue 생성: 1개 (#43)
+  - GitHub Project 카드 연결: 1개
+  - Project 카드 상태: In Progress
+  - 개발 규칙 문서 추가: 1개 (`docs/codex/FAITHLOG_CODEX_HOOK.md`)
+  - README Codex Hook 링크 추가: 1개
+  - 금지어 검색 결과: 허용 문서 외 0건
 
 ## Troubleshooting Log
 
@@ -62,6 +69,7 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 | 2026-06-16 | `./gradlew build` | 성공 | 3초, 8개 task up-to-date, 빌드 성공률 기준선 100% | 배포 전 빌드 체크 유지 |
 | 2026-06-16 | GitHub issue policy audit | 성공 | #17~#41 `칸반 상태:` 잔여 0개, 핵심 이슈 7개 정책 반영 | Project Board 조회에는 `read:project` scope 필요 |
 | 2026-06-16 | GitHub Project Board audit | 성공 | Project Board 필드 24개 수정, #39 P0 반영, #16 상태 필드 일치 | #23/#24 Domain 결정 필요 |
+| 2026-06-16 | Codex Hook validation | 성공 | `./gradlew test` 13초 성공, 금지어 검색 0건, AGENTS/Hook 문서 존재 확인 | 문서-only 작업이라 신규 테스트 없음 |
 
 ## Resume Bullet Candidates
 
@@ -69,3 +77,4 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 - `./gradlew build` 기준 빌드 성공 상태를 확보해 배포 전 안정성 검증 기준선을 수립.
 - GitHub Issues #17~#41의 기획/구현 기준을 최신 백엔드 정책과 정합화하고, 수동 칸반 상태 잔여 0개로 Project Board 중심 운영 기준을 정리.
 - GitHub Project Board의 누락/불일치 필드 24개를 정리해 이슈 본문과 칸반 운영 데이터의 정합성을 개선.
+- Codex Hook 개발 규칙을 문서화하고 GitHub Issue #43 및 Project 카드와 연결해 TDD/보안/아키텍처/Obsidian 기록 기준을 표준화.

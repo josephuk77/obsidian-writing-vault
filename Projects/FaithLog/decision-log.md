@@ -41,3 +41,9 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Context: Project Board items #23 and #24 have mixed domain text in their issue bodies, but the board Domain field is single-select.
 - Pending question: Should #23 use `global` or another convention for `global/domain-admin`, and should #24 use `global` or `notification` for `global/notification`?
 - Current action: Domain was left blank for #23 and #24 to avoid guessing.
+
+### 2026-06-16 - Codex Hook Development Rules
+
+- Context: The user requested a Codex Hook document that consolidates TDD, final FaithLog design rules, architecture rules, security rules, forbidden-term checks, test rules, Obsidian documentation, and GitHub Issue/Project workflow.
+- Decision: Keep `AGENT.md` as the user-decision authority guardrail, make `AGENTS.md` the model-loaded summary, and put detailed rules in `docs/codex/FAITHLOG_CODEX_HOOK.md`.
+- Impact: Issue #43 was created and connected to the FaithLog Backend Kanban board. The board card was moved to `In Progress`. `PollComment` was not treated as a forbidden term because poll comments are MVP scope in #38.
