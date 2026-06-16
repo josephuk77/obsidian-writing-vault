@@ -35,3 +35,9 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Context: Poll comments are now MVP scope. Issue #38 contains the PollComment implementation scope.
 - Pending question: Should PollComment stay inside #38, or should a separate `[Feat] 투표 댓글 구현` issue be created?
 - Current action: No new issue was created because the user said to create it only if needed, and #38 now contains the required implementation scope.
+
+### 2026-06-16 - Project Board Domain Fields For Mixed Domains
+
+- Context: Project Board items #23 and #24 have mixed domain text in their issue bodies, but the board Domain field is single-select.
+- Pending question: Should #23 use `global` or another convention for `global/domain-admin`, and should #24 use `global` or `notification` for `global/notification`?
+- Current action: Domain was left blank for #23 and #24 to avoid guessing.
