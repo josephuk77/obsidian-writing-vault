@@ -37,6 +37,10 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - 테스트 코드 파일: 1개 (`FaithLogApplicationTests.java`)
   - 테스트 리소스 파일: 1개 (`application-test.yml`)
   - DB 마이그레이션: 1개 (`V1__init_schema.sql`)
+- 기획 정합성 보정 수치:
+  - 핵심 정책 반영 이슈: 7개 (#21, #27, #28, #31, #38, #39, #40)
+  - 수동 `칸반 상태:` 제거 이슈: 21개 범위 검증 중 14개 직접 정리, 최종 잔여 0개
+  - 코드 충돌 확인: `refresh_tokens` 테이블/Entity 없음, 현 시점 삭제 작업 불필요
 
 ## Troubleshooting Log
 
@@ -50,8 +54,10 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 | --- | --- | --- | --- | --- |
 | 2026-06-16 | `./gradlew test` | 성공 | 18초, 5개 task up-to-date, 테스트 통과율 100% | 기능별 테스트 수 확대 |
 | 2026-06-16 | `./gradlew build` | 성공 | 3초, 8개 task up-to-date, 빌드 성공률 기준선 100% | 배포 전 빌드 체크 유지 |
+| 2026-06-16 | GitHub issue policy audit | 성공 | #17~#41 `칸반 상태:` 잔여 0개, 핵심 이슈 7개 정책 반영 | Project Board 조회에는 `read:project` scope 필요 |
 
 ## Resume Bullet Candidates
 
 - Spring Boot 기반 FaithLog 프로젝트의 테스트 기준선을 수립하고, `./gradlew test` 기준 테스트 통과율 100%를 확보.
 - `./gradlew build` 기준 빌드 성공 상태를 확보해 배포 전 안정성 검증 기준선을 수립.
+- GitHub Issues #17~#41의 기획/구현 기준을 최신 백엔드 정책과 정합화하고, 수동 칸반 상태 잔여 0개로 Project Board 중심 운영 기준을 정리.

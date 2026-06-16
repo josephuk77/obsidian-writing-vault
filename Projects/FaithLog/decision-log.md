@@ -21,3 +21,17 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Context: The project will be deployed and operated, and the user wants resume-ready quantitative evidence.
 - Decision: Codex should record measurable project progress, tests, troubleshooting, and improvements in Markdown and Obsidian.
 - Impact: Metrics are tracked in `docs/resume-metrics.md` and mirrored to the Obsidian FaithLog note.
+
+### 2026-06-16 - Backend API And Issue Policy Alignment
+
+- Context: The user provided final backend policy decisions for auth, FCM, poll comments, devotion APIs, coffee charge automation, issue status management, and MVP exclusions.
+- Decision: GitHub Issues must follow the final policies recorded in `docs/backend-implementation-policy.md`.
+- Impact: Issues #21, #27, #28, #31, #38, #39, and #40 were updated with final policy details. Manual `칸반 상태:` lines were removed from #17~#41 where present so GitHub Project Board Status remains the source of truth.
+
+## Pending Decisions
+
+### 2026-06-16 - Poll Comment Issue Split
+
+- Context: Poll comments are now MVP scope. Issue #38 contains the PollComment implementation scope.
+- Pending question: Should PollComment stay inside #38, or should a separate `[Feat] 투표 댓글 구현` issue be created?
+- Current action: No new issue was created because the user said to create it only if needed, and #38 now contains the required implementation scope.
