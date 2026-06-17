@@ -84,3 +84,18 @@ tags:
 
 - 모바일 앱 JWT 인증에서 Cookie 대신 response body token transport를 선택한 이유
 - Spring Security stateless JWT 필터와 TDD로 인증 API를 세우는 과정
+
+## 10. PM 리뷰 후 보안 보강
+
+- Refresh token이 Bearer 인증에 사용될 수 있는 위험을 재현하는 실패 테스트를 추가했다.
+- JWT에 `tokenType=ACCESS|REFRESH` claim을 추가하고, `parseAccessToken()`과 `parseRefreshToken()`이 기대 token type만 허용하게 수정했다.
+- `/api/v1/users/me`에 refresh token을 Bearer로 보내면 401 ApiResponse 실패 envelope를 반환하도록 검증했다.
+- `isActive=false` 사용자는 이미 발급된 access token이 있어도 `/api/v1/users/me`에서 401로 차단하도록 보강했다.
+- `AuthService`가 presentation DTO를 직접 반환하지 않도록 application result record를 추가했다.
+
+검증:
+
+- `./gradlew test`: `BUILD SUCCESSFUL`
+- `./gradlew build`: `BUILD SUCCESSFUL`
+- `docker compose build`: 성공
+- `docker compose up -d postgres redis app`: postgres/redis healthy, app은 기존 Docker volume credential mismatch로 종료
