@@ -133,3 +133,17 @@ tags:
 - `./gradlew asciidoctor`: `BUILD SUCCESSFUL`
 - `./gradlew test --rerun-tasks`: `BUILD SUCCESSFUL`
 - `./gradlew build`: `BUILD SUCCESSFUL`
+
+## 13. CI 테스트 실패 수정
+
+- 문제: PR #47 `Backend CI / Spring Boot build and test`에서 Spring context 테스트들이 실패했다.
+- 증상: `HibernateException at DialectFactoryImpl`로 `FaithLogApplicationTests`, `AuthServiceTest`, `AuthApiRestDocsTest`, `UserMeControllerTest` 실패.
+- 원인: CI env의 `SPRING_DATASOURCE_URL=jdbc:postgresql://...`가 test profile의 H2 datasource URL을 덮어썼지만, `application-test.yml`의 H2 driver는 그대로 남아 PostgreSQL URL과 H2 driver가 섞였다. 또한 `JWT_ACCESS_TOKEN_VALIDITY_SECONDS=3600`은 #27 확정값 1800과 충돌할 수 있었다.
+- 해결: CI test job에서 datasource와 token validity env override를 제거해 `application-test.yml`의 H2/create-drop 및 #27 token TTL 기준을 그대로 사용하게 했다.
+
+검증:
+
+- CI env 재현 실패 확인: `./gradlew test --tests '*AuthServiceTest'` 실패
+- 수정 후 CI env 조합 재검증: `./gradlew test --tests '*AuthServiceTest'` 성공
+- `./gradlew test --rerun-tasks`: `BUILD SUCCESSFUL`
+- `./gradlew build`: `BUILD SUCCESSFUL`
