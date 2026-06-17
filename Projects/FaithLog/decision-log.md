@@ -84,3 +84,12 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Context: The current Hook uses `/Users/josephuk77/obsidian/obsidian-writing-vault/Projects/FaithLog/`, while one attached requirement may imply `04_Projects/FaithLog`.
 - Pending question: Should FaithLog Obsidian notes live under `Projects/FaithLog` or `04_Projects/FaithLog`?
 - Current action: The path was not changed to avoid guessing the user's vault structure.
+
+<!-- daily-resume-monitor:start:decision-log:2026-06-16 -->
+### 2026-06-16 - Daily Resume Monitor Transcript Source
+
+- Context: The daily resume monitor can only use Codex or assistant transcripts when their source/location is explicitly available and verifiable.
+- Pending question: Where should the daily monitor read Codex conversation transcripts from, if transcript context should be included?
+- Recommendation: Provide one stable local transcript source path or leave transcript analysis disabled.
+- Current action: No transcript source was provided, so conversation transcripts were not inspected.
+<!-- daily-resume-monitor:end:decision-log:2026-06-16 -->

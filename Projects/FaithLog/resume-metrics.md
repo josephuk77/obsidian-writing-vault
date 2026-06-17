@@ -149,3 +149,19 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 - 투표 템플릿 정책을 기본 제공 1개와 관리자 생성 3개 범주로 분리해 초기 데이터와 운영 권한 기준을 명확화.
 - 투표 자동 생성 책임을 템플릿 설정과 스케줄러 실행으로 분리해 반복 운영 자동화 설계 기준을 명확화.
 - 커피 담당자가 자동 생성 시간과 마감 시간을 설정하도록 투표 운영 권한과 반복 생성 정책을 구체화.
+
+<!-- daily-resume-monitor:start:resume-metrics:2026-06-16 -->
+### 2026-06-16 Automated Resume Monitor
+
+- Evidence source: `docs/prompts/daily-resume-monitor.md` read at runtime.
+- Commits reviewed: 4
+- Changed files reviewed: 6
+- Dependency/config changes reviewed: 0
+- DB migration changes reviewed: 0
+- Local test result: 1 tests, 0 failures/errors. Measurement method: Gradle XML under `build/test-results/test`. Confidence: verified.
+- Build artifacts present locally. Measurement method: `build/libs/*.jar`. Confidence: partially verified.
+
+Metric candidates:
+- Health check success rate: measure against a user-approved local or deployed URL with repeated requests.
+- API response time: measure with a user-approved endpoint and command so daily values are comparable.
+<!-- daily-resume-monitor:end:resume-metrics:2026-06-16 -->
