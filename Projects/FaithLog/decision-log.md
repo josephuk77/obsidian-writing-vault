@@ -28,7 +28,44 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Decision: GitHub Issues must follow the final policies recorded in `docs/backend-implementation-policy.md`.
 - Impact: Issues #21, #27, #28, #31, #38, #39, and #40 were updated with final policy details. Manual `칸반 상태:` lines were removed from #17~#41 where present so GitHub Project Board Status remains the source of truth.
 
+### 2026-06-16 - Codex Hook Development Rules
+
+- Context: The user requested a Codex Hook document that consolidates TDD, final FaithLog design rules, architecture rules, security rules, forbidden-term checks, test rules, Obsidian documentation, and GitHub Issue/Project workflow.
+- Decision: Use `AGENTS.md` as the single Agent rule file, and put detailed development hook rules in `docs/codex/FAITHLOG_CODEX_HOOK.md`.
+- Impact: Issue #43 was created and connected to the FaithLog Backend Kanban board. The board card was moved to `In Progress`. `PollComment` was not treated as a forbidden term because poll comments are MVP scope in #38.
+
+### 2026-06-16 - Agent Rule File Consolidation
+
+- Context: The user requested that Agent rules be merged into one file.
+- Decision: `AGENTS.md` is the single source of Agent instructions for Codex in this repository.
+- Impact: The former `AGENT.md` content was merged into `AGENTS.md`, and repository documentation now points to `AGENTS.md`.
+
+### 2026-06-16 - Poll Template Default Policy
+
+- Context: The user clarified which poll templates should exist by default.
+- Decision: Only the coffee poll template should be provided as a default template. Wednesday worship, Saturday shepherd meeting, and custom poll templates should be created by an admin.
+- Impact: Issue #37 and Codex Hook rules must treat coffee as the only default poll template. Other poll templates are admin-created and must not be silently seeded unless the user later approves a new decision.
+
+### 2026-06-16 - Poll Template Weekly Auto Generation Setting
+
+- Context: The user asked whether polls can be generated automatically every week, then decided that admins should be able to set this when creating custom/admin-created templates.
+- Decision: Poll templates can include a weekly auto-generation setting chosen by the admin at template creation time. Templates without auto-generation enabled are used only for manual poll creation.
+- Impact: Issue #37 must capture the template setting/API scope, and Issue #24 must execute enabled template schedules with duplicate prevention.
+
+### 2026-06-16 - Coffee Duty Poll Time Settings
+
+- Context: The user clarified that Notion ERD includes coffee poll timing design.
+- Decision: The coffee duty assignee can set the weekly coffee poll auto-generation time and the coffee poll close time.
+- Impact: Issue #37 must store these timing settings on the coffee poll template according to the Notion ERD column names. Issue #24 must use those settings when generating and closing weekly coffee polls.
+
 ## Pending Decisions
+
+### 2026-06-17 - Daily Health And Response-Time Measurement Scope
+
+- Context: The codebase exposes `GET /api/v1/health`, and the daily monitor can record health/latency metrics only if the measurement target and runtime are user-approved.
+- Pending question: For daily monitoring, should Codex measure health/response time against a local booted app, a deployed environment URL, or leave health/latency as manual-only until the user defines the target?
+- Recommendation: Approve one source of truth for daily health metrics first so the monitor can report comparable numbers instead of mixed local/deploy timings.
+- Current action: Today's report records that the endpoint exists but does not publish latency or availability percentages.
 
 ### 2026-06-16 - Poll Comment Issue Split
 
@@ -42,8 +79,8 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Pending question: Should #23 use `global` or another convention for `global/domain-admin`, and should #24 use `global` or `notification` for `global/notification`?
 - Current action: Domain was left blank for #23 and #24 to avoid guessing.
 
-### 2026-06-16 - Codex Hook Development Rules
+### 2026-06-16 - Obsidian FaithLog Folder Path
 
-- Context: The user requested a Codex Hook document that consolidates TDD, final FaithLog design rules, architecture rules, security rules, forbidden-term checks, test rules, Obsidian documentation, and GitHub Issue/Project workflow.
-- Decision: Keep `AGENT.md` as the user-decision authority guardrail, make `AGENTS.md` the model-loaded summary, and put detailed rules in `docs/codex/FAITHLOG_CODEX_HOOK.md`.
-- Impact: Issue #43 was created and connected to the FaithLog Backend Kanban board. The board card was moved to `In Progress`. `PollComment` was not treated as a forbidden term because poll comments are MVP scope in #38.
+- Context: The current Hook uses `/Users/josephuk77/obsidian/obsidian-writing-vault/Projects/FaithLog/`, while one attached requirement may imply `04_Projects/FaithLog`.
+- Pending question: Should FaithLog Obsidian notes live under `Projects/FaithLog` or `04_Projects/FaithLog`?
+- Current action: The path was not changed to avoid guessing the user's vault structure.
