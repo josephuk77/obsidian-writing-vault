@@ -109,3 +109,27 @@ tags:
 - `GET /api/v1/health`: 200 OK
 - Hibernate가 local Docker DB에 `users` 테이블을 자동 생성하는 것을 로그로 확인했다.
 - Flyway는 기존 결정대로 최종 도메인 모델 안정화 이후 migration consolidation 작업에서 재도입한다.
+
+## 12. Spring REST Docs 문서화 보강
+
+- Swagger/springdoc은 간단한 API 탐색용으로 유지한다.
+- Controller/DTO/Entity에 Swagger 문서화 어노테이션을 대량으로 붙이는 방식은 사용하지 않는다.
+- #27 상세 API 계약은 Spring REST Docs 테스트와 snippets/asciidoc으로 검증하고 문서화한다.
+- 문서화 대상:
+  - `POST /api/v1/auth/signup` 성공
+  - `POST /api/v1/auth/login` 성공 및 response body token transport
+  - `GET /api/v1/users/me` 성공
+  - 미인증 `/users/me` 401
+  - refresh token Bearer 사용 `/users/me` 401
+  - 비활성 사용자 `/users/me` 401
+- 산출물:
+  - `build/generated-snippets`
+  - `build/docs/asciidoc/index.html`
+
+검증:
+
+- 실패 확인: REST Docs 의존성 추가 전 `./gradlew test --tests '*AuthApiRestDocsTest'`가 `org.springframework.restdocs.*` 패키지 부재로 컴파일 실패
+- `./gradlew test --tests '*AuthApiRestDocsTest'`: `BUILD SUCCESSFUL`
+- `./gradlew asciidoctor`: `BUILD SUCCESSFUL`
+- `./gradlew test --rerun-tasks`: `BUILD SUCCESSFUL`
+- `./gradlew build`: `BUILD SUCCESSFUL`
