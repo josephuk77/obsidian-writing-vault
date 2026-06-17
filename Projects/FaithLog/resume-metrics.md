@@ -13,15 +13,58 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 영역 | 지표 | 측정 방법 | 최신값 | 목표 |
 | --- | --- | --- | --- | --- |
-| 품질 | 테스트 통과율 | `./gradlew test` | 100% (2026-06-17) | 100% |
-| 품질 | 테스트 코드 파일 수 | `rg --files src/test` | 1 test source, 1 test resource | 증가 추적 |
-| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-06-17) | 성공 |
+| 품질 | 테스트 통과율 | `./gradlew test` | 100% (2026-06-18, 21 tests / 0 failures) | 100% |
+| 품질 | 테스트 코드 파일 수 | `rg --files src/test` | 11 test sources, 1 test resource (2026-06-18) | 증가 추적 |
+| 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 10 snippet groups (2026-06-18) | 증가 추적 |
+| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-06-18) | 성공 |
 | API | 응답 시간 | 로컬/운영 부하 테스트 | 측정 보류 (2026-06-17) | TBD |
 | 운영 | 헬스체크 성공률 | `/health` 또는 배포 플랫폼 상태 | 측정 보류 (2026-06-17) | 99%+ |
-| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 7 top-level modules (2026-06-17) | 추적 |
-| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | 1 | 추적 |
+| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 7 top-level modules (2026-06-18) | 추적 |
+| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | 0 (Flyway deferred, 2026-06-18) | 추적 |
 
 ## Daily Monitoring Notes
+
+### 2026-06-18
+
+- 브랜치/작업트리:
+  - 현재 브랜치: `feat/28-auth-refresh-logout-redis`
+  - `git status --short --branch`: 워크트리 변경 0건
+  - `develop` 대비 추가 커밋: 5개 (`0b7cc7a`, `f14ffb7`, `ea5bd3d`, `59d89b0`, `3885808`)
+- 변경 범위 수치:
+  - `git diff --stat develop..HEAD`: 32 files changed, 1,085 insertions, 12 deletions
+  - 앱 코드 변경 파일: 22개 (`global` 6, `user` 15, `fcm adapter` 1)
+  - 테스트 코드 변경 파일: 7개 (`user` 6, `support` 1)
+  - 문서 변경 파일: 4개 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `src/docs/asciidoc/index.adoc`)
+  - 의존성/DB 마이그레이션 변경: 0건
+- 코드베이스 구조 수치:
+  - `src/main/java/com/faithlog` top-level 모듈: 7개 (`billing`, `campus`, `devotion`, `global`, `notification`, `poll`, `user`)
+  - Java 소스 파일: 73개
+  - 실구현 Java 파일(`package-info.java` 제외): 46개
+  - `package-info.java`: 27개
+  - 테스트 소스 파일: 11개
+  - 테스트 리소스 파일: 1개
+  - 테스트 스위트: 7개
+  - 테스트 케이스: 21개
+  - DB 마이그레이션 파일: 0개 (Flyway deferred)
+- 검증 신호:
+  - `./gradlew test`: 성공, 5초, 5 tasks up-to-date, 21 tests / 0 failures / 0 errors
+  - `./gradlew build`: 성공, 3초, 8 tasks up-to-date
+  - 빌드 아티팩트: `build/libs/faithlog-backend-0.0.1-SNAPSHOT.jar`, `build/libs/faithlog-backend-0.0.1-SNAPSHOT-plain.jar`
+  - Spring REST Docs 스니펫 묶음: 10개
+- 운영/문서 신호:
+  - 인증 상세 계약 문서 파일 유지: `src/docs/asciidoc/index.adoc`
+  - 코드상 헬스 엔드포인트 존재: `GET /api/v1/health`
+  - 응답 시간/헬스 성공률은 측정 대상 환경이 승인되지 않아 오늘도 수치 미기록
+- 오늘 리스크/관찰:
+  - Gradle 실행은 성공했지만 deprecated feature 경고가 남아 있어 Gradle 9 업그레이드 전에 원인 정리가 필요하다.
+  - 현재 브랜치 변경은 인증(`user`, `global`)에 집중되어 있고 나머지 5개 top-level 모듈은 이번 브랜치에서 직접 변경되지 않았다.
+- 오늘 테스트 후보:
+  - `./gradlew test --warning-mode all`
+  - 이유: 오늘 `test`/`build` 모두 Gradle deprecated feature 경고를 출력했지만 원인 플러그인/스크립트가 식별되지 않았다.
+  - 기대 지표: 경고 발생 항목 수, 소유 위치(빌드 스크립트/플러그인), Gradle 9 호환성 정리 backlog
+  - `docker compose up -d postgres redis app` 후 `curl /api/v1/health` 반복 측정
+  - 이유: 헬스 엔드포인트는 존재하지만 승인된 일일 측정 대상이 아직 없다.
+  - 기대 지표: 앱 기동 성공 여부, HTTP 200 여부, 응답 시간(ms), 연속 성공률(%)
 
 ### 2026-06-17
 
@@ -40,10 +83,10 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - `package-info.java`: 27개
   - 테스트 파일: 1개
   - 테스트 리소스 파일: 1개
-  - DB 마이그레이션 파일: 1개 (`V1__init_schema.sql`)
+  - DB 마이그레이션 파일: 0개 (Flyway deferred)
 - 의존성/설정 관찰:
-  - `build.gradle.kts` 변경 없음
-  - 핵심 런타임 의존성 유지: Spring Boot 3.5.0, Java 21, JPA, Redis, Security, Flyway, PostgreSQL, Firebase Admin, JWT
+  - `build.gradle.kts`에서 Flyway 런타임 의존성 제거
+  - 핵심 런타임 의존성 유지: Spring Boot 3.5.0, Java 21, JPA, Redis, Security, PostgreSQL, Firebase Admin, JWT
   - Netty override 유지: `4.1.135.Final`
 - 운영 신호:
   - 코드상 헬스 엔드포인트 존재: `GET /api/v1/health`
@@ -70,7 +113,7 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - `./gradlew build`: 성공, 3초, 8개 Gradle task up-to-date
   - 테스트 코드 파일: 1개 (`FaithLogApplicationTests.java`)
   - 테스트 리소스 파일: 1개 (`application-test.yml`)
-  - DB 마이그레이션: 1개 (`V1__init_schema.sql`)
+  - DB 마이그레이션: 0개 (Flyway deferred)
 - 기획 정합성 보정 수치:
   - 핵심 정책 반영 이슈: 7개 (#21, #27, #28, #31, #38, #39, #40)
   - 수동 `칸반 상태:` 제거 이슈: 21개 범위 검증 중 14개 직접 정리, 최종 잔여 0개
@@ -117,6 +160,9 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 날짜 | 명령/방법 | 결과 | 주요 수치 | 후속 조치 |
 | --- | --- | --- | --- | --- |
+| 2026-06-18 | `./gradlew test` | 성공 | 5초, 5 tasks up-to-date, 21 tests / 0 failures / 0 errors, 테스트 통과율 100% | `--warning-mode all`로 deprecated feature 원인 식별 필요 |
+| 2026-06-18 | `./gradlew build` | 성공 | 3초, 8 tasks up-to-date, 빌드 성공률 기준선 100%, JAR 2개 유지 | 앱 코드 변경이 생기면 오늘 수치와 비교 |
+| 2026-06-18 | Branch monitoring audit | 성공 | `develop` 대비 5커밋, 32파일, +1,085/-12, 앱 코드 22파일, 테스트 코드 7파일, DB migration 0개 | 헬스/응답시간 측정 대상 환경 결정 필요 |
 | 2026-06-16 | `./gradlew test` | 성공 | 18초, 5개 task up-to-date, 테스트 통과율 100% | 기능별 테스트 수 확대 |
 | 2026-06-16 | `./gradlew build` | 성공 | 3초, 8개 task up-to-date, 빌드 성공률 기준선 100% | 배포 전 빌드 체크 유지 |
 | 2026-06-16 | GitHub issue policy audit | 성공 | #17~#41 `칸반 상태:` 잔여 0개, 핵심 이슈 7개 정책 반영 | Project Board 조회에는 `read:project` scope 필요 |
@@ -135,13 +181,20 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 | 2026-06-17 | Repo monitoring audit | 성공 | 워크트리 변경 0건, `develop` 대비 4커밋/6파일/1,179라인 문서 변경, 앱 코드 변경 0개 | 헬스/응답시간 측정 대상 환경 결정 필요 |
 | 2026-06-17 | `./gradlew test` 재검증 | 성공 | 31초, 5개 task up-to-date, 테스트 통과율 100% | 현재 브랜치는 문서-only 상태라 기능 테스트 확대 전 smoke baseline 유지 |
 | 2026-06-17 | `./gradlew build` 재검증 | 성공 | 8초, 8개 task up-to-date, 빌드 성공률 기준선 100% | 앱 코드 변경이 생기면 오늘 수치와 비교 |
-| 2026-06-17 | Local repo structure audit 재검증 | 성공 | 실구현 Java 9개, top-level 모듈 7개, CI workflow 2개, Docker Compose 서비스 5개, 마이그레이션 1개 | 헬스 체크 기준 환경 승인 전까지 운영 지표는 보류 |
+| 2026-06-17 | Local repo structure audit 재검증 | 성공 | 실구현 Java 9개, top-level 모듈 7개, CI workflow 2개, Docker Compose 서비스 5개, 마이그레이션 0개 | 헬스 체크 기준 환경 승인 전까지 운영 지표는 보류 |
+| 2026-06-17 | Flyway runtime removal validation | 성공 | `./gradlew test` 35초 성공, `./gradlew build` 26초 성공, `runtimeClasspath` Flyway 항목 0개, active migration file 0개 | 최종 도메인 모델 안정화 후 Flyway migration consolidation task로 재도입 |
+| 2026-06-17 | #27 auth JWT TDD validation | 성공 | `./gradlew test` 18초 성공, 테스트 파일 1개 -> 4개, 회원가입/로그인/JWT claim/Bearer `/users/me` 검증 추가 | #28 refresh/logout/Redis rotation 구현 시 인증 테스트 확장 |
+| 2026-06-17 | #27 PM review security fix validation | 성공 | `./gradlew test` 16초 성공, `./gradlew build` 5초 성공, refresh token Bearer 인증 401 테스트 추가, 비활성 사용자 `/users/me` 401 테스트 추가 | #28 Redis allowlist/blacklist 구현 시 tokenType 검증 유지 |
+| 2026-06-17 | #27 Docker validation | 부분 성공 | `docker compose build` 성공, `docker compose up -d postgres redis app` 후 postgres/redis healthy, app은 기존 Postgres volume credential mismatch로 `FATAL: password authentication failed for user "faithlog"` 종료 | Docker volume credential 정리 또는 승인된 DB 초기화 후 앱 헬스체크 재검증 |
+| 2026-06-17 | #27 Docker local ddl-auto update validation | 성공 | `docker compose build app` 성공, `docker compose up -d app` 성공, `GET /api/v1/health` 200, Hibernate가 local Docker DB에 `users` 테이블 자동 생성 | 최종 Flyway migration consolidation 전까지 local Docker 개발 검증은 `SPRING_JPA_HIBERNATE_DDL_AUTO=update` 기본값 사용 |
+| 2026-06-17 | #27 auth REST Docs validation | 성공 | `./gradlew test --tests '*AuthApiRestDocsTest'` 성공, `./gradlew asciidoctor` 성공, `./gradlew test --rerun-tasks` 11초 성공, `./gradlew build` 5초 성공, 인증 API snippets 6개 묶음과 `build/docs/asciidoc/index.html` 생성 | 새 API/변경 API는 Spring REST Docs 테스트로 상세 계약 문서화 |
+| 2026-06-17 | #27 CI test profile override fix | 성공 | PR #47 Backend CI 실패 원인 확인, CI env 재현 실패 확인, 수정 후 `./gradlew test --tests '*AuthServiceTest'` 성공, `./gradlew test --rerun-tasks` 11초 성공, `./gradlew build` 2초 성공 | GitHub Actions 재실행 후 원격 check 통과 확인 |
 
 ## Resume Bullet Candidates
 
 - Spring Boot 기반 FaithLog 프로젝트의 테스트 기준선을 수립하고, `./gradlew test` 기준 테스트 통과율 100%를 확보.
 - `./gradlew build` 기준 빌드 성공 상태를 확보해 배포 전 안정성 검증 기준선을 수립.
-- FaithLog 백엔드의 일일 모니터링 기준선을 정리해 7개 도메인 모듈, 36개 Java 소스, 1개 Flyway 마이그레이션, 100% 테스트/빌드 성공 상태를 지속 추적할 수 있게 함.
+- FaithLog 백엔드의 일일 모니터링 기준선을 정리해 7개 도메인 모듈, 73개 Java 소스, Flyway deferred 상태, 100% 테스트/빌드 성공 상태를 지속 추적할 수 있게 함.
 - GitHub Issues #17~#41의 기획/구현 기준을 최신 백엔드 정책과 정합화하고, 수동 칸반 상태 잔여 0개로 Project Board 중심 운영 기준을 정리.
 - GitHub Project Board의 누락/불일치 필드 24개를 정리해 이슈 본문과 칸반 운영 데이터의 정합성을 개선.
 - Codex Hook 개발 규칙을 문서화하고 GitHub Issue #43 및 Project 카드와 연결해 TDD/보안/아키텍처/Obsidian 기록 기준을 표준화.
@@ -149,6 +202,10 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 - 투표 템플릿 정책을 기본 제공 1개와 관리자 생성 3개 범주로 분리해 초기 데이터와 운영 권한 기준을 명확화.
 - 투표 자동 생성 책임을 템플릿 설정과 스케줄러 실행으로 분리해 반복 운영 자동화 설계 기준을 명확화.
 - 커피 담당자가 자동 생성 시간과 마감 시간을 설정하도록 투표 운영 권한과 반복 생성 정책을 구체화.
+- 회원가입/로그인/JWT 인증 흐름을 TDD로 구현하고, Bearer 인증 `/api/v1/users/me`와 JWT 필수 claim 검증을 포함한 테스트 파일을 1개에서 4개로 확대.
+- Swagger/springdoc은 API 탐색용으로 유지하면서, 회원가입/로그인/내 정보 조회의 상세 계약을 Spring REST Docs 문서 생성 테스트로 검증하도록 확장.
+- Redis allowlist/blacklist 기반 refresh/logout 흐름을 추가하고, 인증 테스트 스위트를 7개·21개 케이스까지 확장해 토큰 회전과 로그아웃 계약을 검증.
+- 인증 문서화를 Spring REST Docs 중심으로 유지하면서 스니펫 묶음 10개와 AsciiDoc 계약 문서를 계속 생성 가능한 상태로 검증.
 
 <!-- daily-resume-monitor:start:resume-metrics:2026-06-16 -->
 ### 2026-06-16 Automated Resume Monitor
