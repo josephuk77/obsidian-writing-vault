@@ -99,3 +99,13 @@ tags:
 - `./gradlew build`: `BUILD SUCCESSFUL`
 - `docker compose build`: 성공
 - `docker compose up -d postgres redis app`: postgres/redis healthy, app은 기존 Docker volume credential mismatch로 종료
+
+## 11. Docker 로컬 개발 검증 보강
+
+- 로컬 Docker 개발 검증 중에는 `SPRING_JPA_HIBERNATE_DDL_AUTO=update`를 기본값으로 사용하기로 결정했다.
+- `application-local.yml`과 `docker-compose.yml`에 local ddl-auto 기본값 `update`를 설정했다.
+- `docker compose build app`: 성공
+- `docker compose up -d app`: 성공
+- `GET /api/v1/health`: 200 OK
+- Hibernate가 local Docker DB에 `users` 테이블을 자동 생성하는 것을 로그로 확인했다.
+- Flyway는 기존 결정대로 최종 도메인 모델 안정화 이후 migration consolidation 작업에서 재도입한다.
