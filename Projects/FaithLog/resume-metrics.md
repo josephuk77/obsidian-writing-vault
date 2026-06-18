@@ -32,9 +32,11 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - `develop` 대비 추가 커밋: 5개 (`0b7cc7a`, `f14ffb7`, `ea5bd3d`, `59d89b0`, `3885808`)
 - 변경 범위 수치:
   - `git diff --stat develop..HEAD`: 32 files changed, 1,085 insertions, 12 deletions
-  - 앱 코드 변경 파일: 22개 (`global` 6, `user` 15, `fcm adapter` 1)
-  - 테스트 코드 변경 파일: 7개 (`user` 6, `support` 1)
-  - 문서 변경 파일: 4개 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `src/docs/asciidoc/index.adoc`)
+  - 앱 코드 변경 파일: 21개
+  - 테스트 코드 변경 파일: 7개
+  - 프로젝트 문서 변경 파일: 3개 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`)
+  - API 문서 변경 파일: 1개 (`src/docs/asciidoc/index.adoc`)
+  - 변경 모듈: 2개 (`global`, `user`)
   - 의존성/DB 마이그레이션 변경: 0건
 - 코드베이스 구조 수치:
   - `src/main/java/com/faithlog` top-level 모듈: 7개 (`billing`, `campus`, `devotion`, `global`, `notification`, `poll`, `user`)
@@ -47,10 +49,12 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - 테스트 케이스: 21개
   - DB 마이그레이션 파일: 0개 (Flyway deferred)
 - 검증 신호:
-  - `./gradlew test`: 성공, 5초, 5 tasks up-to-date, 21 tests / 0 failures / 0 errors
-  - `./gradlew build`: 성공, 3초, 8 tasks up-to-date
+  - `./gradlew test`: 성공, 24초, 5 tasks up-to-date, 21 tests / 0 failures / 0 errors / 0 skipped
+  - `./gradlew build`: 성공, 25초, 8 tasks up-to-date
+  - `./gradlew asciidoctor`: 성공, 3초, 6 tasks up-to-date
   - 빌드 아티팩트: `build/libs/faithlog-backend-0.0.1-SNAPSHOT.jar`, `build/libs/faithlog-backend-0.0.1-SNAPSHOT-plain.jar`
   - Spring REST Docs 스니펫 묶음: 10개
+  - 생성 문서 확인: `build/docs/asciidoc/index.html` 91,078 bytes
 - 운영/문서 신호:
   - 인증 상세 계약 문서 파일 유지: `src/docs/asciidoc/index.adoc`
   - 코드상 헬스 엔드포인트 존재: `GET /api/v1/health`
@@ -153,6 +157,7 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 날짜 | 문제 | 원인 | 해결 | 전후 수치 | 재발 방지 |
 | --- | --- | --- | --- | --- | --- |
+| 2026-06-18 | 샌드박스에서 `./gradlew asciidoctor` 실행 실패 | `~/.gradle/wrapper` 락 파일이 샌드박스 쓰기 범위 밖에 있어 Gradle wrapper가 `.zip.lck` 파일을 열지 못함 | 권한 상승으로 동일 명령 재실행 후 성공 | 전: `./gradlew asciidoctor` 즉시 실패, 후: 3초 성공 + `build/docs/asciidoc/index.html` 생성 확인 | Gradle 기반 문서 생성 검증은 샌드박스 실패 시 권한 상승 재시도 |
 | 2026-06-17 | 샌드박스에서 Gradle wrapper lock 파일 접근 실패 | `~/.gradle/wrapper` 락 파일이 샌드박스 쓰기 범위 밖에 있어 `./gradlew test`가 `FileNotFoundException`으로 중단 | 권한 상승으로 동일 명령 재실행 후 성공 | 전: 테스트 실행 실패, 후: `./gradlew test` 21.29초 성공 / `./gradlew build` 7.58초 성공 | 자동화 리포트에서 Gradle 검증은 필요 시 권한 상승 재시도 |
 | TBD | TBD | TBD | TBD | TBD | TBD |
 
@@ -160,9 +165,10 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 날짜 | 명령/방법 | 결과 | 주요 수치 | 후속 조치 |
 | --- | --- | --- | --- | --- |
-| 2026-06-18 | `./gradlew test` | 성공 | 5초, 5 tasks up-to-date, 21 tests / 0 failures / 0 errors, 테스트 통과율 100% | `--warning-mode all`로 deprecated feature 원인 식별 필요 |
-| 2026-06-18 | `./gradlew build` | 성공 | 3초, 8 tasks up-to-date, 빌드 성공률 기준선 100%, JAR 2개 유지 | 앱 코드 변경이 생기면 오늘 수치와 비교 |
-| 2026-06-18 | Branch monitoring audit | 성공 | `develop` 대비 5커밋, 32파일, +1,085/-12, 앱 코드 22파일, 테스트 코드 7파일, DB migration 0개 | 헬스/응답시간 측정 대상 환경 결정 필요 |
+| 2026-06-18 | `./gradlew test` | 성공 | 24초, 5 tasks up-to-date, 21 tests / 0 failures / 0 errors / 0 skipped, 테스트 통과율 100% | `--warning-mode all`로 deprecated feature 원인 식별 필요 |
+| 2026-06-18 | `./gradlew build` | 성공 | 25초, 8 tasks up-to-date, 빌드 성공률 기준선 100%, JAR 2개 유지 | 앱 코드 변경이 생기면 오늘 수치와 비교 |
+| 2026-06-18 | `./gradlew asciidoctor` | 성공 | 3초, 6 tasks up-to-date, REST Docs 스니펫 10개, HTML 1개 생성 | 새 API 추가 시 문서 스니펫 수와 HTML 생성 여부 비교 |
+| 2026-06-18 | Branch monitoring audit | 성공 | `develop` 대비 5커밋, 32파일, +1,085/-12, 앱 코드 21파일, 테스트 코드 7파일, DB migration 0개 | 헬스/응답시간 측정 대상 환경 결정 필요 |
 | 2026-06-16 | `./gradlew test` | 성공 | 18초, 5개 task up-to-date, 테스트 통과율 100% | 기능별 테스트 수 확대 |
 | 2026-06-16 | `./gradlew build` | 성공 | 3초, 8개 task up-to-date, 빌드 성공률 기준선 100% | 배포 전 빌드 체크 유지 |
 | 2026-06-16 | GitHub issue policy audit | 성공 | #17~#41 `칸반 상태:` 잔여 0개, 핵심 이슈 7개 정책 반영 | Project Board 조회에는 `read:project` scope 필요 |
@@ -222,3 +228,20 @@ Metric candidates:
 - Health check success rate: measure against a user-approved local or deployed URL with repeated requests.
 - API response time: measure with a user-approved endpoint and command so daily values are comparable.
 <!-- daily-resume-monitor:end:resume-metrics:2026-06-16 -->
+
+<!-- daily-resume-monitor:start:resume-metrics:2026-06-17 -->
+### 2026-06-17 Automated Resume Monitor
+
+- Evidence source: `docs/prompts/daily-resume-monitor.md` read at runtime.
+- Commits reviewed: 5
+- Changed files reviewed: 32
+- Dependency/config changes reviewed: 0
+- DB migration changes reviewed: 0
+- Local test result: 21 tests, 0 failures/errors/skips. Measurement method: Gradle XML under `build/test-results/test`. Confidence: verified.
+- Local build result: `./gradlew build` success in 25s with 8 up-to-date tasks. Confidence: verified.
+- API contract docs: `./gradlew asciidoctor` success in 3s, 10 snippet directories, `build/docs/asciidoc/index.html` present. Confidence: verified.
+
+Metric candidates:
+- Health check success rate: run `docker compose up -d postgres redis app` and repeat `curl /api/v1/health` against one approved runtime.
+- API response time: measure `GET /api/v1/health` or another user-approved endpoint with a fixed local or deployed target.
+<!-- daily-resume-monitor:end:resume-metrics:2026-06-17 -->
