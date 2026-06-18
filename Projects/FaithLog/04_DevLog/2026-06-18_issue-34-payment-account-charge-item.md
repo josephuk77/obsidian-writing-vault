@@ -23,10 +23,13 @@ tags:
 - 캠퍼스별 활성 계좌는 `accountType`별 1개만 허용한다.
 - 새 활성 계좌 등록 시 기존 활성 계좌는 자동 비활성화한다.
 - 모든 ACTIVE 캠퍼스 멤버는 활성 납부 계좌를 조회할 수 있다.
+- 서비스 전체 `ADMIN`은 캠퍼스 멤버십 없이도 납부 계좌를 조회할 수 있다.
 - 일반 멤버 조회 응답은 `ownerUserId`, `isActive`, `createdAt`, `deactivatedAt` 같은 관리용 메타데이터를 노출하지 않는다.
 - 새 활성 계좌 등록 시 기존 `UNPAID` 청구는 새 계좌로 재연결하고 snapshot을 갱신한다.
 - `PAID`, `WAIVED`, `CANCELED` 청구 snapshot은 과거 기록으로 유지한다.
 - 활성 `PENALTY` 계좌가 없으면 `관리자에게 문의하세요`로 실패하고 `charge_items` row를 만들지 않는다.
+- `createPenaltyCharge`는 같은 source의 기존 `UNPAID` 청구가 있으면 새 active PENALTY 계좌 snapshot, title, reason, amount, dueDate를 갱신한다.
+- terminal 상태 청구 재제출 정책은 아직 사용자 확정 전이므로, #34 foundation에서는 데이터 훼손 방지용 구현 가드로 덮어쓰지 않고 명확한 예외로 막는다.
 
 ## 3. 구현 내용
 
@@ -45,6 +48,8 @@ tags:
 3. 최소 구현: billing domain/application/infrastructure/presentation 추가
 4. 테스트 통과: billing 집중 테스트 성공
 5. 리팩토링: terminal 상태 보존 테스트를 `PAID`, `WAIVED`, `CANCELED`로 확장하고 `markWaived`, `markCanceled` 추가
+6. PM 리뷰 실패 테스트: 서비스 ADMIN 계좌 조회와 penalty charge rerun 테스트 추가 후 `./gradlew test --tests 'com.faithlog.billing.*'`에서 4건 실패 확인
+7. PM 리뷰 수정: ADMIN 조회 권한 허용, 기존 `UNPAID` 청구 create-or-update 구현, terminal 청구 미확정 정책에 대한 데이터 훼손 방지 가드 추가
 
 ## 5. 테스트 결과
 
@@ -58,7 +63,7 @@ tags:
 
 수치:
 
-- 56 tests / 0 failures / 0 errors / 0 skipped
+- 59 tests / 0 failures / 0 errors / 0 skipped
 - REST Docs snippet group 25개
 - payment account snippets 3개 묶음 생성
 
@@ -82,11 +87,13 @@ tags:
 
 - 최초 샌드박스 실행은 Gradle wrapper lock 파일 권한 문제로 실패했고, 권한 상승 재실행으로 성공했다.
 - `docker compose build app`은 Docker daemon 응답 `Docker Desktop is unable to start`로 앱 이미지 빌드 전에 중단됐다. Docker Desktop 실행 가능 상태에서 재검증이 필요하다.
+- PM 리뷰 수정 후 `docker compose build app`을 재시도했지만 같은 `Docker Desktop is unable to start` 응답으로 중단됐다.
 
 ## 6. 고민한 부분
 
 - 일반 멤버 계좌 조회 응답에서 계좌번호는 전체 노출하되 관리용 정보는 제외하는 계약을 사용자 확인 후 `docs/decision-log.md`에 기록했다.
 - `ChargeItem`은 후속 #33/#39에서 사용할 foundation만 제공하고, 수동 관리자 청구 생성 API는 만들지 않았다.
+- terminal 청구 재제출 정책은 아직 본 기능 흐름에서 확정되지 않았으므로, #34 foundation에서는 데이터 훼손 방지용 구현 가드로 덮어쓰기 대신 명확한 예외를 반환한다. #33/#35 실제 재제출/납부 흐름 연결 전에 사용자 최종 정책 확인이 필요하다.
 
 ## 7. 트러블슈팅
 
