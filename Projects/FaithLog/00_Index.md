@@ -7,10 +7,12 @@
 
 - [[04_DevLog/2026-06-18_issue-30-campus-member-role-duty-assignment]]
 - [[04_DevLog/2026-06-18_issue-34-payment-account-charge-item]]
+- [[04_DevLog/2026-06-18_issue-35-charge-status-management]]
 
 ## Troubleshooting
 
 - [[05_Troubleshooting/2026-06-17_auth-jwt-test-context]]
+- [[05_Troubleshooting/2026-06-18_gradle-asciidoctor-sandbox-lock]]
 
 ## Velog Drafts
 
