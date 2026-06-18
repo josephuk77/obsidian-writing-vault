@@ -5,6 +5,8 @@
 - [[04_DevLog/2026-06-17_issue-none-remove-flyway-runtime]]
 - [[04_DevLog/2026-06-17_issue-27-auth-jwt]]
 
+- [[04_DevLog/2026-06-18_issue-30-campus-member-role-duty-assignment]]
+
 ## Troubleshooting
 
 - [[05_Troubleshooting/2026-06-17_auth-jwt-test-context]]
