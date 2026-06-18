@@ -8,6 +8,7 @@
 - [[04_DevLog/2026-06-18_issue-30-campus-member-role-duty-assignment]]
 - [[04_DevLog/2026-06-18_issue-34-payment-account-charge-item]]
 - [[04_DevLog/2026-06-18_issue-35-charge-status-management]]
+- [[04_DevLog/2026-06-18_issue-36-charge-list-campus-summary]]
 
 ## Troubleshooting
 
