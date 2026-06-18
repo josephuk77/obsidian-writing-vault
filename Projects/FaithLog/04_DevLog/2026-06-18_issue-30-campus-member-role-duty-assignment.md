@@ -31,6 +31,7 @@ tags:
 - Entity: `CampusDutyAssignment`, `DutyType.COFFEE`, `CampusMember.changeCampusRole()`.
 - Command: `ChangeCampusRoleCommand`, `AssignCoffeeDutyCommand`.
 - Service: `CampusService`에 역할 변경, 관리자 멤버 목록, 커피 담당자 목록/지정/해제 유스케이스 추가.
+- 동시성: `assignCoffeeDuty()`에서 캠퍼스 row를 `PESSIMISTIC_WRITE`로 잠근 뒤 기존 active `DutyType.COFFEE` 배정을 revoke하고 새 배정을 저장해, 캠퍼스별 active coffee assignment 1개를 유지한다.
 - Repository: `CampusDutyAssignmentRepositoryPort`, `CampusDutyAssignmentRepository`, 캠퍼스 멤버 목록 조회 메서드.
 - Controller: `AdminCampusController`.
 - Test: `CampusServiceTest`, `CampusControllerTest`, `CampusApiRestDocsTest`.
@@ -42,6 +43,8 @@ tags:
 3. 최소 구현: 도메인 권한 비교, application use case, JPA repository, DTO/controller 추가.
 4. 테스트 통과: 동일 집중 테스트 통과 후 전체 테스트로 확대.
 5. 리팩토링: REST Docs index와 decision log, resume metrics 정리.
+6. 동시성 실패 테스트 보강: concurrent coffee assignment 테스트가 lock 구현 전 `NonUniqueResultException`으로 실패하는 것을 확인.
+7. 동시성 구현: campus row pessimistic lock 적용 후 동일 테스트와 전체 검증 통과.
 
 ## 5. 테스트 결과
 
@@ -51,7 +54,7 @@ tags:
 
 결과:
 
-`BUILD SUCCESSFUL`, 46 tests / 0 failures / 0 errors / 0 skipped.
+`BUILD SUCCESSFUL`, 47 tests / 0 failures / 0 errors / 0 skipped.
 
 추가 검증:
 
@@ -59,6 +62,11 @@ tags:
 - `./gradlew asciidoctor`: 성공. 샌드박스에서 Gradle wrapper lock 접근 실패 후 권한 상승 재실행으로 성공.
 - REST Docs snippet groups: 22.
 - Admin campus snippets: 5.
+- `./gradlew test --tests com.faithlog.campus.application.CampusDutyAssignmentConcurrencyTest`: 구현 전 active row 중복으로 `NonUniqueResultException` 실패 확인, lock 적용 후 성공.
+- `docker compose build app`: 성공.
+- `docker compose up -d postgres redis app`: 성공. postgres/redis healthy, app container started.
+- `GET /api/v1/health`: `status=UP` 확인.
+- 문서 동기화: `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/backend-implementation-policy.md`, GitHub Issue #30, Notion 역할/커피/API 문서를 same-level assignment 기준으로 갱신.
 
 ## 6. 고민한 부분
 
@@ -73,7 +81,7 @@ tags:
 
 ## 8. 다음 작업
 
-- [ ] Docker 환경 검증은 PM/사용자 지시 후 수행.
+- [x] Docker 환경 검증 수행.
 - [ ] 최종 Flyway migration consolidation 시 `campus_duty_assignments` 스키마 포함.
 
 ## 9. Velog 글감
