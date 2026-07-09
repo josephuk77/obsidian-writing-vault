@@ -13,16 +13,91 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 영역 | 지표 | 측정 방법 | 최신값 | 목표 |
 | --- | --- | --- | --- | --- |
-| 품질 | 테스트 통과율 | `./gradlew test` | 100% (2026-07-09, 138 tests / 0 failures / 0 errors / 0 skipped, checked-out branch) | 100% |
-| 품질 | 테스트 코드 파일 수 | `find src/test -type f` | 28 test sources, 1 test resource (2026-07-09, checked-out branch) | 증가 추적 |
-| 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 57 snippet groups (2026-07-09, checked-out branch) | 증가 추적 |
-| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-07-09, `./gradlew build --warning-mode all`, checked-out branch) | 성공 |
+| 품질 | 테스트 통과율 | `./gradlew test` | 100% (2026-07-10, 138 tests / 0 failures / 0 errors / 0 skipped, checked-out branch) | 100% |
+| 품질 | 테스트 코드 파일 수 | `find src/test -type f` | 28 test sources, 1 test resource (2026-07-10, checked-out branch) | 증가 추적 |
+| 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 57 snippet groups (2026-07-10, checked-out branch) | 증가 추적 |
+| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-07-10, `./gradlew build --warning-mode all --console=plain`, checked-out branch) | 성공 |
 | API | 응답 시간 | 로컬/운영 부하 테스트 | 측정 보류 (2026-06-17) | TBD |
 | 운영 | 헬스체크 성공률 | `/health` 또는 배포 플랫폼 상태 | 측정 보류 (2026-06-17) | 99%+ |
-| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 8 top-level modules, 231 Java sources (2026-07-09 checked-out branch) | 추적 |
-| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | checked-out branch 0, `origin/develop` local ref 6 (2026-07-09) | 추적 |
+| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 8 top-level modules, 231 Java sources (2026-07-10 checked-out branch) | 추적 |
+| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | checked-out branch 0, `origin/develop` local ref 6 (2026-07-10) | 추적 |
 
 ## Daily Monitoring Notes
+
+### 2026-07-10
+
+- 브랜치/작업트리:
+  - 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md` 확인 후 진행. 저장소에는 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
+  - 현재 브랜치: `docs/37-poll-template-planning-sync`
+  - `git fetch --all --prune`: 성공. `origin/main`이 `904135a`로 갱신됐고 `origin/fix/139-timezone-config`, `origin/fix/142-poll-status-time-sync-dev` 원격 ref는 정리됐다.
+  - `git status --short --branch`: 워크트리 변경 4건 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`), 미추적 빈 파일 1건 (`0`)
+  - 브랜치 divergence: `git rev-list --left-right --count origin/develop...HEAD` 기준 현재 브랜치 ahead 4, behind 95
+- 변경 범위 수치:
+  - `git diff --name-only origin/develop...HEAD`: 현재 브랜치 고유 변경 파일 3개, 모두 문서 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`)
+  - `git diff --shortstat origin/develop...HEAD`: 3 files changed, 104 insertions(+)
+  - `git diff --shortstat`: 워크트리 미커밋 변경 4 files changed, 1695 insertions(+), 8 deletions(-)
+  - 지난 자동화 실행 시각(`2026-07-08T21:16:35.441Z`) 이후 현재 체크아웃 브랜치 새 커밋: 0건
+  - 같은 기간 `origin/develop` 비-merge 실변경 커밋: 3건 (`77f0822`, `b2dde4a`, `354ee68`)
+  - 같은 기간 `origin/main` 비-merge 커밋: 2건 (`b2dde4a`, `904135a`)
+  - develop 비-merge 실변경 중 code/config 영향 커밋: 2건 (`#140`, `#143`), 합계 8 unique files changed, 262 insertions(+), 8 deletions(-)
+  - 변경 영역: `global`, `poll`, `deploy`, `config`, `docs`
+  - 의존성/CI 파일 변경: 0건
+  - DB 마이그레이션 신규 변경: 0건
+- 코드베이스 구조 수치:
+  - 현재 체크아웃 브랜치: 8 top-level modules, 231 Java sources, 28 test Java sources, 1 test resource, 57 snippet groups, 2 GitHub Actions workflows, DB 마이그레이션 0개
+  - 로컬 `origin/develop` tree snapshot: 437 Java sources, 59 test Java sources, DB 마이그레이션 6개
+- 검증 신호:
+  - `./gradlew test --warning-mode all --console=plain`: 성공, 1분 8초, 5 actionable tasks up-to-date
+  - `build/test-results/test/*.xml` 집계: 24 XML files, 138 tests / 0 failures / 0 errors / 0 skipped
+  - `./gradlew build --warning-mode all --console=plain`: 성공, 2초, 8 actionable tasks up-to-date
+  - deprecated 경고 상세: `StartParameter.isConfigurationCacheRequested` 경고 1건이 계속 출력됐다.
+  - build problems report: `build/reports/problems/problems-report.html` 갱신 (`2026-07-10 06:05:41 +0900`, 129,871 bytes)
+  - 테스트 HTML 리포트: `build/reports/tests/test/index.html`은 rerun이 `UP-TO-DATE`로 끝나 `2026-06-20 06:03:15 +0900`, 10,574 bytes 상태를 유지했다.
+- 최신 통합선 변경 관찰:
+  - `origin/develop` 최신 ref는 `1bc3578` (`release: #142 main 변경사항을 develop에 병합`)이다.
+  - `77f0822`는 `#140 서버 DB 세션 시간대 설정 정리`로 5 files changed, 96 insertions(+), `ApplicationTimeZoneConfig`, `application.yml`, `TimeZoneConfigurationTest`를 추가해 UTC JVM 환경에서 날짜 저장 밀림을 방지하는 방향의 코드/테스트 증거를 남겼다.
+  - `354ee68`은 `#143 투표 조회 상태 시간 동기화`로 5 files changed, 166 insertions(+), 8 deletions(-)이며 `PollService`, `PollServiceTest`, `docs/wiki/engineering/2026-07-09-poll-status-time-sync.md`를 갱신했다.
+  - `b2dde4a`와 `904135a`는 각각 `main` 반영/배포 release 커밋으로 관찰됐지만, 오늘 모니터는 dirty worktree를 바꾸지 않고 현재 브랜치에 머물렀으므로 최신 통합선 직접 재검증은 하지 않았다.
+- 운영/배포 신호:
+  - `docker ps`: 성공. 실행 중 컨테이너 0개.
+  - health/latency 측정은 `docs/decision-log.md`의 `2026-06-17 - Daily Health And Response-Time Measurement Scope`와 `2026-07-08 - Daily Monitor Local Runtime Startup Scope` pending question이 남아 있고 앱 컨테이너도 없어 오늘도 보류했다.
+- 오늘 리스크/관찰:
+  - 현재 체크아웃 브랜치 기준 신규 앱 코드 변경은 없고 로컬 검증 성공도 docs branch 기준이다.
+  - 현재 브랜치와 `origin/develop`의 격차가 `ahead 4 / behind 95`까지 벌어져 checked-out branch 검증값을 최신 통합선 품질로 인용하면 과대해석 위험이 더 커졌다.
+  - 최신 upstream에는 Java 소스 437개, 테스트 Java 소스 59개, 마이그레이션 6개가 있지만 현재 체크아웃 브랜치에는 각각 231개, 28개, 0개라 최신 통합선 품질을 직접 재검증하지 못했다.
+  - Gradle deprecated 경고는 오늘도 동일하게 1건 재현됐다.
+  - 루트의 미추적 빈 파일 `0`이 계속 남아 있다.
+  - 운영 리스크 집계: 5건(브랜치 격차, upstream 미재검증, Gradle deprecated 경고 지속, 실행 중 컨테이너 부재, dirty worktree로 인한 branch-switch 검증 미실시)
+- 오늘 테스트 후보:
+  - `git switch develop && ./gradlew test && ./gradlew build --warning-mode all`
+  - 이유: 오늘 성공값은 checked-out docs branch 기준이며, 최신 통합선 품질은 직접 재검증하지 못했다.
+  - 기대 지표: develop 기준 테스트 통과율, 빌드 성공 여부, deprecated 경고 지속 여부
+  - `git switch develop && TZ=UTC ./gradlew test --tests com.faithlog.deploy.TimeZoneConfigurationTest`
+  - 이유: 지난 실행 이후 최신 upstream 핵심 실변경 중 하나가 UTC 환경 날짜 저장 보강(`#140`)이기 때문이다.
+  - 기대 지표: UTC 환경 날짜 저장 회귀 pass/fail, 시간대 설정 계약 검증 여부
+  - `git switch develop && ./gradlew test --tests com.faithlog.poll.application.PollServiceTest`
+  - 이유: 지난 실행 이후 최신 upstream 핵심 실변경 중 하나가 투표 조회 상태 시간 동기화(`#143`)이기 때문이다.
+  - 기대 지표: poll 상태 계산 회귀 테스트 pass/fail
+  - `git switch develop && ./gradlew test jacocoTestReport`
+  - 이유: 최신 통합선 기준 coverage 산출 여부는 오늘도 직접 재확인하지 못했다.
+  - 기대 지표: develop 기준 테스트 수, coverage HTML/XML 생성 성공 여부
+- 오늘 트러블슈팅:
+  - 신규 해결 항목 없음.
+  - 미해결 관찰 1: Gradle configure 단계 deprecated 경고 지속.
+  - 문제: `StartParameter.isConfigurationCacheRequested` 사용 경고가 반복 노출된다.
+  - 원인: 기존 누적 기록 기준 Asciidoctor/Grolifant 계열 플러그인 경로가 deprecated API를 호출하는 것으로 계속 관찰된다.
+  - 조치 현황: 오늘은 `./gradlew test --warning-mode all`와 `./gradlew build --warning-mode all`를 재실행해 경고 지속 여부만 재확인했다.
+  - 전후 지표: 2026-07-09와 2026-07-10 모두 테스트/빌드 성공, deprecated 경고 1건 지속
+  - 재발 방지 후보: Asciidoctor/Grolifant plugin 버전 검토 또는 대체 설정 확인
+  - 미해결 관찰 2: 운영 측정 대상 미기동.
+  - 문제: `docker ps`는 성공했지만 실행 중 컨테이너가 0개라 `/api/v1/health`나 응답 시간 측정을 수행할 대상이 없었다.
+  - 원인: 현재 세션에서 로컬 FaithLog 런타임이 시작되지 않았고, 자동 기동 허용 범위도 승인되지 않았다.
+  - 조치 현황: 오늘은 런타임 자동 기동을 추측하지 않고 컨테이너 0개 사실만 기록했다.
+  - 전후 지표: 2026-07-09와 2026-07-10 모두 `docker ps` 성공 / 실행 중 컨테이너 0개
+  - 재발 방지 후보: 모니터링이 로컬 런타임을 자동으로 올려도 되는지 사용자 승인 범위를 먼저 확정해야 한다.
+- 오늘 이력서 bullet 후보:
+  - checked-out branch 기준 신규 구현 성과 없음.
+  - upstream observed candidate: 2026-07-09 기준 최신 통합선에는 UTC 환경 날짜 저장 보강(`#140`)과 투표 조회 상태 시간 동기화(`#143`)가 추가돼 8개 고유 파일, 262 insertions, 2개 핵심 앱 영역(`global`, `poll`)과 회귀 테스트 2종 이상 영향이 관찰됐다. 단, 현재 브랜치 재검증 전까지는 로컬 검증 완료 성과로 승격하면 안 된다.
 
 ### 2026-07-09
 

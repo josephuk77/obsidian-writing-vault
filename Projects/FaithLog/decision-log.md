@@ -10,6 +10,13 @@ This file records user-approved project decisions so Codex does not rely on gues
 
 ## Decisions
 
+### 2026-07-10 - Daily Monitor Upstream Revalidation Branch-Switch Scope
+
+- Context: The 2026-07-10 daily monitor found the checked-out branch `docs/37-poll-template-planning-sync` is `ahead 4 / behind 95` versus `origin/develop`. Local `./gradlew test` and `./gradlew build` succeeded on the checked-out branch, but direct latest-upstream verification would require `git switch develop` in a dirty worktree with existing modified docs files.
+- Pending question: May the daily monitor automatically switch from the user's current branch to `develop` (or another integration branch) and run verification there when the working tree is dirty, or should it stay on the checked-out branch and report upstream changes as unverified observations?
+- Recommendation: Keep the monitor on the current checked-out branch by default until the user explicitly approves automatic branch switching, because switching branches in a dirty worktree can interrupt local work or fail on checkout conflicts.
+- Current action: Today's report kept verification on the checked-out branch and recorded `origin/develop` changes separately as upstream observed evidence.
+
 ### 2026-07-08 - Daily Monitor Local Runtime Startup Scope
 
 - Context: `docker ps` on 2026-07-08 succeeded again, but there were 0 running containers in the local FaithLog environment. Health-check and response-time metrics therefore remain unmeasured even though Docker itself is reachable.
