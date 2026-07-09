@@ -10,11 +10,141 @@ This file records user-approved project decisions so Codex does not rely on gues
 
 ## Decisions
 
+### 2026-07-08 - Daily Monitor Local Runtime Startup Scope
+
+- Context: `docker ps` on 2026-07-08 succeeded again, but there were 0 running containers in the local FaithLog environment. Health-check and response-time metrics therefore remain unmeasured even though Docker itself is reachable.
+- Pending question: When Docker is reachable but the FaithLog local stack is stopped, should the daily monitor automatically start the local runtime (for example `docker compose up -d postgres redis app`) to collect `/api/v1/health` and latency metrics, or should it stay read-only and report that runtime signals are unavailable?
+- Recommendation: Keep the monitor read-only by default until the user explicitly approves local runtime startup, because starting containers changes the local environment and monitoring scope.
+- Current action: Today's report recorded `docker ps` success with 0 running containers and did not start services automatically.
+
+### 2026-06-20 - Issue #39 Coffee Charge Settlement After Poll Close
+
+- Context: Issue #39 connects coffee polls to `COFFEE` charge generation. The previous draft described creating or updating a charge at poll response time, but the user chose a cleaner operational flow where coffee orders are finalized after the poll closes.
+- Decision: Coffee charges are not created when a user responds to a coffee poll. Coffee charges are generated after the coffee poll has ended, using the final poll responses at close/settlement time. Issue #39 implements the settlement service logic for closed coffee polls. Automatic execution is connected later by Issue #24 Scheduler/Batch. Do not add a separate user-facing coffee charge creation API for MVP.
+- Additional decisions: Do not create an `안 먹어요` zero-price option for MVP coffee polls. Coffee `charge_items.due_date` stays `null`. If settlement is rerun and an existing `COFFEE` charge for the same `POLL_RESPONSE` source is already terminal (`PAID`, `WAIVED`, or `CANCELED`), the terminal charge must not be overwritten. A single poll settlement runs as an all-or-nothing transaction so partial charge creation is rolled back on failure.
+- Impact: Poll response remains responsible for saving `poll_responses` and `poll_response_options`; billing side effects move to the closed-poll settlement boundary. Issue #39 tests must verify settlement creates or updates `COFFEE` `charge_items` from final responses and that rerunning settlement does not create duplicates. Development must not implement immediate response-time coffee charge generation. Tests must also cover `dueDate = null`, no zero-price option handling path, terminal charge protection, and all-or-nothing settlement rollback.
+
+### 2026-06-20 - Issue #38 Poll Error Code Contract
+
+- Context: Issue #38 implements poll responses, poll-level results, missing-member lookup, and poll comments. During development, the API behavior for invalid selections, closed polls, access failures, and comments needed stable domain-prefixed `ErrorCode` values instead of broad `INVALID_REQUEST`, `NOT_FOUND`, or `FORBIDDEN` responses.
+- Decision: Use the following #38 poll error contract: `POLL_NOT_FOUND` returns `404` with `투표를 찾을 수 없습니다.` for campus mismatch, visibility window expiry, and direct lookup data hiding; `POLL_OPTION_NOT_FOUND` returns `404` with `투표 선택지를 찾을 수 없습니다.` for missing options or options belonging to another poll; `POLL_RESPONSE_INVALID_SELECTION_COUNT` returns `400` with `투표 선택 개수가 올바르지 않습니다.` for empty `optionIds`, invalid SINGLE counts, or MULTIPLE counts below one; `POLL_RESPONSE_DUPLICATE_OPTION` returns `400` with `중복된 투표 선택지가 포함되어 있습니다.`; `POLL_CLOSED` returns `409` with `마감된 투표에는 응답하거나 댓글을 작성할 수 없습니다.`; `POLL_ACCESS_FORBIDDEN` returns `403` with `투표 접근 권한이 없습니다.` for users without ACTIVE campus membership; `POLL_ADMIN_FORBIDDEN` returns `403` with `투표 관리 권한이 없습니다.` for missing-member lookup permission failures; `POLL_COMMENT_NOT_FOUND` returns `404` with `투표 댓글을 찾을 수 없습니다.`; `POLL_COMMENT_FORBIDDEN` returns `403` with `투표 댓글 수정/삭제 권한이 없습니다.`.
+- Impact: Issue #38 implementation, tests, and Spring REST Docs must use these detailed poll codes. New poll exceptions must not be collapsed into broad `INVALID_REQUEST`, `NOT_FOUND`, or `FORBIDDEN` codes. Development records should include this approved contract.
+
+### 2026-06-19 - Issue #61 Service Admin User And Campus Management API Contract
+
+- Context: Issue #61 implements service-level `ADMIN` user and campus management APIs. The issue had approved behavior but left several REST Docs contract details open, including response field names, allowed sort fields, and the last-admin protection query basis.
+- Decision: `GET /api/v1/admin/users` uses query parameters `name`, `email`, `userId`, `role`, `page`, `size`, and `sort`. User list items return `userId`, `name`, `email`, `role`, `campusCount`, and `campuses[]`; user detail returns `userId`, `name`, `email`, `role`, `isActive`, and `campuses[]`. User campus items use `membershipId`, `campusId`, `campusName`, `region`, `campusRole`, and `status`. `GET /api/v1/admin/campuses` uses query parameters `name`, `region`, `status`, `page`, `size`, and `sort`, and returns `campusId`, `name`, `region`, `isActive`, `status`, `memberCount`, and `adminCount`. Allowed user sort fields are `id`, `name`, `email`, `role`, and `createdAt`. Allowed campus sort fields are `id`, `name`, `region`, and `createdAt`. The last service-level `ADMIN` protection counts only users where `users.role = ADMIN` and `users.is_active = true`.
+- Impact: Issue #61 REST Docs and tests must lock these names and sort contracts. Aggregate fields such as `memberCount` and `adminCount` are not sortable in this MVP. Last-admin demotion must fail when the target is the only active service-level `ADMIN`.
+
+### 2026-06-19 - Issue #61 Service Admin Direct Member Add Duplicate Policy
+
+- Context: Issue #61 allows service-level `ADMIN` to add users to campuses directly without invite codes and reactivates an existing `INACTIVE` membership as `ACTIVE + MEMBER`. The remaining open behavior was how to handle a direct add request when the same user already has an `ACTIVE` membership in that campus.
+- Decision: If service-level `ADMIN` directly adds a user who already has an `ACTIVE` membership in the target campus, the API fails with `CAMPUS_ALREADY_JOINED`, HTTP `400 Bad Request`, and the existing user-facing message `이미 가입된 캠퍼스입니다.`
+- Impact: `POST /api/v1/admin/campuses/{campusId}/members` must not silently return or overwrite an active membership. It should match the existing invite-code duplicate join policy while still reactivating `INACTIVE` memberships.
+
+### 2026-06-19 - Issue #57 My Monthly Devotion Summary Contract
+
+- Context: GitHub Issue #57 was split from Issue #31 for the Notion `10.5 내 월간 경건생활 통계 조회` API. The issue still said to verify the Notion source before choosing path, query parameters, and response shape.
+- Decision: Issue #57 follows Notion API `10.5`: `GET /api/v1/campuses/{campusId}/devotions/me/monthly-summary?year={year}&month={month}`. The response keeps the common `ApiResponse` envelope and returns `campusId`, `campusName`, `region`, `userId`, `name`, `year`, `month`, a monthly `devotion` summary, and `weeklyRecords[]` with `weeklyRecordId`, `weekStartDate`, `weekEndDate`, `quietTimeCount`, `prayerCount`, `bibleReadingCount`, `saturdayLateMinutes`, and `submittedAt`.
+- Impact: Issue #57 does not add a new table. Monthly totals are calculated by calendar date from `devotion_daily_checks.record_date` between the selected month's first and last day for the current authenticated user after ACTIVE campus membership validation. `weeklyRecords[]` groups the selected month's daily rows by week and may contain partial-week counts when a week crosses a month boundary. `SATURDAY_LATE` minutes are included in the month that contains that week's Saturday date. Controller must return DTOs, detailed contract must be covered with Spring REST Docs, and Swagger documentation annotations must not be added.
+
+### 2026-06-19 - Issue #33 Weekly Devotion Submission Response Shape
+
+- Context: Issue #33 creates a `PENALTY` charge as a side effect of the first weekly devotion final submission. The remaining API contract question was whether the existing weekly devotion response should add a new field such as `generatedCharges`.
+- Decision: Keep the existing `WeeklyDevotionResponse` structure unchanged for Issue #33. Do not add `generatedCharges` or another generated-charge summary field to `PUT /api/v1/campuses/{campusId}/devotions/me/weeks/{weekStartDate}`. Clients should confirm generated charges through the existing charge query APIs when needed.
+- Impact: Issue #33 preserves the current devotion response contract while adding billing side effects. REST Docs should continue to document the existing weekly devotion response fields and verify that generated-charge response fields are not part of the contract.
+
+### 2026-06-19 - Issue #33 Weekly Devotion Duplicate Submission Error Contract
+
+- Context: Issue #33 needed a stable API error contract for requests after a weekly devotion record has already been finally submitted.
+- Decision: If `weekly_devotion_records.submitted_at` already exists for the same campus, user, and week, both duplicate `submit = true` requests and post-submission `submit = false` saves fail with `DEVOTION_WEEKLY_ALREADY_SUBMITTED`, HTTP `409 CONFLICT`, and the user-facing message `이미 제출된 주간 경건생활은 수정할 수 없습니다.`
+- Impact: The devotion submission boundary blocks same-week resubmission before billing reruns. The generated `PENALTY` charge for the first submission is not recalculated or overwritten through the normal weekly devotion API.
+
+### 2026-06-19 - Issue #33 Daily Devotion Check After Weekly Submission
+
+- Context: The one-time weekly devotion submission policy also needs to prevent the daily check API from changing the same week's source rows after final submission. Otherwise the weekly summary and generated `PENALTY` charge can diverge.
+- Decision: If `weekly_devotion_records.submitted_at` already exists for the campus, user, and week containing `recordDate`, `PUT /api/v1/campuses/{campusId}/devotions/me/days/{recordDate}` must fail with `DEVOTION_WEEKLY_ALREADY_SUBMITTED`, HTTP `409 CONFLICT`, and the existing user-facing message `이미 제출된 주간 경건생활은 수정할 수 없습니다.`
+- Impact: After final weekly submission, daily check requests for the same week must not create or update `weekly_devotion_records`, `devotion_daily_checks`, or `charge_items`. This preserves the MVP rule that same-week record modification, recalculation, and delta charge flows are excluded.
+
+### 2026-06-19 - Issue #33 One-Time Weekly Devotion Submission
+
+- Context: Issue #33 connects weekly devotion submission to automatic `PENALTY` charge creation. A previous open question asked how to handle resubmitting a weekly devotion record after the generated charge became terminal.
+- Decision: Weekly devotion submission is one-time. Once `weekly_devotion_records.submitted_at` exists for a user/campus/week, the same weekly record cannot be submitted again. A later `submit = true` request for the same week must fail instead of recalculating or overwriting the existing devotion submission or charge. `submit = false` weekly saves are allowed only before final submission and must not create or update `PENALTY` charges.
+- Impact: Issue #33 does not need a terminal charge resubmission policy because same-week resubmission is blocked at the devotion submission boundary. Development must test that first `submit = true` creates one combined `PENALTY` charge, duplicate `submit = true` fails, missing active `PENALTY` account fails the whole submission without creating a charge, and pre-submit `submit = false` saves do not create charges.
+
+### 2026-06-19 - Issue #32 Penalty Rule And Fine Calculation Scope
+
+- Context: Issue #32 still had an older API draft for devotion fine calculation, while the latest Notion integrated plan and API pages define penalty rule management APIs separately from the weekly devotion submission and charge creation flow.
+- Decision: Issue #32 follows the latest Notion penalty rule API paths: `GET /api/v1/campuses/{campusId}/penalty-rules`, `POST /api/v1/admin/campuses/{campusId}/penalty-rules`, and `PATCH /api/v1/admin/penalty-rules/{ruleId}`. The issue also implements a `DevotionFineCalculator` domain service and calculation result model for `QUIET_TIME`, `PRAYER`, `BIBLE_READING`, and `SATURDAY_LATE` using the approved penalty table. The old draft endpoint `GET /api/v1/campuses/{campusId}/devotions/fines?weekStartDate=` is not part of Issue #32 unless the user explicitly approves a separate preview API later.
+- Impact: Issue #32 implementation must not create or update `charge_items`; the real weekly submission to `PENALTY` charge integration remains Issue #33. REST Docs are required for the penalty rule APIs, while the calculator is verified with focused domain/application tests. Swagger documentation annotations must not be added.
+
+### 2026-06-19 - Issue #32 Active Penalty Rule Replacement And Type Pairing
+
+- Context: Issue #32 still needed final user approval for duplicate active penalty rule behavior and whether `ruleType`/`calculationType` combinations are flexible or fixed.
+- Decision: When an administrator creates a new ACTIVE penalty rule for the same campus and `ruleType`, the previous ACTIVE rule of that type is automatically deactivated and the new rule becomes the only ACTIVE rule. `ruleType` and `calculationType` combinations are fixed: `QUIET_TIME`, `PRAYER`, and `BIBLE_READING` only allow `MISSING_COUNT`, while `SATURDAY_LATE` only allows `LATE_MINUTE`.
+- Impact: Issue #32 must validate invalid type/calculation combinations and prevent multiple ACTIVE rules for the same campus/rule type from remaining active. Tests must cover replacement behavior and invalid pairing rejection.
+
+### 2026-06-19 - Issue #55 Billing Charge List Error Code
+
+- Context: During Issue #55 implementation, the existing billing charge query authorization failures had user-facing messages for "my charge list" and "campus charge list" access, but the approved detailed code list did not yet include a stable code for charge-list authorization errors.
+- Decision: Add `BILLING_CHARGE_LIST_FORBIDDEN` and use it for billing charge list authorization failures while preserving the existing user-facing messages.
+- Impact: Billing charge query APIs can return a detailed domain-prefixed code instead of reusing a less precise billing account/status code or a broad `FORBIDDEN` code. This remains within the Issue #55 refactor scope and does not change API paths or DB schema.
+
+### 2026-06-19 - Common Error Code And Request Validation Refactor Policy
+
+- Context: After Issue #36 was merged, charge query code showed that request validation and user-facing error messages were spread across controllers, presentation helpers, application services, and broad shared error codes such as `INVALID_REQUEST`. The user decided the stable API error contract and validation structure before creating a separate refactor issue.
+- Decision: Error responses use `HTTP status + detailed code` as the fixed API contract. The `message` field is managed as user-facing display text. `ErrorCode` remains one global enum, but each code should be split by domain prefix, such as `BILLING_INVALID_SORT_DIRECTION` or `CAMPUS_MEMBER_NOT_FOUND`. Invalid `page`, `size`, or `sort` values must return `400` instead of being silently corrected. Simple DTO validation uses Bean Validation. Pagination and sorting parsing move to a common request validation component. Business rules move to explicit policy classes such as `CampusRolePolicy`, `ChargeStatusPolicy`, and `BillingAccessPolicy`. This cleanup is handled as one separate refactor issue after Issue #36, not inside the already merged #36 feature PR.
+- Impact: Future development must not keep adding broad `INVALID_REQUEST` usage with hardcoded messages when a stable domain error code is required. REST Docs must document error responses using the detailed `code`, and tests must cover invalid pagination/sorting values returning `400`. This refactor must not add new features, change API paths, change DB schema, or add Swagger documentation annotations.
+
+### 2026-06-18 - Issue #36 Charge Query Date Filter And Monthly Summary Policy
+
+- Context: Issue #36 originally listed `startDate` and `endDate` query parameters for charge list APIs, but the user reconsidered the product behavior during development. The user preferred not to expose manual date-range filtering in the API contract and wanted the app to show recent paid/charged history without deleting older records.
+- Decision: Remove `startDate` and `endDate` from the four Issue #36 charge query APIs. The backend keeps charge history queryable through pagination, sorting, `paymentCategory`, `status`, `userId`, and `keyword` filters. The client may choose to emphasize recent paid items in the default screen, but backend records are not hidden or deleted by time. For `GET /api/v1/campuses/{campusId}/charges/me/summary`, `monthlyPaidAmount` is calculated by `paidAt` in the selected year/month, while `monthlyUnpaidAmount`, `monthlyTotalChargeAmount`, and `monthlyByCategory` use charge `createdAt` in the selected year/month as the "charged" period.
+- Impact: Issue #36 implementation, REST Docs, and tests must not document or bind `startDate`/`endDate`. Query tests must cover full-history pagination and the split monthly summary basis (`paidAt` for paid totals, `createdAt` for charged/unpaid totals). If a future UX needs explicit date-range search, it must be approved as a new API contract change.
+
+### 2026-06-18 - Issue #36 Charge List And Campus Summary Contract
+
+- Context: Issue #36 needed final charge query behavior for member-facing charge lists, member payment summary, campus-level administrator aggregation, and administrator member detail.
+- Decision: Use the latest Issue #36 API paths: `GET /api/v1/campuses/{campusId}/charges/me`, `GET /api/v1/campuses/{campusId}/charges/me/summary`, `GET /api/v1/admin/campuses/{campusId}/charges`, and `GET /api/v1/admin/campuses/{campusId}/members/{userId}/charges`. Do not implement `/api/v1/users/me/charges`, `/api/v1/campuses/{campusId}/charges`, or `/api/v1/campuses/{campusId}/charges/unpaid-users`. Administrator campus charge query returns `summary + members[]` aggregation only and does not include individual charge items. Administrator member detail includes target member `userId`, `name`, and `email`, and uses the same charge item `account`/`source` structure as the member-facing list.
+- Impact: Issue #36 controller responses must use DTOs and the common `ApiResponse` envelope, not Entity returns. Request/Response DTOs and application Result records remain separated. Detailed API contracts are verified through Spring REST Docs tests, without adding Swagger documentation annotations.
+
+### 2026-06-18 - Issue #35 Charge Status Transition Policy
+
+- Context: Issue #35 needed final clarification for charge payment completion, waiver, cancellation, and administrator correction behavior before development. The earlier issue draft and Notion API page allowed an administrator to set `PAID`, but the user chose a stricter rule.
+- Decision: User payment completion is the only path that changes an `UNPAID` charge to `PAID`. Administrators must not mark a charge as `PAID`. Administrators may change a charge to `WAIVED` or `CANCELED`, and may revert an incorrectly handled `PAID`, `WAIVED`, or `CANCELED` charge back to `UNPAID`. Issue #35 does not store an administrator status-change reason and does not add `statusChangedReason`, `waivedAt`, `canceledAt`, or a status history table.
+- Impact: Issue #35 implementation, tests, REST Docs, GitHub issue body, and Notion API documentation must use admin target statuses `UNPAID`, `WAIVED`, and `CANCELED` only. `paidAt` is used for user payment completion; when an administrator reverts a `PAID` charge to `UNPAID`, `paidAt` should be cleared. Automatic source rerun behavior for terminal charges remains outside this decision and must still be confirmed when wiring Issue #33/#39.
+
+### 2026-06-18 - Issue #35 Payment Completion Request Contract
+
+- Context: Issue #35 specified that `paidAt` is optional for `PATCH /api/v1/campuses/{campusId}/charges/me/{chargeItemId}/paid`, but left the empty-body contract and timestamp format to be fixed before TDD implementation.
+- Decision: The user payment completion API accepts both an omitted request body and an empty JSON body. If `paidAt` is omitted, the server time is used. When `paidAt` is provided, the request must use an offset-aware instant format such as `2026-06-12T12:30:00Z`.
+- Impact: Issue #35 controller tests and REST Docs must document optional `paidAt`, omitted-body support, and offset-aware `Instant` parsing. The response should expose `paidAt` as an instant value.
+
+### 2026-06-18 - Issue #34 Admin Account List And Penalty Charge Rerun Policy
+
+- Context: PM review found that service-level `ADMIN` could not list campus payment accounts without campus membership, and `BillingService.createPenaltyCharge` raised a unique constraint error when the same penalty charge source was executed again.
+- Decision: `GET /api/v1/campuses/{campusId}/payment-accounts` allows either service-level `ADMIN` or an ACTIVE campus member. `BillingService.createPenaltyCharge` behaves as create-or-update for an existing `UNPAID` `PENALTY` charge with the same `(campusId, userId, paymentCategory, sourceType, sourceId)`: it updates the latest active PENALTY account snapshot, title, reason, amount, and due date, then returns the same row.
+- Implementation guard: The Issue #34 billing foundation keeps terminal charges guarded so `PAID`, `WAIVED`, or `CANCELED` charges are not overwritten by a source rerun. For Issue #33 specifically, the later 2026-06-19 decision blocks same-week devotion resubmission at the devotion boundary, so terminal devotion charge reruns should not occur through the normal weekly submission flow.
+- Impact: Issue #34 service and controller tests must cover service-admin account list access and service-level penalty charge reruns for existing `UNPAID` charges. The DB unique key remains a safety net, but normal service reruns should not surface unique constraint exceptions for existing `UNPAID` charges.
+
+### 2026-06-18 - Issue #34 Member Payment Account Response Contract
+
+- Context: The Issue #34 payment account list API is available to every ACTIVE campus member, but older Notion endpoint detail examples included admin-oriented fields such as `ownerUserId` and `isActive`.
+- Decision: `GET /api/v1/campuses/{campusId}/payment-accounts` returns active accounts only and exposes the member-facing fields required for payment: `id`, `accountType`, `nickname`, `bankName`, `accountNumber`, and `accountHolder`. It does not expose admin-only metadata such as `ownerUserId`, `isActive`, `createdAt`, or `deactivatedAt` in the member-facing response.
+- Impact: Issue #34 REST Docs and controller tests must document the reduced member-facing response. Account numbers remain fully visible because they are required for bank transfer payment.
+
+### 2026-06-18 - Issue 30 Same-Level Campus Role Assignment And Coffee Duty Permission
+
+- Context: Issue #30 role hierarchy wording could be read as "only roles below the requester can be changed or assigned." The user clarified the final behavior during the development session.
+- Decision: A campus manager can assign campus roles up to the manager's own campus role level, but cannot change or assign roles above that level. `MINISTER` can change another user to `MINISTER`, `ELDER`, `CAMPUS_LEADER`, or `MEMBER`. `ELDER` can change another user to `ELDER`, `CAMPUS_LEADER`, or `MEMBER`, but cannot change an existing `MINISTER` or assign `MINISTER`. `CAMPUS_LEADER` can change another user to `CAMPUS_LEADER` or `MEMBER`, but cannot change an existing `ELDER` or `MINISTER` or assign those roles. `MEMBER` cannot change roles. Service-level `ADMIN` can change all campus roles, and service-level `MANAGER` alone does not grant campus role change permission. Coffee duty management is allowed for service-level `ADMIN` and active campus members whose campus role is not `MEMBER`; service-level `MANAGER` alone does not grant coffee duty management permission.
+- Impact: Issue #30 implementation, tests, and REST Docs must use same-level assignment semantics and non-`MEMBER` coffee duty management permission. Any earlier "below only" interpretation is superseded.
+
 ### 2026-06-18 - Issue 30 Campus Role Hierarchy And Coffee Duty Contract
 
 - Context: Issue #30 needed final confirmation before development because the campus role update API path, coffee duty assignment cardinality, and campus role downgrade rules were ambiguous.
 - Decision: Issue #30 must follow the latest Notion API contract. Campus role changes use `PATCH /api/v1/admin/campuses/{campusId}/members/{campusMemberId}/campus-role`, where `campusMemberId` means `campus_members.id`. Coffee duty assignment is limited to one active `DutyType.COFFEE` assignee per campus and uses `PUT /api/v1/admin/campuses/{campusId}/duty-assignments/coffee` to assign/replace the active assignee and `DELETE /api/v1/admin/campuses/{campusId}/duty-assignments/coffee/{assignmentId}` to revoke. The campus role hierarchy is `MINISTER > ELDER > CAMPUS_LEADER > MEMBER`. A campus manager may change roles only below their own role: `MINISTER` can change `ELDER`, `CAMPUS_LEADER`, and `MEMBER`; `ELDER` can change `CAMPUS_LEADER` and `MEMBER`, but not `MINISTER`; `CAMPUS_LEADER` can change `MEMBER`, but not `MINISTER` or `ELDER`; `MEMBER` cannot change roles. Service-level `ADMIN` can change any campus member role in any campus. The last campus management role holder may still be downgraded to `MEMBER`; do not block it with a last-manager guard in Issue #30.
 - Impact: Issue #30, Notion planning, API documentation, REST Docs tests, and implementation must use these paths and authorization rules. Development must not use the older `members/{memberId}/role`, generic `POST duty-assignments`, or `PATCH revoke` API drafts for #30.
+- Status: Role assignment hierarchy wording is superseded by the later 2026-06-18 decision `Issue 30 Same-Level Campus Role Assignment And Coffee Duty Permission`: same-level assignment is allowed. API paths, `campusMemberId`, coffee duty cardinality, and last-manager downgrade policy remain valid.
 
 ### 2026-06-18 - Campus Member Delete And Management Permission For Issue 29
 
@@ -99,6 +229,25 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Context: The user approved the implementation direction previously identified by Codex for conflicts between older Notion/API drafts and the latest local decisions.
 - Decision: Refresh Token storage follows Redis allowlist and not the old `refresh_tokens` table design. Poll responses must use request field `optionIds` and `poll_response_options`, not request field `optionId` or `poll_responses.option_id`. Devotion implementation uses the weekly `PUT /api/v1/campuses/{campusId}/devotions/me/weeks/{weekStartDate}` flow to create or update 7 daily rows; the old single-day devotion API is not the MVP implementation path.
 - Impact: Auth, poll, and devotion issues must treat these decisions as higher priority than older Notion API text. Any implementation or API documentation that still exposes the old paths/fields must be corrected before development is considered complete.
+- Status: Partially superseded for devotion. The 2026-06-19 decision `Issue #31 Devotion Daily Check And Weekly Submission Sync` includes the daily check API in MVP while keeping weekly submission as the only submission/penalty trigger.
+
+### 2026-06-19 - Issue #31 Devotion Daily Check And Weekly Submission Sync
+
+- Context: The user asked to compare Issue #31 with the latest Notion planning/API/ERD and update local planning to match Notion before development.
+- Decision: Issue #31 includes both daily check and weekly save/submit flows. The daily check API is `PUT /api/v1/campuses/{campusId}/devotions/me/days/{recordDate}` and creates or updates the matching `devotion_daily_checks` row while synchronizing the weekly row if missing. Daily checks never update `submitted_at` and never create or update `PENALTY` charges. The weekly API remains `PUT /api/v1/campuses/{campusId}/devotions/me/weeks/{weekStartDate}` and uses request field `dailyChecks`. Weekly submission creates or updates Monday-Sunday daily rows, fills missing submission dates with false defaults, updates `weekly_devotion_records.submitted_at` when `submit = true`, and uses `weekly_devotion_records.submitted_at` as the submission/missing-user source of truth.
+- Impact: Issue #31 development must implement the daily API and weekly API together. Issue #33 remains responsible for the final penalty charge integration, but #31 tests must prove daily checks do not trigger submission or billing behavior.
+
+### 2026-06-19 - Monthly Devotion Statistics Split From Issue #31
+
+- Context: Notion includes a monthly devotion statistics page, but Issue #31 already covers daily check, weekly save/submit, weekly read, and admin missing-user lookup.
+- Decision: Monthly devotion statistics are excluded from Issue #31 and must be tracked as a separate GitHub Issue.
+- Impact: Issue #31 stays focused on the daily/weekly submission flow. Monthly statistics development must verify the final Notion 10.5 API and response contract before implementation instead of guessing the API path or aggregation rules.
+
+### 2026-06-19 - Empty Weekly Devotion Lookup Returns Defaults
+
+- Context: The user chose the mobile-friendly behavior for `GET /api/v1/campuses/{campusId}/devotions/me/weeks/{weekStartDate}` when the user has no record for the requested week.
+- Decision: My weekly devotion lookup must not return 404 just because the weekly record does not exist yet. Instead, it returns a default weekly response with Monday-Sunday `dailyChecks`, all check fields false, summary counts 0, `saturdayLateMinutes = 0`, and `submittedAt = null`.
+- Impact: Issue #31 development must update tests and implementation so the weekly screen can render immediately before the user creates any daily checks or weekly submission. Missing-user admin lookup still treats absent weekly records as missing submissions.
 
 ### 2026-06-17 - Pagination Sorting Redis TTL And Notification Failure Policies
 
@@ -119,11 +268,53 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Impact: Issue #29 and Issue #34 must be aligned so campus onboarding creates the required billing prerequisites. Issue #33 can assume a properly onboarded campus has an active `PENALTY` account, while still returning a clear error if the account is missing due to legacy or corrupted data.
 - Status: Superseded. This is a historical record only. The later 2026-06-18 decision `Campus Creation Does Not Create Payment Account Or Penalty Rules` and the latest Issue #29 scope take precedence: campus creation and account/rule setup are separate, and campus creation must not receive `penaltyAccount`, create `PaymentAccount`, or create default `penalty_rules`.
 
+### 2026-06-18 - Issue #34 Payment Account And Charge Foundation Scope
+
+- Context: Issue #34 was checked against the latest Notion integrated plan, final ERD, and API design before development.
+- Decision: Issue #34 follows the Notion billing foundation model: implement `PaymentAccount`, `ChargeItem`, `PaymentCategory`, `ChargeSourceType`, `ChargeStatus`, payment account list/create/deactivate APIs, account snapshot support, missing-account failure behavior, and duplicate charge prevention. Campus creation does not create accounts or default penalty rules. Manual admin charge creation is not MVP scope.
+- Impact: Detailed API contracts must be verified through Spring REST Docs tests, while Swagger/springdoc remains for simple API exploration. Later charge-producing flows must use the billing foundation instead of manipulating another domain's entity directly.
+
+### 2026-06-18 - Issue #34 Payment Account Activation And Visibility Policy
+
+- Context: The user finalized the remaining account-management behavior before Issue #34 development.
+- Decision: Each campus can have only one active payment account per `account_type`. All active campus members can view campus payment accounts, and account numbers are fully visible because users need them for bank transfer payment. Creating a new active account automatically deactivates the previous active account for the same campus and account type. Accounts can be deactivated even if unpaid charge items are linked to them. When a new active account replaces the old one, existing `UNPAID` charge items for that campus and payment category are re-linked to the new active account and their account snapshots are updated. Terminal `PAID`, `WAIVED`, and `CANCELED` charge items keep their historical snapshots. Issue #34 implements only the billing foundation service; actual devotion and coffee auto-charge flow integration remains in Issue #33 and Issue #39.
+- Impact: Issue #34 tests must cover one-active-account-per-type behavior, member account list access, full account-number exposure in payment account responses, deactivation with unpaid charges, unpaid charge re-linking on account replacement, and preservation of terminal charge snapshots.
+
 ### 2026-06-17 - Coffee Poll Requires Coffee Duty Assignment
 
 - Context: The user decided that coffee poll behavior should fail clearly when no coffee duty assignee exists.
 - Decision: If a coffee poll flow requires a coffee duty assignee and no active `CampusDutyAssignment` with `DutyType.COFFEE` exists for the campus, the API must fail with a clear user-facing message: `관리자에게 문의하세요`.
 - Impact: Issue #30 must provide active coffee duty assignment management, and Issue #37/#39 must validate the assignment before coffee poll setup or coffee charge flow where required.
+
+### 2026-06-19 - Issue #37 Coffee Brand And Menu Catalog
+
+- Context: The user clarified that coffee ordering is initially limited to Compose Coffee, but the design should allow additional coffee brands later.
+- Decision: Do not store Compose Coffee menu names and prices in frontend-only data or Java enums. Issue #37 must add backend-managed coffee brand/menu catalog data. MVP seeds one active brand, Compose Coffee, and seeds all current Compose Coffee menu items into the catalog. The default coffee poll template starts with these five options: iced americano, americano, iced tea, iced latte, and latte. Additional template options are added by selecting from the backend coffee menu catalog. `poll_template_options` and `poll_options` store copied menu name/code/price snapshots so later catalog price changes do not mutate already-created polls or charges.
+- Impact: Issue #37 must include `coffee_brands`, `coffee_menu_catalog`, catalog lookup API, Compose Coffee full-menu seed, and default coffee template option seeding. Brand/menu admin CRUD and additional brand onboarding are excluded unless the user approves a separate issue. Development must verify the full Compose Coffee seed list and prices from an approved current source before implementation instead of guessing.
+
+### 2026-06-19 - Issue #37 Coffee Catalog Source And API Path
+
+- Context: The user approved the source of truth for Compose Coffee menu seed data and accepted the recommended catalog lookup API paths.
+- Decision: Issue #37 must seed Compose Coffee menu names and prices from the official Compose Coffee menu board/source available at implementation time. If the official website blocks automated access, the development session must use another official source provided by Compose Coffee, such as the official app/menu image/menu board, and record the source used. The catalog lookup APIs are `GET /api/v1/coffee-brands` and `GET /api/v1/coffee-brands/{brandId}/menus`.
+- Impact: Issue #37 development must not guess menu prices from blogs or unofficial lists. REST Docs tests must document both catalog lookup APIs, and the seed verification record must name the official source and capture date.
+
+### 2026-06-19 - Issue #38 Poll Result Visibility
+
+- Context: The user clarified how poll result visibility should work for normal and anonymous polls.
+- Decision: Normal poll results are visible to all active campus members, not only admins. If `polls.is_anonymous = false`, the result response may show who voted for each option. If `polls.is_anonymous = true`, nobody should be able to identify who voted for which option through result APIs; return aggregate counts only and hide respondent user identifiers/names. The backend still stores `poll_responses.user_id` for duplicate response prevention, response editing, and missing-member calculation, but does not expose voter identity for anonymous poll results.
+- Impact: Issue #38 must use a member-facing result endpoint, such as `GET /api/v1/campuses/{campusId}/polls/{pollId}/results`, and tests must cover both non-anonymous identity exposure and anonymous identity hiding. Admin-only missing-member lookup can remain separate.
+
+### 2026-06-19 - Issue #38 Poll Result And Past Poll Visibility Window
+
+- Context: The user clarified how long poll results and past polls should remain visible after a poll ends.
+- Decision: Visibility windows are based on `polls.ends_at`. User-facing poll history, poll detail, and poll result lookup are visible to active campus members only until 3 days after `ends_at`. Admin-facing poll history, poll detail, and poll result lookup are visible in the admin page only until 7 days after `ends_at`. After the visibility window expires, expired polls should be hidden from lists and direct lookup should not expose the poll/result data.
+- Impact: Issue #38 must add tests for member visibility before and after `ends_at + 3 days`, and admin visibility before and after `ends_at + 7 days`. The anonymous poll identity-hiding rule still applies during the visible window.
+
+### 2026-06-19 - Issue #38 Poll-Level Result Query
+
+- Context: The user clarified that seeing who voted for what should be handled as a full result view for one poll, not as separate option-level result lookup APIs.
+- Decision: Issue #38 must provide one poll-level result API, `GET /api/v1/campuses/{campusId}/polls/{pollId}/results`. Do not create option-level result endpoints such as `/options/{optionId}/results` for MVP. The poll-level result response contains poll metadata, all options, vote counts, and, when the poll is not anonymous, respondent lists grouped under each option. Anonymous polls return aggregate counts only and omit respondent identity fields.
+- Impact: API docs, tests, and frontend planning should treat the poll detail/result screen as a single poll-level result resource. Tests must verify that all options are returned in one response and that anonymous polls do not expose respondent identity.
 
 ### 2026-06-17 - Prayer Requests Group Board
 
@@ -187,6 +378,34 @@ This file records user-approved project decisions so Codex does not rely on gues
 
 ## Pending Decisions
 
+### 2026-07-07 - Daily Monitor Develop Checkout Verification Scope
+
+- Context: `git fetch --all --prune` on 2026-07-07 advanced `origin/develop` to `e52459f`, which now includes the 2026-07-06 account deletion implementation commit `b498356`. Today's local verification still ran only on the checked-out docs branch `docs/37-poll-template-planning-sync`, which remains `85` commits behind `origin/develop`.
+- Pending question: May the daily monitor temporarily switch to `develop` or another approved latest-code checkout target and run Gradle verification there, or must it remain limited to the currently checked-out branch and report upstream code only as unverified observed evidence?
+- Recommendation: Approve one explicit latest-code verification mode such as `git switch develop`, a detached checkout/worktree for `origin/develop`, or "do not switch branches" so the monitor can cite current-code metrics without guessing branch policy.
+- Current action: Today's report kept `b498356` and merge `e52459f` in the upstream-documented section only, and listed the develop-branch Gradle commands as testing candidates instead of treating them as completed verification.
+
+### 2026-06-30 - Flyway Reintroduction Policy After Upstream Migration Commits
+
+- Context: `git fetch origin` on 2026-06-30 advanced `origin/develop` to `c624be5` and retained `0eb1e95`, which includes `src/main/resources/db/migration/V2__add_poll_user_option_fields.sql` and `src/test/java/com/faithlog/deploy/PostgresFlywayMigrationTest`. This appears to conflict with the still-recorded 2026-06-17 decisions `Defer Flyway Until Feature Development Is Complete` and `Remove Flyway From Active Runtime`.
+- Pending question: Should the daily monitor treat the reintroduced Flyway migration/test files on `origin/develop` as an approved policy change, or as unapproved upstream divergence that must stay labeled as a risk until the user explicitly updates the Flyway decision?
+- Recommendation: Keep citing the new migration/test files only as observed upstream evidence and do not reinterpret FaithLog's active migration policy until the user explicitly approves a new decision.
+- Current action: Today's report recorded the Flyway-related upstream files as a policy-risk observation and did not rewrite the existing 2026-06-17 decisions.
+
+### 2026-06-25 - Resume Monitor Upstream Metrics Citation Scope
+
+- Context: After `git fetch --all --prune` on 2026-06-25, `origin/develop` advanced to `c46266d` and now contains Cloud Run performance metrics in `docs/resume-metrics.md`, while the checked-out branch `docs/37-poll-template-planning-sync` still has no local code changes beyond docs and remains `53` commits behind `origin/develop`.
+- Pending question: When the monitor sees concrete upstream metrics in `origin/develop` docs but has only locally revalidated the checked-out branch, should those upstream numbers be promoted into the daily resume report as current project evidence, or only as "upstream documented but not locally reverified" notes until the branch is synced or checked out?
+- Recommendation: Keep upstream performance numbers in a separate labeled section until the same ref is checked out or otherwise explicitly approved as the source of truth for resume citations.
+- Current action: Today's monitor recorded the `c46266d` Cloud Run numbers as upstream documented evidence and did not treat them as locally verified current-branch achievements.
+
+### 2026-06-21 - Daily Monitor Comparison Baseline Branch
+
+- Context: The current working branch `docs/37-poll-template-planning-sync` is `4` commits ahead and `4` commits behind `origin/develop`. In this state, `git diff origin/develop...HEAD` shows the branch's own docs-only changes, while `git diff origin/develop..HEAD` shows a much larger 154-file delta because the branch tip does not include newer `develop` commits such as `#67`.
+- Pending question: For daily resume monitoring, should the default comparison baseline be the checked-out branch's unique commits (`origin/develop...HEAD`), the repository integration branch tip (`origin/develop`), or both with separate labels?
+- Recommendation: Use `origin/develop...HEAD` as the default "work done on this branch" delta, and report `origin/develop..HEAD` only as a branch-divergence warning so the monitor does not overstate deletions or missing modules as authored work.
+- Current action: Today's report recorded both ranges separately and did not interpret the 154-file tip-to-tip diff as an actual branch deletion set.
+
 ### 2026-06-17 - Prayer Request Meeting Status Storage Scope
 
 - Context: Prayer request writing remains available even when there is no meeting, so meeting status must be separated from whether a prayer request can be written. The remaining unresolved decision is only where, if anywhere, meeting status should be stored.
@@ -227,3 +446,17 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Recommendation: Provide one stable local transcript source path or leave transcript analysis disabled.
 - Current action: No transcript source was provided, so conversation transcripts were not inspected.
 <!-- daily-resume-monitor:end:decision-log:2026-06-16 -->
+
+### 2026-07-06 - Untracked Root File `0` Ownership
+
+- Context: `git status --short --branch` on 2026-07-06 still shows untracked root file `0`. Local inspection confirms `/Users/josephuk77/FaithLog/0` is an empty file (0 bytes) and it is not referenced by the approved monitor inputs.
+- Pending question: Should the monitor keep ignoring root file `0` as local workspace noise, or should the repository owner remove it / add an ignore rule after explicit approval?
+- Recommendation: Keep reporting it as workspace risk only and do not delete, rename, or ignore it until the user explicitly chooses the cleanup policy.
+- Current action: Today's monitor recorded the file as an untracked-risk observation and left the worktree unchanged.
+
+### 2026-07-07 - Upstream Implementation Citation Scope For Daily Monitor
+
+- Context: Local Git metadata now shows `origin/develop` commit `b498356` (`[Feat] 회원 탈퇴와 계정 소프트 삭제 구현 (#132)`) with 20 changed files, including 11 main Java files, 4 test Java files, and `src/main/resources/db/migration/V6__add_user_deleted_at.sql`, while the checked-out branch `docs/37-poll-template-planning-sync` still has no local app-code commits beyond docs and remains 82 commits behind local `origin/develop`.
+- Pending question: When the daily monitor observes substantial implementation work only on local `origin/develop`, should that code/test/migration work be promoted into resume-ready daily reporting as current project evidence, or kept labeled as upstream-observed evidence until the branch is synced or the user explicitly approves `origin/develop` as the citation source?
+- Recommendation: Keep implementation work from local `origin/develop` in a separately labeled upstream-observed section until the same ref is checked out or the user explicitly approves using integration-branch evidence for resume citations.
+- Current action: Today's monitor recorded #132 only as upstream-observed activity and did not promote it as checked-out-branch verified delivery.
