@@ -61,6 +61,14 @@ tags:
 
 `BUILD SUCCESSFUL`
 
+전체 검증:
+
+- `./gradlew test` 성공(313 tests / 0 failures / 0 errors / 1 skipped)
+- `./gradlew build` 성공
+- `git diff --check` 성공
+- `scripts/qa_docker_compose_isolated.sh --suffix 142-poll-status-sync` 성공: app image build, PostgreSQL/Redis health, backend health `UP`, compose down 완료
+- Swagger 문서화 annotation 검색은 정책 문서의 금지 예시만 매칭됐고 `src` 신규 annotation 추가는 없음
+
 ## 6. 고민한 부분
 
 - 조회 메서드는 기존에 `readOnly = true`였기 때문에 동기화 mutation이 유실되지 않도록 write transaction으로 바꿨다.
@@ -76,7 +84,7 @@ tags:
 
 ## 8. 다음 작업
 
-- [ ] PM 검증 후 전체 테스트/build/Docker QA 결과를 최종 확인한다.
+- [ ] PM 검증 후 PR 생성 여부를 결정한다.
 
 ## 9. Velog 글감
 
