@@ -2,6 +2,7 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-10_issue-145-ddd-mvc-package-structure]]
 - [[04_DevLog/2026-07-09_issue-142-poll-status-time-sync]]
 - [[04_DevLog/2026-07-07_issue-134-1000-user-read-optimization]]
 - [[04_DevLog/2026-07-01_issue-112-billing-account-scope-coffee-poll-policy]]
@@ -35,6 +36,7 @@
 
 ## Troubleshooting
 
+- [[05_Troubleshooting/2026-07-10_package-move-test-order-isolation]]
 - [[05_Troubleshooting/2026-06-22_token-version-docker-security]]
 - [[05_Troubleshooting/2026-06-20_notification-concurrency-test-bean-conflict]]
 
