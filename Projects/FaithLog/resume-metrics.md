@@ -13,18 +13,27 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 영역 | 지표 | 측정 방법 | 최신값 | 목표 |
 | --- | --- | --- | --- | --- |
-| 품질 | 테스트 통과율 | `./gradlew test` | 100% (2026-07-10, 138 tests / 0 failures / 0 errors / 0 skipped, checked-out branch) | 100% |
-| 품질 | 테스트 코드 파일 수 | `find src/test -type f` | 28 test sources, 1 test resource (2026-07-10, checked-out branch) | 증가 추적 |
+| 품질 | 테스트 통과율 | `./gradlew test` | 100% of executed tests (2026-07-10 #152, 350 tests / 0 failures / 0 errors / 1 skipped) | 100% |
+| 품질 | 테스트 코드 파일 수 | `rg --files src/test/java | rg '\.java$'` | 69 test files (2026-07-10 #152) | 증가 추적 |
 | 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 57 snippet groups (2026-07-10, checked-out branch) | 증가 추적 |
-| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-07-10, `./gradlew build --warning-mode all --console=plain`, checked-out branch) | 성공 |
+| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-07-10 #152) | 성공 |
 | API | 응답 시간 | 로컬/운영 부하 테스트 | 측정 보류 (2026-06-17) | TBD |
 | 운영 | 헬스체크 성공률 | `/health` 또는 배포 플랫폼 상태 | 측정 보류 (2026-06-17) | 99%+ |
-| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 8 top-level modules, 231 Java sources (2026-07-10 checked-out branch) | 추적 |
-| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | checked-out branch 0, `origin/develop` local ref 6 (2026-07-10) | 추적 |
+| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 10 top-level modules, 548 Java sources including tests (2026-07-10 #152) | 추적 |
+| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | 6 (Flyway V1-V6, 2026-07-10 #152) | 추적 |
 
 ## Daily Monitoring Notes
 
 ### 2026-07-10
+
+- #152 Poll 템플릿과 커피 정산 책임 분리:
+  - 기준: 최신 `origin/develop` `d7ae1d6`, 별도 worktree, `chore/152-poll-template-coffee-settlement-separation`.
+  - TDD: production 수정 전 구조 테스트 6건을 추가해 6/6 RED를 확인하고 책임 이동 후 6/6 GREEN. 자동 생성 snapshot 전체 필드와 비활성 auto template 제외 characterization 추가.
+  - 분리: template command 3개/query 2개를 `PollTemplateCommandService`/`PollTemplateQueryService`, option snapshot을 `PollTemplateOptionSupport`, 자동 복사를 `ScheduledPollFactory`, settlement transaction/Billing orchestration을 `CoffeePollSettlementCommandService`, eligibility/response-option 조립을 `CoffeePollSettlementSupport`로 분리. `CoffeeCatalogService`는 변경하지 않음.
+  - 줄 수: `PollTemplateService` 218→42(-80.7%), `PollAutomationService` 207→121(-41.5%), `CoffeePollSettlementService` 130→17(-86.9%). 추출 class를 포함한 전체 코드 감소가 아니라 facade/orchestrator 책임 축소 수치.
+  - 검증: focused 62/62, 4-domain 204/204, 전체 350 tests / 0 failures / 0 errors / 1 skipped, build/asciidoctor 성공, 격리 Docker image build + PostgreSQL/Redis healthy + backend `data.status=UP` + volume 삭제 없는 down. GitHub CI는 PR/push 금지로 미실행.
+  - 무변경: API/DTO/ErrorCode/Entity/DB/Flyway/repository/scheduler/의존성 변경 0건, Swagger annotation 추가 0건, Controller Entity import 0건, 서비스 순환 의존 0건.
+  - 이력서 후보: `Poll template의 5개 command/query와 자동 생성·커피 정산 책임을 전용 Service/Support/Factory로 분리해 기존 통합 Service를 최대 86.9% 축소하고, 6개 구조 회귀 테스트·350개 전체 테스트·204개 4-domain 테스트·격리 Docker health 검증으로 API·DB·권한·스케줄·정산 동작 무변경을 보장했다.`
 
 - 브랜치/작업트리:
   - 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md` 확인 후 진행. 저장소에는 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
