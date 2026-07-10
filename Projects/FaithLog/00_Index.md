@@ -2,6 +2,7 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-10_issue-151-poll-core-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-150-devotion-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-165-devotion-test-context-isolation]]
 - [[04_DevLog/2026-07-10_issue-149-billing-query-aggregation-separation]]
@@ -41,6 +42,7 @@
 
 ## Troubleshooting
 
+- [[05_Troubleshooting/2026-07-10_poll-helper-package-rule]]
 - [[05_Troubleshooting/2026-07-10_spring-context-shared-h2-test-pollution]]
 - [[05_Troubleshooting/2026-07-10_pm-dev-harness-missing]]
 - [[05_Troubleshooting/2026-07-10_package-move-test-order-isolation]]
