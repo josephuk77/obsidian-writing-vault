@@ -2,6 +2,7 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-10_issue-148-billing-command-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-147-campus-admin-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-145-ddd-mvc-package-structure]]
 - [[04_DevLog/2026-07-09_issue-142-poll-status-time-sync]]
