@@ -52,7 +52,7 @@ tags:
 - `./gradlew asciidoctor`: BUILD SUCCESSFUL
 - `git diff --check`: 성공
 - GitHub CI: PR/push 금지 지시로 미실행
-- Docker QA: BuildKit metadata DB I/O 오류로 Docker daemon 재시작 승인 전 보류
+- Docker QA: 1차 BuildKit metadata DB I/O 오류, daemon 복구 후 2차 호스트 가용 공간 116MiB·100% 사용 상태의 no-space 오류로 image/health 확인 미완료. volume 삭제 없는 project down 수행
 
 ## 6. 고민한 부분
 
@@ -65,12 +65,12 @@ tags:
 
 - `pm-dev`가 비활성 보관 경로에만 있고 저장소 Harness 파일과 활성 gate가 없어, 누락 파일을 만들거나 품질 기준을 완화하지 않고 FaithLog TDD/검증 기준을 사용했다.
 - Asciidoctor 첫 실행은 sandbox Gradle wrapper lock 권한으로 실패했고 승인 경로의 동일 명령으로 성공했다.
-- Docker QA는 BuildKit `metadata_v2.db`/`snapshots.db` I/O 오류로 중단돼 별도 troubleshooting 문서에 기록했다.
+- Docker QA는 BuildKit `metadata_v2.db`/`snapshots.db` I/O 오류와 호스트 디스크 부족으로 중단돼 별도 troubleshooting 문서에 기록했다. Android Emulator, 기존 volume/image는 건드리지 않았다.
 
 ## 8. 다음 작업
 
 - [ ] PM 코드리뷰 후 PR 생성 여부 결정
-- [ ] Docker Desktop 재시작 승인 시 격리 Docker health QA 재실행
+- [ ] 사용자가 호스트 디스크 공간을 확보한 뒤 격리 Docker health QA 재실행
 
 ## 9. Velog 글감
 
