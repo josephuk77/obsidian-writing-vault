@@ -2,6 +2,7 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-10_issue-150-devotion-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-165-devotion-test-context-isolation]]
 - [[04_DevLog/2026-07-10_issue-149-billing-query-aggregation-separation]]
 - [[04_DevLog/2026-07-10_issue-148-billing-command-usecase-separation]]
