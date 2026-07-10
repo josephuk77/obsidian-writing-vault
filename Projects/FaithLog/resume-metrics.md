@@ -35,6 +35,77 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
   - 무변경: API/DTO/ErrorCode/Entity/DB/Flyway/repository/의존성 변경 0건, Swagger annotation 추가 0건, Controller Entity import 0건, 서비스 순환 의존 0건.
   - 이력서 후보: `Prayer의 11개 유스케이스를 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다.`
 
+
+### 2026-07-11 Daily Monitor (checked-out branch)
+
+- 브랜치/작업트리:
+  - 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md` 확인 후 진행. 저장소에는 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
+  - 현재 브랜치: `docs/37-poll-template-planning-sync`
+  - `git fetch --all --prune`: 성공. `origin/chore/145-ddd-mvc-package-structure`, `origin/chore/147-campus-admin-usecase-separation`, `origin/chore/148-billing-command-usecase-separation`, `origin/chore/149-billing-query-aggregation-separation`, `origin/chore/150-devotion-usecase-separation`, `origin/chore/151-poll-core-usecase-separation`, `origin/chore/152-poll-template-coffee-settlement-separation`, `origin/chore/165-devotion-test-isolation` 원격 ref가 정리됐다.
+  - `git status --short`: 워크트리 변경 4건 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`), 미추적 빈 파일 1건 (`0`)
+  - 브랜치 divergence: `git rev-list --left-right --count origin/develop...HEAD` 기준 현재 브랜치 ahead 4, behind 134
+- 변경 범위 수치:
+  - `git diff --name-only origin/develop...HEAD`: 현재 브랜치 고유 변경 파일 3개, 모두 문서 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`)
+  - `git diff --shortstat origin/develop...HEAD`: 3 files changed, 104 insertions(+)
+  - `git diff --shortstat`: 워크트리 미커밋 변경 4 files changed, 1777 insertions(+), 8 deletions(-)
+  - 지난 자동화 실행 시각(`2026-07-09T21:01:14.351Z`) 이후 현재 체크아웃 브랜치 새 커밋: 0건
+  - 같은 기간 `origin/develop` 비-merge 실변경 커밋: 38건. 최근 묶음은 `#146` DDD 패키지 구조 정리, `#147` Campus Admin 책임 분리, `#148` Billing 명령 책임 분리, `#149` Billing 조회 책임 분리, `#150` Devotion 책임 분리, `#151` Poll core 책임 분리, `#152` Poll template/coffee settlement 책임 분리, `#165` 테스트 DB 격리 보강이다.
+  - 같은 기간 `origin/develop` 누적 변경량: 546 unique files changed, 7496 insertions(+), 3979 deletions(-)
+  - 변경 영역: `admin`, `batch`, `billing`, `campus`, `devotion`, `global`, `notification`, `poll`, `prayer`, `user`
+  - 의존성/CI 파일 변경: 관찰된 범위에서 없음
+  - DB 마이그레이션 신규 변경: 현재 체크아웃 브랜치 0, 로컬 `origin/develop` snapshot 6
+- 코드베이스 구조 수치:
+  - 현재 체크아웃 브랜치: 8 top-level modules, 231 Java sources, 28 test Java sources, 1 test resource, 57 snippet groups, 2 GitHub Actions workflows, DB 마이그레이션 0개
+  - 로컬 `origin/develop` tree snapshot: 479 Java sources, 69 test Java sources, DB 마이그레이션 6개
+- 검증 신호:
+  - `./gradlew test --warning-mode all --console=plain`: 성공, 14초, 5 actionable tasks up-to-date
+  - `build/test-results/test/*.xml` 집계: 24 XML files, 138 tests / 0 failures / 0 errors / 0 skipped
+  - `./gradlew build --warning-mode all --console=plain`: 성공, 17초, 8 actionable tasks up-to-date
+  - deprecated 경고 상세: `StartParameter.isConfigurationCacheRequested` 경고 1건이 계속 출력됐다.
+  - build problems report: `build/reports/problems/problems-report.html` 갱신 (`2026-07-11 06:03:50 +0900`, 129,871 bytes)
+  - 테스트 HTML 리포트: `build/reports/tests/test/index.html`은 rerun이 `UP-TO-DATE`로 끝나 `2026-06-20 06:03:15 +0900`, 10,574 bytes 상태를 유지했다.
+- 운영/배포 신호:
+  - `docker ps --format '{{.Names}}'`: 현재 세션에서 `EOF`로 실패해 실행 중 컨테이너 수를 확인하지 못했다.
+  - health/latency 측정은 `docs/decision-log.md`의 `2026-06-17 - Daily Health And Response-Time Measurement Scope`, `2026-07-08 - Daily Monitor Local Runtime Startup Scope`, `2026-07-10 - Daily Monitor Upstream Revalidation Branch-Switch Scope` pending question이 남아 있어 오늘도 보류했다.
+- 오늘 리스크/관찰:
+  - 현재 체크아웃 브랜치 기준 신규 앱 코드 변경은 없고 로컬 검증 성공도 docs branch 기준이다.
+  - 현재 브랜치와 `origin/develop`의 격차가 `ahead 4 / behind 134`까지 벌어져 checked-out branch 검증값을 최신 통합선 품질로 인용하면 과대해석 위험이 더 커졌다.
+  - 최신 upstream에는 Java 소스 479개, 테스트 Java 소스 69개, 마이그레이션 6개가 있지만 현재 체크아웃 브랜치에는 각각 231개, 28개, 0개라 최신 통합선 품질을 직접 재검증하지 못했다.
+  - Gradle deprecated 경고는 오늘도 동일하게 1건 재현됐다.
+  - 루트의 미추적 빈 파일 `0`이 계속 남아 있다.
+  - Docker 운영 신호는 오늘 `EOF` 실패로 비어 있다.
+  - 운영 리스크 집계: 5건(브랜치 격차, upstream 미재검증, Gradle deprecated 경고 지속, Docker 운영 신호 부재, untracked 파일 `0`)
+- 오늘 테스트 후보:
+  - `git switch develop && ./gradlew test && ./gradlew build --warning-mode all`
+  - 이유: 오늘 성공값은 checked-out docs branch 기준이며, 최신 통합선 품질은 직접 재검증하지 못했다.
+  - 기대 지표: develop 기준 테스트 통과율, 빌드 성공 여부, deprecated 경고 지속 여부
+  - `git switch develop && ./gradlew test --tests com.faithlog.campus.service.CampusUseCaseServiceStructureTest --tests com.faithlog.billing.service.BillingCommandUseCaseServiceStructureTest --tests com.faithlog.billing.service.BillingQueryUseCaseServiceStructureTest --tests com.faithlog.devotion.service.DevotionUseCaseServiceStructureTest --tests com.faithlog.poll.service.PollUseCaseServiceStructureTest --tests com.faithlog.poll.service.PollTemplateSettlementServiceStructureTest`
+  - 이유: 지난 실행 이후 최신 upstream 핵심 실변경이 책임 분리 구조 회귀(`#147`~`#152`)에 집중돼 있기 때문이다.
+  - 기대 지표: 구조 분리 회귀 테스트 pass/fail, 패키지 경계 유지 여부
+  - `git switch develop && ./gradlew test --tests com.faithlog.support.TestDatabaseIsolationConfigTest`
+  - 이유: 지난 실행 이후 최신 upstream 핵심 수정 중 하나가 테스트 DB 격리 보강(`#165`)이기 때문이다.
+  - 기대 지표: 테스트 컨텍스트 격리 회귀 pass/fail
+  - `git switch develop && ./gradlew test jacocoTestReport`
+  - 이유: 최신 통합선 기준 coverage 산출 여부는 오늘도 직접 재확인하지 못했다.
+  - 기대 지표: develop 기준 테스트 수, coverage HTML/XML 생성 성공 여부
+- 오늘 트러블슈팅:
+  - 신규 해결 항목 없음.
+  - 미해결 관찰 1: Gradle configure 단계 deprecated 경고 지속.
+  - 문제: `StartParameter.isConfigurationCacheRequested` 사용 경고가 반복 노출된다.
+  - 원인: 기존 누적 기록 기준 Asciidoctor/Grolifant 계열 플러그인 경로가 deprecated API를 호출하는 것으로 계속 관찰된다.
+  - 조치 현황: 오늘은 `./gradlew test --warning-mode all`와 `./gradlew build --warning-mode all`를 재실행해 경고 지속 여부만 재확인했다.
+  - 전후 지표: 2026-07-10과 2026-07-11 모두 테스트/빌드 성공, deprecated 경고 1건 지속
+  - 재발 방지 후보: Asciidoctor/Grolifant plugin 버전 검토 또는 대체 설정 확인
+  - 미해결 관찰 2: 운영 측정 신호 미확보.
+  - 문제: `docker ps --format '{{.Names}}'`가 `EOF`로 실패해 컨테이너 상태와 `/api/v1/health` 측정 대상을 확인하지 못했다.
+  - 원인: 현재 세션의 Docker daemon 접근 상태 또는 응답 경로가 불안정한 것으로 관찰되지만, 자동으로 환경을 변경하거나 재기동하는 범위는 승인되지 않았다.
+  - 조치 현황: 오늘은 실패 사실만 기록하고 Docker 재기동이나 런타임 시작은 수행하지 않았다.
+  - 전후 지표: 2026-07-11 컨테이너 수 미확인 / health 미측정
+  - 재발 방지 후보: Docker 접근 경로 또는 로컬 런타임 기동 허용 범위를 사용자 승인으로 먼저 확정해야 한다.
+- 오늘 이력서 bullet 후보:
+  - checked-out branch 기준 신규 구현 성과 없음.
+  - upstream observed candidate: 지난 실행 이후 `origin/develop`에는 책임 분리/테스트 격리 중심 비-merge 커밋 38건이 누적됐고, 10개 앱 영역에 걸쳐 546개 파일과 7496 insertions가 관찰됐다. 단, 현재 브랜치 재검증 전까지는 로컬 검증 완료 성과로 승격하면 안 된다.
+
 ### 2026-07-10
 
 - #152 Poll 템플릿과 커피 정산 책임 분리:
@@ -2183,3 +2254,50 @@ Testing candidates:
 - Latest integration coverage baseline: on approved `origin/develop`, run `./gradlew test jacocoTestReport` to measure HTML/XML coverage after the new deletion and migration changes.
 - Daily runtime health and response time: keep pending until the user approves one target runtime for repeated `curl /api/v1/health` measurement.
 <!-- daily-resume-monitor:end:resume-metrics:2026-07-07 -->
+
+<!-- daily-resume-monitor:start:resume-metrics:2026-07-11 -->
+### 2026-07-11 Automated Resume Monitor
+
+- Evidence source: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, fetched Git metadata, local Gradle outputs, local Docker CLI output.
+- Branch baseline reviewed: checked-out `docs/37-poll-template-planning-sync` unique diff vs fetched `origin/develop`, plus integration-branch divergence audit.
+- Current branch new commits since last review window (`2026-07-09T21:01:14.351Z`): 0
+- Current branch unique committed files vs `origin/develop`: 3 docs files, 104 insertions, app/test/config/migration changes 0
+- Current worktree status before today's monitor write: 4 modified docs files (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`) plus untracked root file `0`
+- `origin/develop` new non-merge commits since last review window: 39
+- `origin/main` new non-merge commits since last review window: 0
+- Branch divergence from fetched `origin/develop`: current branch ahead 4 commits, behind 134 commits
+- Recent `origin/develop` activity reviewed explicitly: #146 DDD 패키지 구조 재배치, #147 campus/admin 유스케이스 분리, #148~#149 billing command/query 분리, #150 devotion 책임 분리, #151 poll core 책임 분리, #152 poll template/coffee settlement 책임 분리, #165 H2 테스트 격리 보강
+- Upstream code movement observed since last review window: 39 non-merge commits; representative large refactor `8314059` alone changed 490 files with 2374 insertions and 1929 deletions
+- Local codebase snapshot on checked-out branch: 8 top-level modules, 231 Java sources, 28 test Java sources, 57 REST Docs snippet groups, 2 GitHub Actions workflows, 0 DB migration files
+- Local test result: `./gradlew test --warning-mode all --console=plain` success in 19s with 5 up-to-date tasks; Gradle XML suite outputs verify 24 files, 138 tests, 0 failures, 0 errors, 0 skipped. Confidence: verified.
+- Local build result: `./gradlew build --warning-mode all --console=plain` success in 16s with 8 up-to-date tasks. Confidence: verified.
+- Warning signal: configure-phase deprecation 1건 (`StartParameter.isConfigurationCacheRequested`) still appears during test/build. Confidence: verified.
+- Problems report artifact: `build/reports/problems/problems-report.html` present and updated at `2026-07-11 06:03:50 +0900` (129,871 bytes). Confidence: verified from local artifact.
+- Test report artifact: `build/reports/tests/test/index.html` remains present at 10,574 bytes; current reruns completed `UP-TO-DATE`, so HTML timestamp remains `2026-06-20 06:03:15 +0900` while XML suites still verify 138 passing tests. Confidence: verified.
+- Dependency / CI / migration change signal on checked-out branch: `build.gradle.kts`, `settings.gradle.kts`, `.github/workflows`, `src/main/resources/db/migration` had no branch-unique committed changes vs `origin/develop`; local checked-out branch still has 0 migration files. Confidence: verified.
+- Docker / runtime signal: `docker ps` returned `EOF` instead of a container list, so today's monitor could not confirm 0 running containers or collect health/latency evidence. Confidence: verified from local CLI failure.
+
+Resume-ready observations:
+- Current checked-out branch still contributes docs-only committed work, while the local verification baseline remains stable at 138 passing tests, successful Gradle build, 57 REST Docs snippet groups, and one known Gradle deprecation warning.
+- Fetched `origin/develop` accumulated substantial upstream-only implementation work after the last review window, culminating in #152 poll template/coffee settlement separation and the earlier #146 large-scale package refactor; however, this remains upstream-observed evidence because the checked-out branch is still 134 commits behind and no approved branch-switch verification ran on `develop`.
+- No new checked-out-branch implementation metric is promoted to resume-ready delivery today.
+
+Troubleshooting:
+- Problem: Docker runtime availability signal regressed from prior `docker ps` success to an immediate `EOF` failure.
+- Root cause: Unverified. The monitor did not infer whether Docker Desktop, daemon socket, or CLI session state caused the failure.
+- Fix: No recovery command executed. The monitor stayed read-only and recorded the failure only.
+- Before / after metric: 2026-07-09 and 2026-07-10 recorded `docker ps` success with 0 running containers; 2026-07-11 recorded `docker ps` failure before container enumeration.
+- Prevention candidate: decide whether the monitor may retry or start Docker runtime automatically when daemon access fails.
+
+Testing candidates:
+- Latest integration baseline on approved `develop`: `git switch develop && ./gradlew test && ./gradlew build --warning-mode all`
+- Reason: today's verified pass rate and build status still come from the checked-out docs branch, while fetched `origin/develop` is 134 commits ahead.
+- Expected metric: current integration-branch test pass rate, build success, and deprecation warning persistence
+- Latest integration coverage baseline on approved `develop`: `git switch develop && ./gradlew test jacocoTestReport`
+- Reason: upstream refactor wave #146~#152 materially changed application/service package structure and service boundaries, but no current coverage artifact was generated today.
+- Expected metric: integration-branch coverage artifact generation success and updated test-count baseline
+- Latest integration poll/devotion/billing regression on approved `develop`: `git switch develop && ./gradlew test --tests com.faithlog.poll.service.PollServiceTest --tests com.faithlog.devotion.service.DevotionServiceTest --tests com.faithlog.billing.service.BillingServiceTest`
+- Reason: the most recent upstream wave concentrated on poll, devotion, and billing responsibility separation.
+- Expected metric: domain-focused regression pass/fail across the most heavily changed service areas
+- Daily runtime health and response time: keep pending until the user approves one target runtime and Docker recovery scope for repeated `/api/v1/health` measurement.
+<!-- daily-resume-monitor:end:resume-metrics:2026-07-11 -->

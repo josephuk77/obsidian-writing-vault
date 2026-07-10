@@ -467,3 +467,10 @@ This file records user-approved project decisions so Codex does not rely on gues
 - Pending question: When the daily monitor observes substantial implementation work only on local `origin/develop`, should that code/test/migration work be promoted into resume-ready daily reporting as current project evidence, or kept labeled as upstream-observed evidence until the branch is synced or the user explicitly approves `origin/develop` as the citation source?
 - Recommendation: Keep implementation work from local `origin/develop` in a separately labeled upstream-observed section until the same ref is checked out or the user explicitly approves using integration-branch evidence for resume citations.
 - Current action: Today's monitor recorded #132 only as upstream-observed activity and did not promote it as checked-out-branch verified delivery.
+
+### 2026-07-11 - Daily Monitor Docker Recovery Scope
+
+- Context: `docker ps` on 2026-07-11 returned `EOF` instead of the previously observed successful empty-container response. This blocked today's runtime availability evidence before health/latency measurement could even be considered.
+- Pending question: When Docker CLI access fails with `EOF` or similar daemon/session errors, may the daily monitor retry Docker commands or start Docker Desktop/runtime automatically, or must it stay read-only and only record the failure?
+- Recommendation: Keep the monitor read-only until the user explicitly approves Docker runtime recovery commands, because daemon startup/retry changes the local environment and monitoring scope.
+- Current action: Today's report recorded the `docker ps` failure as an operational risk signal and did not attempt Docker recovery.
