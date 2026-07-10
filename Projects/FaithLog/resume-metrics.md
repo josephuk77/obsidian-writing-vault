@@ -13,16 +13,27 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 영역 | 지표 | 측정 방법 | 최신값 | 목표 |
 | --- | --- | --- | --- | --- |
-| 품질 | 테스트 통과율 | `./gradlew test` | 100% of executed tests (2026-07-10 #152, 350 tests / 0 failures / 0 errors / 1 skipped) | 100% |
-| 품질 | 테스트 코드 파일 수 | `rg --files src/test/java | rg '\.java$'` | 69 test files (2026-07-10 #152) | 증가 추적 |
+| 품질 | 테스트 통과율 | `./gradlew test` | 100% of executed tests (2026-07-11 #153, 355 tests / 0 failures / 0 errors / 1 skipped) | 100% |
+| 품질 | 테스트 코드 파일 수 | `rg --files src/test/java | rg '\.java$'` | 70 test files (2026-07-11 #153) | 증가 추적 |
 | 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 57 snippet groups (2026-07-10, checked-out branch) | 증가 추적 |
-| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-07-10 #152) | 성공 |
+| 안정성 | 빌드 성공 여부 | `./gradlew build` | 성공 (2026-07-11 #153) | 성공 |
 | API | 응답 시간 | 로컬/운영 부하 테스트 | 측정 보류 (2026-06-17) | TBD |
 | 운영 | 헬스체크 성공률 | `/health` 또는 배포 플랫폼 상태 | 측정 보류 (2026-06-17) | 99%+ |
-| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 10 top-level modules, 548 Java sources including tests (2026-07-10 #152) | 추적 |
+| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 10 top-level modules, 559 Java sources including tests (2026-07-11 #153) | 추적 |
 | 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | 6 (Flyway V1-V6, 2026-07-10 #152) | 추적 |
 
 ## Daily Monitoring Notes
+
+### 2026-07-11
+
+- #153 Prayer 유스케이스 책임 분리:
+  - 기준: 최신 `origin/develop` `f6e3c2e`, 별도 worktree, `chore/153-prayer-usecase-separation`.
+  - TDD: production 수정 전 구조 테스트 5건을 추가해 5/5 RED를 확인하고 책임 이동 후 5/5 GREEN. 기존 Prayer service/동시성/REST Docs characterization 유지.
+  - 분리: 11개 public 유스케이스를 season command/query, group command/query, board query, 관리자/본인 submission command의 7개 전용 Service로 분리. 권한·대상 조원·보드 조립은 3개 package-private support에 응집.
+  - 줄 수: `PrayerService` 606→90(-516, -85.1%). 추출 class를 포함한 전체 코드 감소가 아니라 compatibility facade 책임 축소 수치.
+  - 검증: Prayer focused GREEN, Campus+Billing/Devotion/Poll/Prayer/Batch 260/260, 전체 355 tests / 0 failures / 0 errors / 1 skipped, build/asciidoctor 성공. Docker QA는 BuildKit metadata DB I/O 오류로 daemon 재시작 승인 전 보류.
+  - 무변경: API/DTO/ErrorCode/Entity/DB/Flyway/repository/의존성 변경 0건, Swagger annotation 추가 0건, Controller Entity import 0건, 서비스 순환 의존 0건.
+  - 이력서 후보: `Prayer의 11개 유스케이스를 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다.`
 
 ### 2026-07-10
 
