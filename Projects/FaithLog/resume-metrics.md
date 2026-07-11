@@ -2301,3 +2301,11 @@ Testing candidates:
 - Expected metric: domain-focused regression pass/fail across the most heavily changed service areas
 - Daily runtime health and response time: keep pending until the user approves one target runtime and Docker recovery scope for repeated `/api/v1/health` measurement.
 <!-- daily-resume-monitor:end:resume-metrics:2026-07-11 -->
+## 2026-07-11 Issue #154 Notification/FCM 책임 분리
+
+- 검증: `./gradlew test` 362 tests / 0 failures / 0 errors / 1 skipped, `./gradlew build` 성공, `./gradlew asciidoctor` 성공, `git diff --check` 성공.
+- 구조 지표: `FcmTokenService` 105→33줄(-68.6%), `NotificationService` 205→20줄(-90.2%), `AutomaticNotificationService` 358→296줄(-17.3%). 추출 class를 포함한 전체 코드 감소가 아니라 facade/orchestrator 책임 축소 수치다.
+- 회귀 gate: 신규 구조 테스트 7개, test source 71개, 전체 Java source/test 563개.
+- 무변경 정적 확인: API/DTO/ErrorCode/Entity/DB/Flyway/scheduler/config/dependency 변경 0건, Swagger annotation·Controller Entity 반환·application service Redis/Firebase SDK 누출·서비스 순환 의존 각 0건.
+- 환경 제약: 호스트 Data 볼륨 99% 사용/2.1GiB 가용으로 격리 Docker QA 미실행. 원격 Docker CI 필요.
+- 이력서 후보: `Notification의 FCM token command와 관리자·자동 요청 command를 분리해 105줄/205줄 통합 Service를 33줄/20줄 호환 facade로 각각 68.6%/90.2% 축소하고, 7개 구조 회귀 테스트·362개 전체 테스트로 API·DB·권한·retry·Redis fail-closed 정책 무변경을 보장했다.`

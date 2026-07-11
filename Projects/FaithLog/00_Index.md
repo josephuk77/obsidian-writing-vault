@@ -2,6 +2,7 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-11_issue-154-notification-fcm-usecase-separation]]
 - [[04_DevLog/2026-07-11_issue-153-prayer-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-152-poll-template-coffee-settlement-separation]]
 - [[04_DevLog/2026-07-10_issue-151-poll-core-usecase-separation]]

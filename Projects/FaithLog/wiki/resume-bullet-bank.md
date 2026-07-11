@@ -1,3 +1,7 @@
+## 2026-07-11 Issue #154
+
+- [ready] Notification의 FCM token command와 관리자·자동 요청 command를 분리해 105줄/205줄 통합 Service를 33줄/20줄 호환 facade로 각각 68.6%/90.2% 축소하고, 7개 구조 회귀 테스트·362개 전체 테스트로 API·DB·권한·retry·Redis fail-closed 정책 무변경을 보장했다. Evidence: `04_DevLog/2026-07-11_issue-154-notification-fcm-usecase-separation`, repository `docs/resume-metrics.md`.
+
 ## 2026-07-11 Issue #153
 
 - [ready] Prayer의 11개 유스케이스를 `PrayerGroupSubmissionCommandService`의 조별 다중 제출을 포함한 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다. Evidence: `04_DevLog/2026-07-11_issue-153-prayer-usecase-separation`, repository `docs/resume-metrics.md`.
