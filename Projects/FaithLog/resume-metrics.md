@@ -28,12 +28,12 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 - #153 Prayer 유스케이스 책임 분리:
   - 기준: 최신 `origin/develop` `f6e3c2e`, 별도 worktree, `chore/153-prayer-usecase-separation`.
-  - TDD: production 수정 전 구조 테스트 5건을 추가해 5/5 RED를 확인하고 책임 이동 후 5/5 GREEN. 기존 Prayer service/동시성/REST Docs characterization 유지.
-  - 분리: 11개 public 유스케이스를 season command/query, group command/query, board query, 관리자/본인 submission command의 7개 전용 Service로 분리. 권한·대상 조원·보드 조립은 3개 package-private support에 응집.
+  - TDD: production 수정 전 구조 테스트 5건을 추가해 5/5 RED를 확인하고 책임 이동 후 5/5 GREEN. PM 리뷰에서 다중 제출 서비스명을 새 이름 기준으로 먼저 바꿔 다시 5/5 RED를 확인하고 production rename 후 GREEN. 기존 Prayer service/동시성/REST Docs characterization 유지.
+  - 분리: 11개 public 유스케이스를 season command/query, group command/query, board query, 조별/본인 submission command의 7개 전용 Service로 분리. `PrayerGroupSubmissionCommandService`는 일반 ACTIVE 멤버의 자기 활성 조 다중 입력과 관리자 전체 조 입력을 모두 포함하는 권한 범위를 표현한다. 권한·대상 조원·보드 조립은 3개 package-private support에 응집.
   - 줄 수: `PrayerService` 606→90(-516, -85.1%). 추출 class를 포함한 전체 코드 감소가 아니라 compatibility facade 책임 축소 수치.
   - 검증: Prayer focused GREEN, Campus+Billing/Devotion/Poll/Prayer/Batch 260/260, 전체 355 tests / 0 failures / 0 errors / 1 skipped, build/asciidoctor 성공. Docker QA는 BuildKit metadata DB I/O 오류와 호스트 가용 공간 116MiB·100% 사용 상태의 no-space 오류로 image/health 확인 미완료. volume/system/image prune과 named volume 삭제는 수행하지 않았고 마지막 Docker 명령은 `docker builder prune -f`였다.
   - 무변경: API/DTO/ErrorCode/Entity/DB/Flyway/repository/의존성 변경 0건, Swagger annotation 추가 0건, Controller Entity import 0건, 서비스 순환 의존 0건.
-  - 이력서 후보: `Prayer의 11개 유스케이스를 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다.`
+  - 이력서 후보: `Prayer의 11개 유스케이스를 조별 다중 제출을 포함한 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다.`
 
 
 ### 2026-07-11 Daily Monitor (checked-out branch)

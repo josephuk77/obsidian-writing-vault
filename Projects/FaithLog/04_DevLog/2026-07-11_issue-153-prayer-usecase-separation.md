@@ -15,7 +15,7 @@ tags:
 
 ## 1. 작업 배경
 
-#145~#152의 도메인별 책임 분리 이후에도 606줄 `PrayerService`는 시즌, 조, 주간 보드, 관리자 다중 제출, 본인 제출, 권한, 대상 조원 조회, 결과 조립을 함께 소유했다. 공개 API와 DB 동작을 바꾸지 않고 유스케이스와 transaction 경계를 분리했다.
+#145~#152의 도메인별 책임 분리 이후에도 606줄 `PrayerService`는 시즌, 조, 주간 보드, 조별 다중 제출, 본인 제출, 권한, 대상 조원 조회, 결과 조립을 함께 소유했다. 공개 API와 DB 동작을 바꾸지 않고 유스케이스와 transaction 경계를 분리했다.
 
 ## 2. 최종 설계 기준
 
@@ -30,7 +30,7 @@ tags:
 - Season: `PrayerSeasonCommandService`, `PrayerSeasonQueryService`
 - Group: `PrayerGroupCommandService`, `PrayerGroupQueryService`
 - Board: `PrayerWeekBoardQueryService`
-- Submission: `AdminPrayerSubmissionCommandService`, `MyPrayerSubmissionCommandService`
+- Submission: `PrayerGroupSubmissionCommandService`, `MyPrayerSubmissionCommandService`
 - Support: `PrayerAccessSupport`, `PrayerTargetMemberSupport`, `PrayerBoardAssembler`
 - Compatibility facade: `PrayerService`
 - Controller: `AdminPrayerController`, `PrayerController`를 전용 Service에 직접 연결
@@ -42,6 +42,7 @@ tags:
 3. 최소 구현: 기존 public/private 로직을 validation·repository 호출 순서 그대로 이동
 4. 테스트 통과: 구조 테스트 5건과 Prayer service/동시성/REST Docs GREEN
 5. 리팩토링: 권한·대상 조원·보드 조립을 실제 공유 경계로 정리하고 호환 facade를 delegate로 축소
+6. PM 리뷰: 다중 제출 Service를 `PrayerGroupSubmissionCommandService` 기준으로 구조 테스트부터 변경해 5/5 RED 확인 후 production 이름만 변경해 GREEN
 
 ## 5. 테스트 결과
 
@@ -57,7 +58,7 @@ tags:
 ## 6. 고민한 부분
 
 - 조원 전체 교체는 중복 ID, ACTIVE 캠퍼스 멤버, 타 조 중복 배정, 기존 row 재활성/비활성, 신규 row 저장 순서를 바꾸지 않았다.
-- 관리자 다중 제출은 모든 version을 쓰기 전에 검증하고 조건부 update 실패 시 같은 transaction 전체를 rollback하는 경계를 유지했다.
+- 조별 다중 제출은 일반 ACTIVE 멤버의 자기 활성 조 다중 입력과 관리자 전체 조 입력 권한을 유지하며, 모든 version을 쓰기 전에 검증하고 조건부 update 실패 시 같은 transaction 전체를 rollback하는 경계를 유지했다.
 - 보드 GET은 `prayer_week`/`prayer_submission`을 만들지 않고, 저장 command만 필요한 row를 생성한다.
 - `PrayerService`는 기존 내부 호출과 테스트 호환을 위해 남기되 606→90줄(-85.1%)의 순수 delegate로 제한했다.
 
@@ -78,4 +79,4 @@ tags:
 
 ## 10. 이력서 후보
 
-`Prayer의 11개 유스케이스를 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다.`
+`Prayer의 11개 유스케이스를 조별 다중 제출을 포함한 7개 응집 Service와 3개 package-private support로 분리해 606줄 통합 Service를 90줄 호환 facade로 85.1% 축소하고, 5개 구조 회귀 테스트·355개 전체 테스트·260개 연관 도메인 테스트로 API·DB·권한·optimistic locking·all-or-nothing 동작 무변경을 보장했다.`
