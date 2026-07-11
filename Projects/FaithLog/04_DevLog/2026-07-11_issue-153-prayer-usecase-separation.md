@@ -46,7 +46,7 @@ tags:
 
 ## 5. 테스트 결과
 
-- Prayer focused service/동시성/REST Docs/구조: 성공
+- PM 리뷰 rename 이후 Prayer focused service/동시성/REST Docs/구조: 23 tests / 0 failures / 0 errors / 0 skipped
 - Campus + Billing/Devotion/Poll/Prayer/Batch: 260 tests / 0 failures / 0 errors / 0 skipped
 - 전체 `./gradlew test`: 355 tests / 0 failures / 0 errors / 1 skipped, 실행된 테스트 통과율 100%
 - `./gradlew build`: BUILD SUCCESSFUL
@@ -66,6 +66,7 @@ tags:
 
 - `pm-dev`가 비활성 보관 경로에만 있고 저장소 Harness 파일과 활성 gate가 없어, 누락 파일을 만들거나 품질 기준을 완화하지 않고 FaithLog TDD/검증 기준을 사용했다.
 - Asciidoctor 첫 실행은 sandbox Gradle wrapper lock 권한으로 실패했고 승인 경로의 동일 명령으로 성공했다.
+- PM 세션의 독립 Gradle 실행이 같은 worktree의 `build/classes`를 동시에 갱신해 삭제/쓰기 경합 1회와 손상된 class/XML 결과 1회를 만들었다. 두 결과는 코드 실패에서 제외했고, PM 실행 중단·worker 0개 확인·`./gradlew clean` 후 단독 전체 test/build를 각각 재실행해 355 tests 성공과 BUILD SUCCESSFUL을 확인했다.
 - Docker QA는 BuildKit `metadata_v2.db`/`snapshots.db` I/O 오류와 호스트 디스크 부족으로 중단돼 별도 troubleshooting 문서에 기록했다. Android Emulator, 기존 volume/image는 건드리지 않았다.
 
 ## 8. 다음 작업
