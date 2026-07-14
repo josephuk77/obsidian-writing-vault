@@ -2,6 +2,22 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-14_issue-188-189-190-integration]]
+- [[04_DevLog/2026-07-13_issue-189-meal-duty-poll-settlement]]
+- [[04_DevLog/2026-07-13_issue-190-penalty-cancel-resubmit-admin-paid]]
+- [[04_DevLog/2026-07-13_issue-188-admin-weekly-devotion-export]]
+- [[04_DevLog/2026-07-13_issue-186-spring-security-maintenance-upgrade]]
+- [[04_DevLog/2026-07-13_issue-161-deployment-supply-chain-security-audit]]
+- [[04_DevLog/2026-07-13_issue-183-coffee-option-catalog-authority]]
+- [[04_DevLog/2026-07-13_issue-182-devotion-fine-overflow-positive-charge]]
+- [[04_DevLog/2026-07-13_issue-160-input-validation-sensitive-data-security-audit]]
+- [[04_DevLog/2026-07-13_issue-179-coffee-template-update-authorization]]
+- [[04_DevLog/2026-07-12_issue-176-refresh-token-rotation-atomicity]]
+- [[04_DevLog/2026-07-12_issue-159-campus-isolation-idor-security-audit]]
+- [[04_DevLog/2026-07-12_issue-158-jwt-session-lifecycle-security-audit]]
+- [[04_DevLog/2026-07-12_issue-157-threat-model-authorization-matrix]]
+- [[04_DevLog/2026-07-12_issue-156-user-auth-usecase-separation]]
+- [[04_DevLog/2026-07-11_issue-155-batch-scheduler-usecase-separation]]
 - [[04_DevLog/2026-07-11_issue-154-notification-fcm-usecase-separation]]
 - [[04_DevLog/2026-07-11_issue-153-prayer-usecase-separation]]
 - [[04_DevLog/2026-07-10_issue-152-poll-template-coffee-settlement-separation]]
@@ -45,6 +61,8 @@
 
 ## Troubleshooting
 
+- [[05_Troubleshooting/2026-07-13_docker-storage-io-low-space]]
+- [[05_Troubleshooting/2026-07-12_refresh-token-rotation-lua-cas]]
 - [[05_Troubleshooting/2026-07-11_docker-buildkit-metadata-io]]
 - [[05_Troubleshooting/2026-07-10_poll-helper-package-rule]]
 - [[05_Troubleshooting/2026-07-10_spring-context-shared-h2-test-pollution]]

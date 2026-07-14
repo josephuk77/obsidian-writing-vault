@@ -152,6 +152,7 @@ account_holder_snapshot
 ```text
 PENALTY
 COFFEE
+MEAL
 ```
 
 사용 가능한 `chargeSourceType`:
