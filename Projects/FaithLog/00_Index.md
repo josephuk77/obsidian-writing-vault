@@ -2,6 +2,17 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-20_issue-213-poll-option-add-response]]
+- [[04_DevLog/2026-07-16_issue-206-charge-item-stable-ordering]]
+- [[04_DevLog/2026-07-14_issue-200-coffee-duty-notifications]]
+- [[04_DevLog/2026-07-15_issue-202-supabase-rls-security]]
+- [[04_DevLog/2026-07-14_issue-197-devotion-retention-before-scenario]]
+- [[04_DevLog/2026-07-14_issue-196-prayer-poll-before-scenario]]
+- [[04_DevLog/2026-07-14_issue-199-admin-dashboard-before-scenario]]
+- [[04_DevLog/2026-07-14_issue-193-admin-charge-query-before-scenario]]
+- [[04_DevLog/2026-07-14_issue-195-member-list-before-scenario]]
+- [[04_DevLog/2026-07-14_issue-194-postgresql-explain-index-baseline]]
+- [[04_DevLog/2026-07-14_issue-192-poll-settlement-before-baseline]]
 - [[04_DevLog/2026-07-14_issue-188-189-190-integration]]
 - [[04_DevLog/2026-07-13_issue-189-meal-duty-poll-settlement]]
 - [[04_DevLog/2026-07-13_issue-190-penalty-cancel-resubmit-admin-paid]]
@@ -61,6 +72,20 @@
 
 ## Troubleshooting
 
+- [[05_Troubleshooting/2026-07-16_issue-193-insert-triggered-autovacuum]]
+- [[05_Troubleshooting/2026-07-16_issue-193-measured-login-users-stats-boundary]]
+- [[05_Troubleshooting/2026-07-16_issue-193-login-update-counter-ack]]
+- [[05_Troubleshooting/2026-07-16_issue-193-host-exclusive-provenance]]
+- [[05_Troubleshooting/2026-07-16_issue-193-fixture-analyze-boundary]]
+- [[05_Troubleshooting/2026-07-16_issue-193-pre-boundary-stats-stabilization]]
+- [[05_Troubleshooting/2026-07-16_issue-193-docker-stats-cadence-gap]]
+- [[05_Troubleshooting/2026-07-16_issue-193-k6-v2-rate-summary]]
+- [[05_Troubleshooting/2026-07-16_issue-193-docker-memory-rounding-evidence]]
+- [[05_Troubleshooting/2026-07-16_issue-193-charge-item-tie-ordering]]
+- [[05_Troubleshooting/2026-07-16_issue-193-member-detail-nanosecond-ordering]]
+- [[05_Troubleshooting/2026-07-16_issue-193-psql-dataset-binding]]
+- [[05_Troubleshooting/2026-07-14_gradle-byte-buddy-attach-stall]]
+- [[05_Troubleshooting/2026-07-14_k6-summary-export-shape]]
 - [[05_Troubleshooting/2026-07-13_docker-storage-io-low-space]]
 - [[05_Troubleshooting/2026-07-12_refresh-token-rotation-lua-cas]]
 - [[05_Troubleshooting/2026-07-11_docker-buildkit-metadata-io]]

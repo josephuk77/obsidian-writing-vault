@@ -10,6 +10,34 @@ This file records user-approved project decisions so Codex does not rely on gues
 
 ## Decisions
 
+### 2026-07-17 - Daily Monitor Escalated Docker Diagnostics Scope
+
+- Context: The 2026-07-17 daily monitor could refresh git refs and rerun Gradle verification, but host-path probes to `127.0.0.1:28080` still failed and read-only Docker diagnostics such as `docker ps`, `docker exec ... pg_isready`, and `docker exec ... redis-cli ping` were blocked by docker API permission errors or hung in the current environment.
+- Pending question: When sandbox or local docker socket permissions block the daily monitor, may it use escalated read-only Docker diagnostics such as `docker ps`, `docker exec` health/readiness probes, and `docker logs` to complete runtime evidence collection?
+- Recommendation: Allow escalated read-only Docker diagnostics for monitoring, but keep runtime start, restart, recovery, or other mutating Docker commands opt-in.
+- Current action: Today's report recorded the host-path failure, the runtime evidence gap, and the permission limitation separately without mutating the local stack.
+
+### 2026-07-17 - Daily Monitor Future-Dated Local Clock Interpretation Scope
+
+- Context: The monitor date for this run is Friday, July 17, 2026, but local commands and fresh Gradle artifacts were stamped `2026-07-18` (`date`, `build/reports/tests/test/index.html`, `build/reports/problems/problems-report.html`). The monitor can record these raw timestamps as facts, but it cannot decide whether they should be normalized to the report date, treated as local clock drift only, or counted as an operational risk without the user's interpretation policy.
+- Pending question: When local machine timestamps are ahead of the approved monitoring date, should the daily monitor normalize those timestamps back to the report date, record them only as raw local-clock evidence, or count clock drift itself as an operational risk metric?
+- Recommendation: Record the raw future-dated timestamps as local-clock observations and avoid promoting them to a separate daily metric or risk severity until the user defines how clock drift should be interpreted.
+- Current action: Today's report labels `2026-07-18` local timestamps as future-dated local-clock evidence while keeping the monitoring day anchored to Friday, July 17, 2026.
+
+### 2026-07-16 - Daily Monitor Startup Warning Interpretation Scope
+
+- Context: The 2026-07-16 local Docker app startup log showed a generated security password warning and SpringDoc `/api-docs` and `/swagger-ui.html` enabled warnings while the host-mapped app port `127.0.0.1:28080` still failed external health probing. The monitor can record these lines as facts, but cannot infer whether they are expected local-only defaults, an intended docker-profile setup, or an actionable operational/security risk without the user's interpretation policy.
+- Pending question: When local runtime startup logs emit framework warnings like generated default credentials or enabled API docs endpoints, should the daily monitor count them as actionable operational/security risks, or should it record them only as unresolved local observations until the user explicitly says they matter?
+- Recommendation: Record the exact warning signals separately from confirmed risk counts until the user defines how to interpret local-only startup warnings in resume/operations monitoring.
+- Current action: Today's report captured the warning lines as unresolved observations and did not promote them to confirmed security findings.
+
+### 2026-07-15 - Daily Monitor Health Signal Source When Host Port Fails
+
+- Context: The 2026-07-15 daily monitor found `faithlog-latest-app`, `faithlog-latest-redis`, and `faithlog-latest-postgres` running for about 21 hours. `docker exec` inside the app container returned `{"status":"UP"}` from `/actuator/health`, container-internal `/api/v1/health` samples completed in `29ms`, `6ms`, and `8ms`, PostgreSQL returned `pg_isready`, and Redis returned `PONG`. However, host-path probing `curl http://127.0.0.1:28080/actuator/health` failed immediately even though Docker reported `0.0.0.0:28080->8080/tcp`.
+- Pending question: When the app container is running and internal health is `UP` but the host-mapped port does not respond, should the daily monitor treat the container-internal endpoint as an acceptable health/latency metric source, or should it require a successful host-path probe before recording operational availability metrics?
+- Recommendation: Record container-internal health separately as an internal runtime signal, but do not treat it as external availability evidence until the user explicitly approves that interpretation.
+- Current action: Today's report recorded container-internal health success, PostgreSQL/Redis readiness, and host-path connection failure as separate signals.
+
 ### 2026-07-10 - Daily Monitor Upstream Revalidation Branch-Switch Scope
 
 - Context: The 2026-07-10 daily monitor found the checked-out branch `docs/37-poll-template-planning-sync` is `ahead 4 / behind 95` versus `origin/develop`. Local `./gradlew test` and `./gradlew build` succeeded on the checked-out branch, but direct latest-upstream verification would require `git switch develop` in a dirty worktree with existing modified docs files.

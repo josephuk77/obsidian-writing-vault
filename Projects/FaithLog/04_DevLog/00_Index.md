@@ -1,5 +1,7 @@
 # FaithLog DevLog Index
 
+- [[2026-07-14_issue-198-notification-batch-before-scenario]] - Issue #198 알림 생성·전송 1,000명 before 시나리오 준비 (`scenario-ready / not-measured`)
+- [[2026-07-14_issue-196-prayer-poll-before-scenario]] - Issue #196 기도조·투표 목록 before 시나리오 (`scenario-ready / not-measured`)
 - [[2026-07-14_issue-188-189-190-integration]] - Issues #188/#189/#190 통합, 동시성 보강, Flyway/실제 HTTP QA
 - [[2026-07-13_issue-188-admin-weekly-devotion-export]] - Issue #188 관리자 주차별 경건·실제 벌금 조회와 Excel 다운로드
 - [[2026-07-13_issue-186-spring-security-maintenance-upgrade]] - Issue #186 Spring Boot 3.5.15와 Spring Security 6.5.11 maintenance upgrade
