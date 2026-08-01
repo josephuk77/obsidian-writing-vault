@@ -13,16 +13,298 @@ FaithLog를 운영 가능한 프로젝트로 만들면서 이력서에 사용할
 
 | 영역 | 지표 | 측정 방법 | 최신값 | 목표 |
 | --- | --- | --- | --- | --- |
-| 품질 | 테스트 통과율 | `./gradlew test` | 98.55% (2026-07-26 rerun update, 138 tests / 2 failures / 0 errors / 0 skipped, checked-out branch; fresh artifacts locally stamped `2026-07-27`, future-dated versus monitor date) | 100% |
-| 품질 | 테스트 코드 파일 수 | `find src/test/java -type f -name '*.java'` | 28 test sources (2026-07-26 checked-out branch), `origin/develop` snapshot 102 | 증가 추적 |
-| 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 55 local snippet groups (2026-07-26 checked-out branch; fresh artifacts locally stamped `2026-07-27`, future-dated versus monitor date) | 증가 추적 |
-| 안정성 | 빌드 성공 여부 | `./gradlew build` | 실패 (2026-07-26 rerun update, 동일 2개 Billing 테스트 실패 재현 + XML test result write failure 2건, local output stamped `2026-07-27`) | 성공 |
+| 품질 | 테스트 통과율 | `./gradlew test` | 98.55% (2026-07-31 monitor, 24 XML files / 138 tests / 2 failures / 0 errors / 0 skipped, checked-out branch; raw local logs stamped future-dated `2026-08-01`) | 100% |
+| 품질 | 테스트 코드 파일 수 | `find src/test/java -type f -name '*.java'` | 28 test sources (2026-07-31 checked-out branch) | 증가 추적 |
+| 품질 | 인증/문서 스니펫 묶음 수 | `find build/generated-snippets -mindepth 1 -maxdepth 1 -type d` | 55 local snippet groups (2026-07-31 checked-out branch; latest HTML report timestamp `2026-07-30 06:04:06 +0900`) | 증가 추적 |
+| 안정성 | 빌드 성공 여부 | `./gradlew build` | 실패 (2026-07-31 monitor, 동일 2개 Billing 테스트 실패 재현; local problems report stamped future-dated `2026-08-01 06:05:17 +0900`) | 성공 |
 | API | 응답 시간 | 로컬/운영 부하 테스트 | 측정 보류 (2026-06-17) | TBD |
-| 운영 | 헬스체크 성공률 | 호스트 `/actuator/health` 또는 승인된 컨테이너 내부 probe | 2026-07-26 rerun update: host probe 0/2 success at `127.0.0.1:28080` (`0.000136s`, `0.000247s`); `docker ps` saw FaithLog app/Redis/Postgres containers Up 6 days, but fresh container-internal probes were unavailable due Docker API permission denial | 99%+ |
-| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 8 top-level modules, 231 main Java sources (2026-07-26 checked-out branch), `origin/develop` snapshot 8 modules / 575 main Java sources | 추적 |
-| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | checked-out branch 0, `origin/develop` local ref 12 (2026-07-26) | 추적 |
+| 운영 | 헬스체크 성공률 | 호스트 `/actuator/health` 또는 승인된 컨테이너 내부 probe | 2026-07-31 monitor: host probe 0/2 success at `127.0.0.1:28080` (`0.000161s`, `0.000168s`); `docker ps` shows 0 running containers, so container-internal probe was unavailable | 99%+ |
+| 유지보수 | 주요 모듈 수 | 패키지/도메인 기준 | 8 top-level modules, 231 main Java sources (2026-07-31 checked-out branch) | 추적 |
+| 데이터 | DB 마이그레이션 수 | `src/main/resources/db/migration` | checked-out branch 0 (2026-07-31) | 추적 |
 
 ## Daily Monitoring Notes
+
+### 2026-07-31 Daily Monitor (checked-out branch)
+
+- 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, repo `docs/decision-log.md`, repo `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md`, automation memory를 확인하고 진행했다. 저장소에는 이번 실행도 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
+- 보고 기준일은 금요일 `2026-07-31`이다. 로컬 `date` 출력과 Gradle 로그 시각은 `2026-08-01`을 가리켜 future-dated local clock evidence로만 기록한다.
+- `git fetch --all --prune`는 성공했다. 현재 브랜치는 `docs/37-poll-template-planning-sync`이고 `git rev-list --left-right --count origin/develop...HEAD` 기준 divergence `behind 223 / ahead 4`다. 현재 브랜치 최신 커밋은 `fc366d7` (`2026-06-19`, `docs: #38 투표 결과 조회와 커피 카탈로그 기준 반영`)이고, 지난 자동화 실행 시각(`2026-07-30T21:00:41.839Z`) 이후 현재 체크아웃 브랜치와 `origin/develop`/`origin/main`에 새 non-merge 커밋은 관찰되지 않았다.
+- 최신 upstream 기준점은 그대로다: `origin/develop` latest `689d144` (`2026-07-29`, `feat: #224 회원가입 이메일 인증과 비밀번호 재설정 구현`), `origin/main` latest `3dfb3e2` (`2026-07-29`, `release: #224 이메일 인증과 비밀번호 재설정을 main에 반영 (#226)`).
+- 현재 worktree 상태: `git status --short --branch` 기준 수정 파일 4개 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`)와 미추적 빈 파일 `0`이 있다.
+- 코드베이스 구조 수치: 8 top-level modules, 231 main Java sources, 28 test Java sources, 55 snippet groups, 2 GitHub Actions workflows, checked-out branch DB 마이그레이션 0개.
+- 브랜치 고유 변경은 `git diff --shortstat origin/develop...HEAD` 기준 `3 files changed, 104 insertions(+)`이며 모두 문서 파일(`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`)이다. 오늘도 checked-out branch 기준 신규 app-code delivery는 관찰되지 않았다.
+- `./gradlew test --warning-mode all --console=plain`: 실패, 1분 9초, `5 actionable tasks: 1 executed, 4 up-to-date`. `build/test-results/test/*.xml` 집계는 24 XML files, 138 tests / 2 failures / 0 errors / 0 skipped로 통과율 98.55%다.
+- 실패 테스트는 `BillingApiRestDocsTest.documents_charge_query_contracts`, `BillingControllerTest.charge_query_api_maps_my_summary_admin_campus_and_admin_member_responses` 두 건이다.
+- 실패 payload 관찰:
+  - `BillingControllerTest`: JSON path `$.data.monthlyPaidAmount` expected `<2500>` but was `<0>`
+  - `BillingApiRestDocsTest`: `data.monthlyByCategory[].paymentCategory`, `paidAmount`, `unpaidAmount`, `totalAmount` 필드가 payload에서 누락돼 REST Docs snippet 실패
+- `./gradlew test` 종료 오류에는 `Could not write XML test results ...`가 17개 suite에 대해 함께 출력됐다. 현재 확인된 파일 집계는 24 XML files이므로 test body failure 2건과 결과 파일 write failure가 동시에 존재하는 상태다.
+- `./gradlew build --warning-mode all --console=plain`: 실패, 59초, `8 actionable tasks: 1 executed, 7 up-to-date`. build는 동일한 2개 Billing 테스트 실패 때문에 `:test` 단계에서 중단됐다.
+- test/build 공통 관찰:
+  - configure 단계 deprecated 경고 `StartParameter.isConfigurationCacheRequested` 1건이 계속 출력됐다.
+  - JVM 경고 `Sharing is only supported for boot loader classes because bootstrap classpath has been appended`가 재현됐다.
+- build/test artifact 시각:
+  - `build/reports/tests/test/index.html`: `2026-07-30 06:04:06 +0900`
+  - `build/reports/problems/problems-report.html`: `2026-08-01 06:05:17 +0900`
+  - 둘 다 보고 기준일 `2026-07-31`과 분리된 raw local timestamp다.
+- 운영/배포 신호:
+  - 호스트 경로 `curl http://127.0.0.1:28080/actuator/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000161s`
+  - 호스트 경로 `curl http://127.0.0.1:28080/api/v1/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000168s`
+  - `docker ps`: 성공, 실행 중 컨테이너 0개
+  - 컨테이너가 없어 container-internal app/DB/Redis probe는 오늘 수행되지 않았다.
+- 오늘 리스크/관찰:
+  - checked-out branch의 Billing summary/REST Docs 회귀 2건이 `2026-07-31`에도 동일하게 재현됐다.
+  - build 게이트는 오늘도 동일 2개 Billing 테스트 실패 때문에 막혀 있다.
+  - 호스트 health probe는 오늘도 0/2 success다.
+  - 오늘은 Docker daemon 접근 자체는 가능했지만 실행 중 FaithLog 컨테이너가 0개라 container-internal availability를 재측정하지 못했다.
+  - 브랜치 격차 `behind 223 / ahead 4`와 최근 브랜치 커밋 공백 때문에 현재 브랜치 검증값을 최신 통합선 품질로 인용하기 어렵다.
+- 오늘 테스트 후보:
+  - `./gradlew test --tests com.faithlog.billing.presentation.BillingApiRestDocsTest --tests com.faithlog.billing.presentation.BillingControllerTest`
+  - 이유: 오늘도 재현된 실패 2건이 모두 Billing summary 응답/문서 계약에 집중돼 있다.
+  - 기대 지표: `monthlyPaidAmount` 계산값 일치 여부, `monthlyByCategory` 배열 필드 복원 여부, Billing summary 계약 pass/fail
+  - `./gradlew test --tests com.faithlog.billing.application.BillingQueryServiceTest`
+  - 이유: controller/REST Docs 실패가 summary 집계값과 category aggregation 누락으로 이어져 query/service fixture 재검증이 필요하다.
+  - 기대 지표: summary 계산 fixture pass/fail, `monthlyPaidAmount`와 category aggregation 회귀 범위
+  - `./gradlew test --stacktrace`
+  - 이유: 이번 실행에서는 17개 suite의 XML test result write failure가 같이 출력돼 결과 파일 write 문제와 실제 테스트 실패를 분리 확인할 추가 evidence가 필요하다.
+  - 기대 지표: XML write failure root exception, file write 경로 충돌 여부, suite-level write failure 재현 범위
+  - `docker compose up -d postgres redis app` 또는 동등한 local stack start command
+  - 이유: 오늘은 `docker ps`에서 실행 중 컨테이너 0개만 확인돼 container-internal health를 측정하지 못했다.
+  - 기대 지표: app/postgres/redis 기동 여부, host-path와 container-internal health signal 복구 여부
+  - `git switch develop && ./gradlew test`
+  - 이유: branch-switch 미승인 정책 때문에 최신 integration baseline을 오늘도 직접 검증하지 못했다.
+  - 기대 지표: `origin/develop` 기준 fresh 테스트 통과율, checked-out branch와 최신 통합선 차이
+- 오늘 트러블슈팅:
+  - 문제: Billing summary 관련 테스트 2건이 `2026-07-31`에도 실패했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 `monthlyPaidAmount`가 기대값 `2500` 대신 `0`으로 반환됐고 `monthlyByCategory` 필드가 누락됐다는 점뿐이다.
+  - 조치: `./gradlew test`, `./gradlew build`를 fresh rerun해 동일 실패를 다시 수집했다. 구현 변경은 하지 않았다.
+  - 전후 지표: `2026-07-29` `138 tests / 2 failures`, `2026-07-31` `138 tests / 2 failures`
+  - 예방 후보: 승인된 변경 원천 확인 후 Billing summary 집계 기준, DTO 직렬화, REST Docs 계약을 함께 재검증
+  - 문제: `./gradlew test` 종료 시 XML test result write failure가 17개 suite에 대해 함께 출력됐다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 XML file count는 24개를 유지했지만 test 종료 본문에는 17개 report file write failure가 함께 보고됐다는 점뿐이다.
+  - 조치: raw `test` 종료 메시지와 XML file count를 함께 기록했다. `clean`, 파일 삭제, 권한 수정은 하지 않았다.
+  - 전후 지표: `2026-07-29 test/build` XML write failure 미재현, `2026-07-31 test` 종료 본문 17건 write failure / XML file count 24
+  - 예방 후보: artifact 정리 정책, parallel test write 설정, file lock 조사 범위를 사용자 승인 후 확정
+  - 문제: host-path health probe가 오늘도 모두 실패했고 실행 중 컨테이너도 0개였다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 host-path probe 2건이 모두 `http_code=000`이고 `docker ps`가 빈 결과를 반환했다는 점뿐이다.
+  - 조치: host-path probe 2건과 `docker ps` 결과를 함께 기록해 host-path failure와 runtime 부재를 분리했다.
+  - 전후 지표: host-path 0/2 success, running containers 0, container-internal probe 미측정
+  - 예방 후보: `docs/decision-log.md`에 이미 기록된 local runtime startup scope와 health metric source policy를 먼저 확정해야 한다.
+  - 문제: 이번 실행에서도 보고 기준일 `2026-07-31`보다 하루 앞선 `2026-08-01` local timestamp가 기록됐다.
+  - 원인: 미확인. 현재는 로컬 clock 또는 세션 기준시각 불일치 가능성만 관찰됐다.
+  - 조치: 보고 기준일을 `2026-07-31`로 고정하고 raw timestamp를 그대로 기록했다.
+  - 전후 지표: monitor date `2026-07-31`, local `date` 출력 `2026-08-01 06:06:03 +0900`, `problems-report.html` timestamp `2026-08-01 06:05:17 +0900`
+  - 예방 후보: `docs/decision-log.md`의 pending question대로 future-dated local clock 해석 정책을 먼저 확정해야 한다.
+- 오늘 이력서 bullet 후보:
+  - checked-out branch 기준 신규 구현 성과 없음.
+  - resume-ready 개선 수치로 승격할 새 구현은 없고, `138 tests / 2 failures`, test 종료 XML write failure 17건, host probe `0/2 success`, running containers `0`만 확인됐다.
+
+### 2026-07-29 Daily Monitor (checked-out branch)
+
+- 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md`를 확인하고 진행했다. 저장소에는 이번 실행도 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
+- 보고 기준일은 수요일 `2026-07-29`다. 로컬 `date` 출력과 fresh Gradle artifact timestamp는 `2026-07-30`을 가리켜 future-dated local clock evidence로만 기록한다.
+- 현재 브랜치 상태: `docs/37-poll-template-planning-sync`, `git rev-list --left-right --count origin/develop...HEAD` 기준 divergence `behind 223 / ahead 4`, 최근 현재 브랜치 커밋 5건은 모두 `2026-06-19` docs/feature 기록이다. 지난 자동화 실행 시각(`2026-07-28T21:01:57.060Z`) 이후 현재 체크아웃 브랜치 새 커밋은 관찰되지 않았다.
+- 현재 worktree 상태: `git status --short` 기준 수정 파일 4개 (`docs/backend-implementation-policy.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`)와 미추적 빈 파일 `0`이 있다. `git diff --stat` 기준 전체 미커밋 변화량은 `4 files changed, 2951 insertions(+), 9 deletions(-)`다.
+- 코드베이스 구조 수치: 8 top-level modules, 231 main Java sources, 28 test Java sources, 55 snippet groups, 2 GitHub Actions workflows, checked-out branch DB 마이그레이션 0개.
+- `./gradlew test --warning-mode all --console=plain`: 실패, 1분 36초, `5 actionable tasks: 1 executed, 4 up-to-date`. `build/test-results/test/*.xml` 집계는 24 XML files, 138 tests / 2 failures / 0 errors / 0 skipped로 통과율 98.55%다.
+- 실패 테스트는 `BillingApiRestDocsTest.documents_charge_query_contracts`, `BillingControllerTest.charge_query_api_maps_my_summary_admin_campus_and_admin_member_responses` 두 건이다.
+- 실패 payload 관찰:
+  - `BillingControllerTest`: JSON path `$.data.monthlyPaidAmount` expected `<2500>` but was `<0>`
+  - `BillingApiRestDocsTest`: `data.monthlyByCategory[].paymentCategory`, `paidAmount`, `unpaidAmount`, `totalAmount` 필드가 payload에서 누락돼 REST Docs snippet 실패
+- `./gradlew build --warning-mode all --console=plain`: 실패, 36초, `8 actionable tasks: 1 executed, 7 up-to-date`. 동일 2개 Billing 실패가 재현됐다.
+- test/build 공통 관찰: configure 단계 deprecated 경고 `StartParameter.isConfigurationCacheRequested` 1건이 계속 출력됐다. 이번 `2026-07-29` 실행 본문에서는 `Could not write XML test results` 문구가 재현되지 않았다.
+- build/test artifact 시각: `build/reports/tests/test/index.html`, `build/reports/problems/problems-report.html` 모두 `2026-07-30 06:03:16 +0900`로 갱신됐다. 보고 기준일 `2026-07-29`과 분리된 raw local timestamp다.
+- 운영/배포 신호:
+  - 호스트 경로 `curl http://127.0.0.1:28080/actuator/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000162s`
+  - 호스트 경로 `curl http://127.0.0.1:28080/api/v1/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000087s`
+  - `docker ps`, `docker exec faithlog-latest-app ...`, `docker exec faithlog-latest-postgres ...`, `docker exec faithlog-latest-redis ...`: 모두 `unix:///Users/josephuk77/.docker/run/docker.sock` 소켓 부재로 실패해 container-internal runtime 증거는 오늘 재수집하지 못했다.
+- 오늘 리스크/관찰:
+  - checked-out branch의 Billing summary/REST Docs 회귀 2건이 `2026-07-29`에도 동일하게 재현됐다.
+  - build 게이트는 오늘도 동일 2개 Billing 테스트 실패 때문에 막혀 있다.
+  - 호스트 health probe는 오늘도 0/2 success다.
+  - Docker CLI는 권한 승격 재시도 후에도 socket 부재 때문에 read-only runtime 진단을 완료하지 못했다.
+  - 브랜치 격차 `behind 223 / ahead 4`와 최근 브랜치 커밋 공백 때문에 현재 브랜치 검증값을 최신 통합선 품질로 인용하기 어렵다.
+- 오늘 테스트 후보:
+  - `./gradlew test --tests com.faithlog.billing.presentation.BillingApiRestDocsTest --tests com.faithlog.billing.presentation.BillingControllerTest`
+  - 이유: 오늘도 재현된 실패 2건이 모두 Billing summary 응답/문서 계약에 집중돼 있다.
+  - 기대 지표: `monthlyPaidAmount` 계산값 일치 여부, `monthlyByCategory` 배열 필드 복원 여부, Billing summary 계약 pass/fail
+  - `./gradlew test --tests com.faithlog.billing.service.BillingQueryServiceTest`
+  - 이유: controller/REST Docs 실패가 summary 집계값과 category aggregation 누락으로 이어져 query/service fixture 재검증이 필요하다.
+  - 기대 지표: summary 계산 fixture pass/fail, `monthlyPaidAmount`와 category aggregation 회귀 범위
+  - `git switch develop && ./gradlew test jacocoTestReport`
+  - 이유: branch-switch 미승인 상태라 최신 통합선 baseline을 오늘도 직접 재측정하지 못했다.
+  - 기대 지표: develop 기준 테스트 통과율, coverage 산출 여부, checked-out branch와의 품질 차이
+  - `docker ps` 및 `docker exec ... /api/v1/health`
+  - 이유: 오늘은 host probe 0/2 success와 docker socket 부재만 확인돼 container-internal availability를 재수집하지 못했다.
+  - 기대 지표: Docker daemon 접근 가능 여부, container-internal health success 여부, 운영 증거 source 복구 여부
+- 오늘 트러블슈팅:
+  - 문제: Billing summary 관련 테스트 2건이 `2026-07-29`에도 실패했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 `monthlyPaidAmount`가 기대값 `2500` 대신 `0`으로 반환됐고 `monthlyByCategory` 필드가 누락됐다는 점뿐이다.
+  - 조치: `./gradlew test`, `./gradlew build`를 fresh rerun해 동일 실패를 다시 수집했다. 구현 변경은 하지 않았다.
+  - 전후 지표: `2026-07-28` `138 tests / 2 failures`, `2026-07-29` `138 tests / 2 failures`
+  - 예방 후보: 승인된 변경 원천 확인 후 Billing summary 집계 기준, DTO 직렬화, REST Docs 계약을 함께 재검증
+  - 문제: 호스트 health probe는 실패했지만 container-internal runtime 증거는 오늘 재수집하지 못했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 host-path probe 2건이 모두 `http_code=000`이고, Docker CLI가 `unix:///Users/josephuk77/.docker/run/docker.sock` socket 부재로 실패했다는 점뿐이다.
+  - 조치: host-path probe 2건과 read-only Docker 진단(`docker ps`, `docker exec`)을 모두 재시도해 실패 지점을 분리 기록했다.
+  - 전후 지표: host-path 0/2 success, container-internal probe 미측정, Docker CLI 5/5 commands failed on missing socket
+  - 예방 후보: `docs/decision-log.md`에 이미 기록된 Docker recovery/diagnostics scope와 health metric source policy를 먼저 확정해야 한다.
+  - 문제: 이번 실행에서도 보고 기준일 `2026-07-29`보다 하루 앞선 `2026-07-30` local timestamp가 기록됐다.
+  - 원인: 미확인. 현재는 로컬 clock 또는 세션 기준시각 불일치 가능성만 관찰됐다.
+  - 조치: 보고 기준일을 `2026-07-29`로 고정하고 raw timestamp를 그대로 기록했다.
+  - 전후 지표: monitor date `2026-07-29`, local `date` 출력 `2026-07-30 06:01:33 +0900`, artifact timestamp `2026-07-30 06:03:16 +0900`
+  - 예방 후보: `docs/decision-log.md`의 pending question대로 future-dated local clock 해석 정책을 먼저 확정해야 한다.
+- 오늘 이력서 bullet 후보:
+  - checked-out branch 기준 신규 구현 성과 없음.
+  - resume-ready 개선 수치로 승격할 새 구현은 없고, `138 tests / 2 failures`, host probe `0/2 success`, Docker socket 부재, Billing summary 회귀 지속만 확인됐다.
+
+### 2026-07-28 Daily Monitor (checked-out branch)
+
+- 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md`를 확인하고 진행했다. 저장소에는 이번 실행도 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
+- 보고 기준일은 화요일 `2026-07-28`이다. 로컬 `date` 출력은 `2026-07-29 06:02:05 +0900`이므로 future-dated local clock evidence로만 기록한다.
+- 현재 브랜치 상태: `docs/37-poll-template-planning-sync`, `git rev-list --left-right --count origin/develop...HEAD` 기준 divergence `ahead 4 / behind 222`, branch 고유 diff `3 files changed, 104 insertions(+)`, 미커밋 diff `4 files changed, 2872 insertions(+), 9 deletions(-)`, 미추적 빈 파일 `0` 유지.
+- 지난 자동화 실행 시각(`2026-07-27T21:00:51.027Z`) 이후 현재 체크아웃 브랜치 새 커밋 2건이 관찰됐다: `56cba41 Codex worktree snapshot: startup-cleanup`, `54ae819 Codex worktree snapshot: startup-cleanup`. 같은 기간 `origin/develop`와 `origin/main`의 새 non-merge 커밋은 관찰되지 않았다.
+- 코드베이스 구조 수치: 8 top-level modules (`admin`, `billing`, `campus`, `devotion`, `global`, `notification`, `poll`, `user`), 231 main Java sources, 28 test Java sources, 55 snippet groups, 2 GitHub Actions workflows, checked-out branch DB 마이그레이션 0개. 로컬 `origin/develop` snapshot은 575 main Java sources, 102 test Java sources, DB 마이그레이션 12개다.
+- `./gradlew test --warning-mode all --console=plain`: 실패, 1분 57초, `5 actionable tasks: 1 executed, 4 up-to-date`. `build/test-results/test/*.xml` 집계는 24 XML files, 138 tests / 2 failures / 0 errors / 0 skipped로 통과율 98.55%다.
+- 실패 테스트는 `BillingApiRestDocsTest.documents_charge_query_contracts`, `BillingControllerTest.charge_query_api_maps_my_summary_admin_campus_and_admin_member_responses` 두 건이다.
+- test 단계 추가 관찰: `AuthServiceTest`, `DevotionApiRestDocsTest`, `AuthLogoutControllerTest`, `AuthRefreshControllerTest`, `CampusApiRestDocsTest`, `CampusControllerTest`, `PenaltyRuleApiRestDocsTest`, `UserMeControllerTest`, `CampusServiceTest`, `PenaltyRuleServiceTest`, `DevotionServiceTest`, `AuthControllerTest`, `AuthApiRestDocsTest`, `DevotionControllerTest` 총 14개 XML test result write failure가 함께 출력됐다.
+- `./gradlew build --warning-mode all --console=plain`: 실패, 1분 46초, `8 actionable tasks: 1 executed, 7 up-to-date`. 동일 2개 Billing 실패와 동일한 XML test result write failure 14건이 재현됐다.
+- build/test artifact 시각: `build/reports/tests/test/index.html`은 `2026-07-28 09:15:32 +0900`, `build/reports/problems/problems-report.html`은 `2026-07-29 06:06:15 +0900`다. 둘 다 보고 기준일 `2026-07-28`과 별도로 raw local timestamp로 기록한다.
+- deprecated 경고: configure 단계 `StartParameter.isConfigurationCacheRequested` 1건이 이번 실행에도 지속됐다.
+- 운영/배포 신호:
+  - `docker ps`: `faithlog-latest-app` Up 42 hours, `faithlog-latest-redis` / `faithlog-latest-postgres` Up 44 hours (`healthy`)
+  - 호스트 경로 `curl http://127.0.0.1:28080/actuator/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000236s`
+  - 호스트 경로 `curl http://127.0.0.1:28080/api/v1/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000220s`
+  - 컨테이너 내부 `docker exec faithlog-latest-app wget -qO- http://127.0.0.1:8080/actuator/health`: `{"status":"UP"}`
+  - 컨테이너 내부 `docker exec faithlog-latest-app wget -qO- http://127.0.0.1:8080/api/v1/health`: `{"success":true,"code":"SUCCESS","message":"요청이 성공했습니다.","data":{"status":"UP"},"timestamp":"2026-07-28T21:06:43.199087926Z"}`
+  - `docker exec faithlog-latest-postgres pg_isready -U faithlog -d faithlog`: `/var/run/postgresql:5432 - accepting connections`
+  - `docker exec faithlog-latest-redis redis-cli ping`: `PONG`
+- 오늘 리스크/관찰:
+  - checked-out branch의 Billing summary/REST Docs 회귀 2건이 `2026-07-28`에도 그대로 재현됐다.
+  - build 게이트는 오늘도 동일 2개 Billing 테스트 실패 때문에 막혀 있다.
+  - `./gradlew test` XML test result write failure 범위가 14건으로 확대됐다.
+  - 브랜치 격차 `ahead 4 / behind 222`가 유지돼 현재 브랜치 검증값을 최신 통합선 품질로 인용하기 어렵다.
+- 지난 자동화 실행 이후 upstream 실변경은 없고, 현재 브랜치에는 automation snapshot 커밋 2건만 추가됐다.
+  - host-mapped app port `127.0.0.1:28080`는 오늘도 두 health endpoint 모두 즉시 실패했지만 container-internal app/DB/Redis probe는 4/4 성공했다.
+  - 루트의 미추적 빈 파일 `0`이 계속 남아 있다.
+  - configure 단계 Gradle deprecated 경고 1건이 지속된다.
+  - local `date`와 fresh `problems-report.html`이 Wednesday `2026-07-29`를 가리켜 future-dated local clock evidence가 계속 누적된다.
+- 오늘 테스트 후보:
+  - `./gradlew test --tests com.faithlog.billing.presentation.BillingApiRestDocsTest --tests com.faithlog.billing.presentation.BillingControllerTest`
+  - 이유: 오늘도 재현된 실패 2건이 모두 Billing summary 응답/문서 계약에 집중돼 있다.
+  - 기대 지표: `monthlyPaidAmount` 계산값 일치 여부, `monthlyByCategory` 배열 필드 복원 여부, Billing summary 계약 pass/fail
+  - `./gradlew test --tests com.faithlog.user.application.AuthServiceTest --tests com.faithlog.user.presentation.AuthLogoutControllerTest --tests com.faithlog.user.presentation.AuthRefreshControllerTest --tests com.faithlog.user.presentation.UserMeControllerTest --tests com.faithlog.campus.presentation.CampusApiRestDocsTest --tests com.faithlog.devotion.presentation.DevotionApiRestDocsTest`
+  - 이유: 오늘 XML write failure 14건이 auth/user/campus/devotion 축에 넓게 퍼져 단일 도메인 문제가 아닐 수 있다.
+  - 기대 지표: 단독 실행 시 XML result write failure 재현 여부, 실패 파일 수 변화
+  - `./gradlew build --rerun-tasks --warning-mode all --console=plain`
+  - 이유: 오늘 `test`와 `build`가 모두 14건 XML write failure를 출력해 task 경계별 차이가 사라졌는지 다시 분리 검증해야 한다.
+  - 기대 지표: XML write failure 재현 여부, build artifact 기록 안정성, 실패 XML 파일 수
+  - `git switch develop && ./gradlew test --tests com.faithlog.billing.service.BillingQueryServiceTest`
+  - 이유: dirty worktree와 branch-switch 미승인 상태라 최신 통합선 Billing fixture 검증을 오늘도 직접 수행하지 못했다.
+  - 기대 지표: 최신 upstream fixture 기준 Billing query pass/fail, checked-out branch 회귀와의 차이
+  - `git switch develop && ./gradlew test jacocoTestReport`
+  - 이유: 최신 통합선 전체 품질/coverage baseline은 현재 브랜치에서 직접 재측정하지 못했다.
+  - 기대 지표: develop 기준 테스트 통과율, coverage 산출 여부, 최신 통합선 회귀 여부
+- 오늘 트러블슈팅:
+  - 문제: Billing summary 관련 테스트 2건이 `2026-07-28`에도 실패했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 실패 테스트명이 `BillingApiRestDocsTest.documents_charge_query_contracts`, `BillingControllerTest.charge_query_api_maps_my_summary_admin_campus_and_admin_member_responses`로 동일하게 재현됐다는 점뿐이다.
+  - 조치: `./gradlew test`, `./gradlew build`를 fresh rerun해 동일 실패를 다시 수집했다. 구현 변경은 하지 않았다.
+  - 전후 지표: `2026-07-27` `138 tests / 2 failures`, `2026-07-28` `138 tests / 2 failures`
+  - 예방 후보: 승인된 변경 원천 확인 후 Billing summary 집계 기준, DTO 직렬화, REST Docs 계약을 함께 재검증
+  - 문제: `./gradlew test`와 `./gradlew build`가 `2026-07-28`에 XML result write failure 14건을 함께 출력했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 XML file count는 24개를 유지했지만, test/build 본문에는 같은 14개 report file write failure가 함께 보고됐다는 점뿐이다.
+  - 조치: fresh `test`와 `build` rerun으로 raw 오류 재현 범위를 다시 수집했다. `clean`이나 파일 삭제 같은 추가 조치는 하지 않았다.
+  - 전후 지표: `2026-07-27 test` XML write failure 4건, `2026-07-28 test/build` XML write failure 각 14건
+  - 예방 후보: artifact 정리 정책, parallel test write 설정, file lock 조사 범위를 사용자 승인 후 확정
+  - 문제: host-path health probe가 오늘도 모두 실패했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 host-path probe 2건이 모두 `http_code=000`이고, 같은 시점 container-internal app/DB/Redis probe는 4/4 성공했다는 점뿐이다.
+  - 조치: 오늘도 host-path probe와 container-internal probe를 같은 실행에서 함께 수집해 신호를 분리 기록했다.
+  - 전후 지표: host-path 0/2 success, container-internal app/DB/Redis probe 4/4 success
+  - 예방 후보: `docs/decision-log.md`의 pending question대로 host-path failure 시 어떤 health source를 공식 metric으로 볼지 먼저 확정해야 한다.
+  - 문제: 이번 실행에서도 보고 기준일 화요일 `2026-07-28`보다 하루 앞선 Wednesday `2026-07-29` local timestamp가 기록됐다.
+  - 원인: 미확인. 현재는 로컬 clock 또는 세션 기준시각 불일치 가능성만 관찰됐다.
+  - 조치: 보고 기준일을 `2026-07-28`로 고정하고 raw timestamp를 그대로 기록했다.
+  - 전후 지표: monitor date `2026-07-28`, local `date` 출력 `2026-07-29 06:02:05 +0900`, `problems-report.html` timestamp `2026-07-29 06:06:15 +0900`
+  - 예방 후보: `docs/decision-log.md`의 pending question대로 future-dated local clock 해석 정책을 먼저 확정해야 한다.
+- 오늘 이력서 bullet 후보:
+  - checked-out branch 기준 신규 구현 성과 없음.
+  - automation snapshot 커밋 2건과 운영/품질 재측정만 확인됐고, resume-ready 개선 수치는 새로 승격하지 않았다.
+
+### 2026-07-27 Daily Monitor (checked-out branch)
+
+- 기준 문서 확인: Vault `AGENTS.md`, repo `AGENTS.md`, `docs/codex/FAITHLOG_CODEX_HOOK.md`, `docs/decision-log.md`, `docs/resume-metrics.md`, Obsidian `Projects/FaithLog/resume-metrics.md`, `Projects/FaithLog/decision-log.md`를 확인하고 진행했다. 저장소에는 이번 실행도 `AGENT.md`가 없고 `AGENTS.md` 단일 규칙만 유지 중이다.
+- 보고 기준일은 월요일 `2026-07-27`이다. 로컬 `date` 출력은 `2026-07-28 09:08:37 +0900`이므로 future-dated local clock evidence로만 기록한다.
+- 현재 브랜치 상태: `docs/37-poll-template-planning-sync`, `git rev-list --left-right --count origin/develop...HEAD` 기준 divergence `ahead 4 / behind 222`, branch 고유 diff `3 files changed, 104 insertions(+)`, 미커밋 diff `4 files changed, 2788 insertions(+), 9 deletions(-)`, 미추적 빈 파일 `0` 유지.
+- 지난 자동화 실행 시각(`2026-07-26T21:00:17.196Z`) 이후 현재 체크아웃 브랜치 새 커밋 0건. 같은 기간 `origin/develop` 비-merge 실변경 커밋 4건이 관찰됐다.
+- 최근 upstream 주요 변경 관찰:
+  - `7b96a53 test: #219 청구 조회 fixture 시각 안정화 (#220)`: `src/test/java/com/faithlog/billing/service/BillingQueryServiceTest.java` 1개 파일 수정
+  - `5de059f docs: #161 배포 인프라·공급망 보안 감사 (#221)`: `docs/security/161-audit-findings.md`, `docs/security/161-deployment-supply-chain-matrix.md` 추가
+  - `c0f08d4 test: #208 공통 성능 하네스 호환성 감사 (#222)`: `performance/k6/common-harness-compatibility/*` 신규 추가와 테스트 자산 확장
+  - `7fc50af release: develop 최신 변경사항을 main에 반영 (#223)`: 위 변경들이 release 흐름에 포함됨
+- 코드베이스 구조 수치: 8 top-level modules (`admin`, `billing`, `campus`, `devotion`, `global`, `notification`, `poll`, `user`), 231 main Java sources, 28 test Java sources, 55 snippet groups, 2 GitHub Actions workflows, checked-out branch DB 마이그레이션 0개. 로컬 `origin/develop` snapshot은 575 main Java sources, 102 test Java sources, DB 마이그레이션 12개다.
+- `./gradlew test --warning-mode all --console=plain`: 실패, 45초, `5 actionable tasks: 1 executed, 4 up-to-date`. `build/test-results/test/*.xml` 집계는 24 XML files, 138 tests / 2 failures / 0 errors / 0 skipped로 통과율 98.55%다. 실패 테스트는 `BillingApiRestDocsTest.documents_charge_query_contracts`, `BillingControllerTest.charge_query_api_maps_my_summary_admin_campus_and_admin_member_responses`다.
+- 실패 payload 관찰: 두 Billing 실패 모두 응답 `totalPaidAmount=2500` 대비 `monthlyPaidAmount=0`, `monthlyByCategory=[]`를 반환했다. REST Docs 실패는 `data.monthlyByCategory[].paymentCategory`, `paidAmount`, `unpaidAmount`, `totalAmount` 필드 부재로 기록됐다.
+- test 단계 추가 관찰: 같은 `./gradlew test` 실행에서 `AuthLogoutControllerTest`, `AuthRefreshControllerTest`, `UserMeControllerTest`, `AuthControllerTest` XML test result write failure 4건이 함께 출력됐다.
+- `./gradlew build --warning-mode all --console=plain`: 실패, 37초, `8 actionable tasks: 1 executed, 7 up-to-date`. 동일 2개 Billing 실패가 재현됐고, 이번 실행 본문에서는 XML test result write failure 문구가 추가로 관찰되지 않았다.
+- build artifact 시각: `build/reports/tests/test/index.html` `2026-07-28 09:15:32 +0900`, `build/reports/problems/problems-report.html` `2026-07-28 09:15:33 +0900`로 갱신됐다. monitor date `2026-07-27`보다 하루 앞선 future-dated local timestamp다.
+- deprecated 경고: configure 단계 `StartParameter.isConfigurationCacheRequested` 1건이 이번 실행에도 지속됐다.
+- 운영/배포 신호:
+  - `docker ps`: `faithlog-latest-app` Up 21 hours, `faithlog-latest-redis` / `faithlog-latest-postgres` Up 23 hours (`healthy`)
+  - 호스트 경로 `curl http://127.0.0.1:28080/actuator/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000147s`
+  - 호스트 경로 `curl http://127.0.0.1:28080/api/v1/health`: 즉시 연결 실패, `http_code=000`, `time_total=0.000193s`
+  - 컨테이너 내부 `docker exec faithlog-latest-app wget -qO- http://127.0.0.1:8080/actuator/health`: `{"status":"UP"}`
+  - 컨테이너 내부 `docker exec faithlog-latest-app wget -qO- http://127.0.0.1:8080/api/v1/health`: `{"success":true,"code":"SUCCESS","message":"요청이 성공했습니다.","data":{"status":"UP"},"timestamp":"2026-07-28T00:15:55.439470804Z"}`
+  - `docker exec faithlog-latest-postgres pg_isready -U faithlog -d faithlog`: `/var/run/postgresql:5432 - accepting connections`
+  - `docker exec faithlog-latest-redis redis-cli ping`: `PONG`
+- 오늘 리스크/관찰:
+  - checked-out branch의 Billing summary/REST Docs 회귀 2건이 `2026-07-27`에도 그대로 재현됐다.
+  - build 게이트는 오늘도 동일 2개 Billing 테스트 실패 때문에 막혀 있다.
+  - `./gradlew test`에서 XML test result write failure 4건이 다시 관찰됐지만, 직후 `./gradlew build` 본문에서는 같은 문구가 재출력되지 않아 재현 양상이 일관되지 않다.
+  - 브랜치 격차가 `ahead 4 / behind 222`로 더 벌어져 현재 브랜치 검증값을 최신 통합선 품질로 인용하기 어렵다.
+  - 지난 자동화 실행 이후 upstream에는 성능 하네스 감사, 배포 보안 감사, fixture 시각 안정화, develop→main release 반영 4건이 추가됐다.
+  - host-mapped app port `127.0.0.1:28080`는 오늘도 두 health endpoint 모두 즉시 실패했지만 container-internal app/DB/Redis probe는 4/4 성공했다.
+  - 루트의 미추적 빈 파일 `0`이 계속 남아 있다.
+  - configure 단계 Gradle deprecated 경고 1건이 지속된다.
+  - local `date`와 fresh artifact가 `2026-07-28`을 가리켜 시각 해석 보정 정책이 계속 필요하다.
+- 오늘 테스트 후보:
+  - `./gradlew test --tests com.faithlog.billing.presentation.BillingApiRestDocsTest --tests com.faithlog.billing.presentation.BillingControllerTest`
+  - 이유: 오늘 재현된 실패 2건이 모두 Billing summary 응답/문서 계약에 집중돼 있다.
+  - 기대 지표: `monthlyPaidAmount` 계산값 일치 여부, `monthlyByCategory` 배열 필드 복원 여부, Billing summary 계약 pass/fail
+  - `./gradlew test --tests com.faithlog.user.presentation.AuthLogoutControllerTest --tests com.faithlog.user.presentation.AuthRefreshControllerTest --tests com.faithlog.user.presentation.UserMeControllerTest --tests com.faithlog.user.presentation.AuthControllerTest`
+  - 이유: 오늘 `test` 단계 XML write failure가 4개 user presentation report 파일에 집중됐다.
+  - 기대 지표: 해당 네 테스트 단독 실행 pass/fail, XML result write failure 재현 여부
+  - `./gradlew build --rerun-tasks --warning-mode all --console=plain`
+  - 이유: `test` 단계 4건 XML write failure와 `build` 단계 무재출력 차이를 분리 검증해야 한다.
+  - 기대 지표: XML write failure 재현 여부, build artifact 기록 안정성, 실패 XML 파일 수
+  - `git switch develop && ./gradlew test --tests com.faithlog.billing.service.BillingQueryServiceTest`
+  - 이유: upstream `#220`이 Billing query fixture 시각을 조정했지만 dirty worktree와 branch-switch 미승인 상태라 최신 통합선에서 직접 재검증하지 못했다.
+  - 기대 지표: 최신 upstream fixture 기준 Billing query pass/fail, checked-out branch 회귀와의 차이
+  - `git switch develop && ./gradlew test jacocoTestReport`
+  - 이유: `origin/develop`에는 2026-07-27 기준 K6 harness/security audit 관련 신규 자산이 추가됐지만 현재 브랜치에서는 최신 통합선 전체 품질을 재측정하지 못했다.
+  - 기대 지표: develop 기준 테스트 통과율, coverage 산출 여부, 최신 통합선 회귀 여부
+- 오늘 트러블슈팅:
+  - 문제: Billing summary 관련 테스트 2건이 `2026-07-27`에도 실패했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 응답 payload에서 `monthlyPaidAmount`가 기대값 `2500` 대신 `0`으로 반환됐고 `monthlyByCategory`가 빈 배열이라 REST Docs 필드 4개가 누락됐다는 점뿐이다.
+  - 조치: `./gradlew test`, `./gradlew build`를 fresh rerun해 동일 실패 payload를 다시 수집했다. 구현 변경은 하지 않았다.
+  - 전후 지표: `2026-07-26 rerun` `138 tests / 2 failures`, `2026-07-27` `138 tests / 2 failures`
+  - 예방 후보: 승인된 변경 원천 확인 후 Billing summary 집계 기준, DTO 직렬화, REST Docs 계약을 함께 재검증
+  - 문제: `./gradlew test`가 `AuthLogoutControllerTest`, `AuthRefreshControllerTest`, `UserMeControllerTest`, `AuthControllerTest` XML 결과 4건을 쓰지 못했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 같은 실행 뒤 파일 개수 집계는 24 XML files를 유지했지만, 테스트 본문에는 XML write failure 4건이 보고됐다는 점뿐이다.
+  - 조치: fresh `test`와 `build` rerun으로 raw 오류를 다시 수집했다. `clean`이나 파일 삭제 같은 추가 조치는 하지 않았다.
+  - 전후 지표: `2026-07-26 rerun build` XML write failure 2건, `2026-07-27 test` XML write failure 4건
+  - 예방 후보: artifact 정리 정책, parallel test write 설정, file lock 조사 범위를 사용자 승인 후 확정
+  - 문제: host-path health probe가 오늘도 모두 실패했다.
+  - 원인: 미확인. 현재 관찰 가능한 사실은 host-path probe 2건이 모두 `http_code=000`이고, 같은 시점 container-internal app/DB/Redis probe는 4/4 성공했다는 점뿐이다.
+  - 조치: 오늘은 host-path probe와 container-internal probe를 같은 실행에서 함께 수집해 신호를 분리 기록했다.
+  - 전후 지표: host-path 0/2 success, container-internal app/DB/Redis probe 4/4 success
+  - 예방 후보: `docs/decision-log.md`의 pending question대로 host-path failure 시 어떤 health source를 공식 metric으로 볼지 먼저 확정해야 한다.
+  - 문제: 이번 실행에서도 monitor date보다 하루 앞선 `2026-07-28` local timestamp가 기록됐다.
+  - 원인: 미확인. 현재는 로컬 clock 또는 세션 기준시각 불일치 가능성만 관찰됐다.
+  - 조치: 보고 기준일을 `2026-07-27`로 고정하고 raw timestamp를 그대로 기록했다.
+  - 전후 지표: monitor date `2026-07-27`, local `date` 출력 `2026-07-28 09:08:37 +0900`, artifact timestamp `2026-07-28 09:15:32 +0900` / `2026-07-28 09:15:33 +0900`
+  - 예방 후보: `docs/decision-log.md`의 pending question대로 future-dated local clock 해석 정책을 먼저 확정해야 한다.
+- 오늘 이력서 bullet 후보:
+  - checked-out branch 기준 신규 구현 성과 없음.
+  - upstream observation candidate: `origin/develop`에는 2026-07-27 기준 배포·공급망 보안 감사 문서 2건과 K6 공통 하네스 호환성 감사 자산이 추가됐지만, 현재 dirty worktree 정책상 checked-out branch에서 직접 검증하지 못해 resume-ready 성과로는 아직 승격하지 않았다.
 
 ### 2026-07-26 Daily Monitor Rerun Update (checked-out branch)
 

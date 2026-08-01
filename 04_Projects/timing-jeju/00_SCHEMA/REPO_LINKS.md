@@ -3,20 +3,20 @@
 ---
 tags:
   - type/project
-  - status/planning
+  - status/active
 ---
 
-`timing-jeju`는 아직 실제 개발 레포가 없는 기획 단계 프로젝트입니다. 레포가 생성되면 아래 항목을 채웁니다.
+`timing-jeju` 백엔드 로컬·원격 저장소가 연결되었습니다. 배포 주소는 생성된 뒤 추가합니다.
 
 | 항목 | 값 |
 | --- | --- |
 | Notion 기획 링크 |  |
-| GitHub repo 링크 |  |
-| 로컬 repo 경로 |  |
-| repo 내부 wiki 경로 |  |
+| GitHub repo 링크 | [Timing-Jeju/jeju_BE](https://github.com/Timing-Jeju/jeju_BE) |
+| 로컬 repo 경로 | `/Users/josephuk77/Tour-API` |
+| repo 내부 wiki 경로 | `/Users/josephuk77/Tour-API/docs` |
 | 배포 URL |  |
 | API 문서 URL |  |
-| 기타 참고 링크 |  |
+| 기타 참고 링크 | [초기 환경 Issue #1](https://github.com/Timing-Jeju/jeju_BE/issues/1) |
 
 ## 연결 원칙
 

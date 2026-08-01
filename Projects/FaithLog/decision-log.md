@@ -10,6 +10,20 @@ This file records user-approved project decisions so Codex does not rely on gues
 
 ## Decisions
 
+### 2026-07-28 - Daily Monitor Automation Snapshot Commit Citation Scope
+
+- Context: The `2026-07-28` monitor found two new current-branch commits since the previous run, `56cba41` and `54ae819`, both titled `Codex worktree snapshot: startup-cleanup`, while `origin/develop` and `origin/main` had no new non-merge commits in the same window. The monitor can record these commits as branch facts, but it cannot decide whether automation-generated snapshot/housekeeping commits should count as authored work or resume evidence without the user's policy.
+- Pending question: When the daily monitor sees Codex-generated snapshot or startup-cleanup commits without new product/code changes, should it count them as branch activity for resume reporting, or exclude them unless the user explicitly approves them as meaningful delivery?
+- Recommendation: Record automation snapshot commits as workspace-maintenance evidence only, and exclude them from resume-ready delivery metrics by default until the user defines a different citation policy.
+- Current action: Today's report recorded the 2 snapshot commits as observed branch facts and did not promote them into resume-ready output.
+
+### 2026-07-27 - Daily Monitor Upstream Baseline Branch Scope
+
+- Context: The `2026-07-27` monitor found the checked-out branch `docs/37-poll-template-planning-sync` is `ahead 4 / behind 222` versus `origin/develop`, while new upstream commits since the previous run included `test` (#220, #222), `docs/security` (#221), and a same-day release merge `7fc50af release: develop 최신 변경사항을 main에 반영 (#223)` on `origin/main`. The monitor can record both `origin/develop` and `origin/main` facts, but it cannot decide whether resume-quality baseline evidence should continue to use `origin/develop`, switch to `origin/main`, or track both as separate baselines without the user's policy.
+- Pending question: When `origin/main` receives a same-day release merge while the checked-out branch remains far behind `origin/develop`, should the daily monitor treat `origin/develop` as the single upstream quality baseline, add `origin/main` as a separate release baseline, or switch the report's primary baseline to `origin/main`?
+- Recommendation: Keep reporting checked-out branch measurements plus `origin/develop` change facts by default, and record `origin/main` release activity separately until the user defines which branch is the official resume/operations baseline.
+- Current action: Today's report recorded the checked-out branch metrics, the 4 upstream non-merge commits, and the `origin/main` release merge as separate observations without reclassifying the baseline branch.
+
 ### 2026-07-17 - Daily Monitor Escalated Docker Diagnostics Scope
 
 - Context: The 2026-07-17 daily monitor could refresh git refs and rerun Gradle verification, but host-path probes to `127.0.0.1:28080` still failed and read-only Docker diagnostics such as `docker ps`, `docker exec ... pg_isready`, and `docker exec ... redis-cli ping` were blocked by docker API permission errors or hung in the current environment.

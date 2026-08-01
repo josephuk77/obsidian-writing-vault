@@ -2,6 +2,7 @@
 
 ## DevLog
 
+- [[04_DevLog/2026-07-29_issue-224-email-verification-password-reset]]
 - [[04_DevLog/2026-07-20_issue-213-poll-option-add-response]]
 - [[04_DevLog/2026-07-16_issue-206-charge-item-stable-ordering]]
 - [[04_DevLog/2026-07-14_issue-200-coffee-duty-notifications]]

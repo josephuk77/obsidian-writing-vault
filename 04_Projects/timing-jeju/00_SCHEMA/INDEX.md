@@ -3,10 +3,10 @@
 ---
 tags:
   - type/project
-  - status/planning
+  - status/active
 ---
 
-이 문서는 `timing-jeju` 프로젝트의 맥락 복구용 인덱스입니다. 아직 실제 코드 레포가 없는 기획 허브이며, Notion 원문을 가져온 뒤 이 문서를 기준으로 관련 위키와 로그를 갱신합니다.
+이 문서는 `timing-jeju` 프로젝트의 맥락 복구용 인덱스입니다. 백엔드 로컬 저장소가 연결되었으며, 이 문서를 기준으로 기획과 구현 맥락을 복구합니다.
 
 ## Raw Source
 
@@ -47,6 +47,11 @@ tags:
 - [[architecture-memo]]
 - [[domain-notes]]
 - [[feature-notes]]
+- [[2026-07-28-backend-initial-setup-log]]
+- [[2026-07-28-issue-7-supabase-jwt-security-log]]
+- [[2026-07-29-issue-9-supabase-social-login-log]]
+- [[2026-07-30-issue-11-database-integrity-log]]
+- [[2026-07-31-issue-11-database-integrity-review-log]]
 
 ## Decisions
 
@@ -68,6 +73,6 @@ tags:
 
 ## Current State
 
-- Status: planning
+- Status: active
 - Notion 원문: 미수집
-- Repo 연결: 미연결
+- Repo 연결: 로컬 백엔드 저장소 연결
